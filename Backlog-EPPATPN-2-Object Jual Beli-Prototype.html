@@ -128,7 +128,7 @@
     background:var(--tabbar);border:1px solid var(--line);border-radius:8px;padding:8px 10px;
   }
 
-  /* ---- blok sertifikat (baru) ---- */
+  /* ---- blok sertipikat (baru) ---- */
   .cert{
     border:1px solid var(--line);border-radius:12px;padding:16px;
     background:linear-gradient(180deg,rgba(238,243,241,.45),rgba(238,243,241,0));
@@ -220,28 +220,28 @@
           <div class="field">
             <label for="jenisHak">Jenis Hak</label>
             <select id="jenisHak">
-              <option value="SHM">Sertifikat Hak Milik (SHM)</option>
-              <option value="SHGB">Sertifikat Hak Guna Bangunan (SHGB)</option>
-              <option value="SHGU">Sertifikat Hak Guna Usaha (SHGU)</option>
-              <option value="HP">Sertifikat Hak Pakai (HP)</option>
+              <option value="SHM">Sertipikat Hak Milik (SHM)</option>
+              <option value="SHGB">Sertipikat Hak Guna Bangunan (SHGB)</option>
+              <option value="SHGU">Sertipikat Hak Guna Usaha (SHGU)</option>
+              <option value="HP">Sertipikat Hak Pakai (HP)</option>
               <option value="GIRIK">Girik / Letter C</option>
               <option value="LAINNYA">Lainnya</option>
             </select>
           </div>
         </div>
 
-        <!-- BLOK BARU: input sertifikat -->
+        <!-- BLOK BARU: input sertipikat -->
         <div class="cert" style="margin-top:16px">
           <div class="cert-head">
             <div>
-              <div class="cert-title" id="certTitle">Input Sertifikat</div>
+              <div class="cert-title" id="certTitle">Input Sertipikat</div>
             </div>
             <div class="seg" id="segMode">
               <button type="button" data-mode="manual" aria-pressed="true">Manual</button>
               <button type="button" data-mode="elektronik" aria-pressed="false">Elektronik</button>
             </div>
           </div>
-          <div class="seg-hint" id="segHint">*klik untuk mengganti input sertifikat</div>
+          <div class="seg-hint" id="segHint">*klik untuk mengganti input sertipikat</div>
           <div class="cert-fields" id="certFields"></div>
         </div>
 
@@ -289,16 +289,16 @@
 /* ---------- isian sertipikat: kolomnya sama untuk semua Jenis Hak ---------- */
 const ISIAN_MANUAL = [
   {label:'NIB (Nomor Identifikasi Bidang)', ph:'Nomor Identifikasi Bidang', req:true},
-  {label:'Nomor Kode Sertifikat', ph:'Nomor Kode Sertifikat', req:true},
+  {label:'Nomor Kode Sertipikat', ph:'Nomor Kode Sertipikat', req:true},
   {label:'NOP SPPT PBB (Nomor Objek Pajak — Surat Pemberitahuan Pajak Terutang Pajak Bumi dan Bangunan)', span2:true, ph:'00.00.000.000.000-0000.0', req:true}
 ];
 const ISIAN_ELEKTRONIK = [
   {label:'NIB Elektronik (Nomor Identifikasi Bidang Elektronik)', ph:'Nomor Identifikasi Bidang Elektronik', req:true},
-  {label:'Nomor Kode Sertifikat', ph:'Nomor Kode Sertifikat', req:true},
+  {label:'Nomor Kode Sertipikat', ph:'Nomor Kode Sertipikat', req:true},
   {label:'NOP SPPT PBB (Nomor Objek Pajak — Surat Pemberitahuan Pajak Terutang Pajak Bumi dan Bangunan)', span2:true, ph:'00.00.000.000.000-0000.0', req:true}
 ];
-const NOTE_MANUAL = '* Catatan: Nomor Hak wajib diisi. NIB (Nomor Identifikasi Bidang), SU (Surat Ukur), atau Nomor Blanko Sertifikat diisi minimal salah satunya.';
-const NOTE_ELEKTRONIK = '* Catatan: NIB Elektronik (Nomor Identifikasi Bidang Elektronik) dan Kode Sertifikat wajib diisi.';
+const NOTE_MANUAL = '* Catatan: Nomor Hak wajib diisi. NIB (Nomor Identifikasi Bidang), SU (Surat Ukur), atau Nomor Blanko Sertipikat diisi minimal salah satunya.';
+const NOTE_ELEKTRONIK = '* Catatan: NIB Elektronik (Nomor Identifikasi Bidang Elektronik) dan Kode Sertipikat wajib diisi.';
 
 let mode = 'manual';
 const el = id => document.getElementById(id);
