@@ -195,7 +195,7 @@
   <span class="protonav"><a class="home" href="index.html">☰ Daftar prototipe</a><a href="Backlog-EPPATPN-2-Object%20Jual%20Beli-Prototype.html" aria-current="page">EPPATPN-2 · Object Jual Beli</a><a href="Backlog-EPPATPN-3-Minuta-01-Prototype.html">EPPATPN-3 · Minuta — 01</a></span>
   <span class="sep">•</span>
   <b>Prototipe UI</b><span class="sep">•</span><span>Tambah Objek (AJB) — E-PPAT</span>
-  <span class="sep">•</span><span class="hint">Ganti <b>Jenis Hak</b> dan tekan <b>Manual / Elektronik</b> untuk melihat perubahan form.</span>
+  <span class="sep">•</span><span class="hint">Isian sama untuk semua <b>Jenis Hak</b> dan untuk <b>Manual</b> maupun <b>Elektronik</b>.</span>
   <button class="reopen" id="reopen" hidden>Buka kembali modal</button>
 </div>
 
@@ -245,49 +245,19 @@
           <div class="cert-fields" id="certFields"></div>
         </div>
 
-        <!-- KOLOM LAMA (tetap seperti aplikasi) -->
-        <div class="grid" style="margin-top:16px">
-          <div class="field">
-            <label for="noSert">Nomor Sertifikat</label>
-            <input type="text" id="noSert">
-          </div>
-          <div class="field">
-            <label for="nibLama">NIB (Nomor Identifikasi Bidang)</label>
-            <input type="text" id="nibLama">
-          </div>
-          <div class="field">
-            <label for="luas">Luas (meter persegi)</label>
-            <input type="text" id="luas">
-          </div>
-          <div class="field">
-            <label for="noSU">Nomor Surat Ukur</label>
-            <input type="text" id="noSU">
-          </div>
-          <div class="field">
-            <label for="tglSU">Tanggal Surat Ukur</label>
-            <input type="date" id="tglSU">
-          </div>
-          <div class="field col-2">
-            <label for="njop">SPPT PBB (Surat Pemberitahuan Pajak Terutang Pajak Bumi dan Bangunan)</label>
-            <input type="text" id="njop">
-          </div>
-          <div class="field col-2">
-            <label for="lokasi">Lokasi</label>
-            <textarea id="lokasi"></textarea>
-          </div>
-        </div>
       </section>
 
       <!-- ================= DATA KHUSUS AJB (sama seperti aplikasi) ================= -->
       <section class="panel" id="panel-khusus" hidden>
         <div class="grid">
-          <div class="field"><label>Nama Pemilik Terdaftar</label><input type="text"></div>
-          <div class="field"><label>NOP PBB</label><input type="text"></div>
-          <div class="field"><label>Provinsi</label><input type="text"></div>
-          <div class="field"><label>Kota/Kabupaten</label><input type="text"></div>
-          <div class="field"><label>Kecamatan</label><input type="text"></div>
-          <div class="field"><label>Kelurahan</label><input type="text"></div>
-          <div class="field"><label>Nilai Perbandingan Proporsional</label><input type="text" value="0"><div class="help">Belum diisi</div></div>
+          <div class="field col-2"><label>Nama</label><input type="text" placeholder="Nama pemilik terdaftar"></div>
+          <div class="field"><label>Provinsi</label><input type="text" placeholder="Provinsi"></div>
+          <div class="field"><label>Kota / Kabupaten</label><input type="text" placeholder="Kota / Kabupaten"></div>
+          <div class="field"><label>Kecamatan</label><input type="text" placeholder="Kecamatan"></div>
+          <div class="field"><label>Kelurahan</label><input type="text" placeholder="Kelurahan"></div>
+          <div class="field col-2"><label>Jalan</label><input type="text" placeholder="Nama jalan, nomor, RT/RW"></div>
+          <div class="field"><label>NPP (Nilai Perbandingan Proporsional)</label><input type="text" placeholder="0"></div>
+          <div class="field"><label>Luas (meter persegi)</label><input type="text" placeholder="0"></div>
           <div class="field"><label>Harga Jual Beli</label><input type="text" value="0"><div class="help">Belum diisi</div></div>
         </div>
       </section>
@@ -316,44 +286,19 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* ---------- definisi form sertifikat per Jenis Hak ---------- */
-const SERI = [
-  {label:'Nomor Hak', ph:'Nomor Hak', req:true, help:'Nomor Hak harus diisi'},
-  {label:'NIB (Nomor Identifikasi Bidang)', ph:'Nomor Identifikasi Bidang'},
-  {label:'Nomor Seri (Nomor Blanko Sertifikat)', ph:'Nomor Blanko Sertifikat'},
-  {group:'Nomor dan Tahun GS/SU (Gambar Situasi / Surat Ukur)',
-   pair:[{ph:'Nomor Gambar Situasi / Surat Ukur'},{ph:'Tahun Gambar Situasi / Surat Ukur'}]}
+/* ---------- isian sertipikat: kolomnya sama untuk semua Jenis Hak ---------- */
+const ISIAN_MANUAL = [
+  {label:'NIB (Nomor Identifikasi Bidang)', ph:'Nomor Identifikasi Bidang', req:true},
+  {label:'Nomor Kode Sertifikat', ph:'Nomor Kode Sertifikat', req:true},
+  {label:'NOP SPPT PBB (Nomor Objek Pajak — Surat Pemberitahuan Pajak Terutang Pajak Bumi dan Bangunan)', span2:true, ph:'00.00.000.000.000-0000.0', req:true}
+];
+const ISIAN_ELEKTRONIK = [
+  {label:'NIB Elektronik (Nomor Identifikasi Bidang Elektronik)', ph:'Nomor Identifikasi Bidang Elektronik', req:true},
+  {label:'Nomor Kode Sertifikat', ph:'Nomor Kode Sertifikat', req:true},
+  {label:'NOP SPPT PBB (Nomor Objek Pajak — Surat Pemberitahuan Pajak Terutang Pajak Bumi dan Bangunan)', span2:true, ph:'00.00.000.000.000-0000.0', req:true}
 ];
 const NOTE_MANUAL = '* Catatan: Nomor Hak wajib diisi. NIB (Nomor Identifikasi Bidang), SU (Surat Ukur), atau Nomor Blanko Sertifikat diisi minimal salah satunya.';
-const ELEKTRONIK = [
-  {label:'NIB Elektronik (Nomor Identifikasi Bidang Elektronik)', ph:'Nomor Identifikasi Bidang Elektronik', req:true},
-  {label:'Kode Sertifikat', ph:'Kode Sertifikat Elektronik', req:true}
-];
 const NOTE_ELEKTRONIK = '* Catatan: NIB Elektronik (Nomor Identifikasi Bidang Elektronik) dan Kode Sertifikat wajib diisi.';
-const MASA = {label:'Tanggal Berakhir Hak', type:'date', req:true, help:'Wajib diisi untuk hak berjangka waktu'};
-
-const FORMS = {
-  SHM:    {toggle:true, manual:SERI, elektronik:ELEKTRONIK},
-  SHGB:   {toggle:true, manual:SERI.concat([MASA]), elektronik:ELEKTRONIK.concat([MASA])},
-  SHGU:   {toggle:true, manual:SERI.concat([MASA]), elektronik:ELEKTRONIK.concat([MASA])},
-  HP:     {toggle:true, manual:SERI.concat([MASA]), elektronik:ELEKTRONIK.concat([MASA])},
-  GIRIK:  {toggle:false, title:'Data Girik / Letter C',
-           info:'Girik / Letter C bukan sertifikat hak, sehingga pilihan Manual / Elektronik tidak berlaku.',
-           fields:[
-             {label:'Nomor Girik / Letter C', ph:'Nomor Girik / Letter C', req:true},
-             {label:'Persil / Blok', ph:'Nomor Persil atau Blok'},
-             {label:'Kohir', ph:'Nomor Kohir'},
-             {label:'Nama Tertulis pada Girik', ph:'Nama pemegang yang tertulis'},
-             {label:'Luas (meter persegi)', ph:'0'}
-           ]},
-  LAINNYA:{toggle:false, title:'Data Hak Lainnya',
-           info:'Jenis hak di luar daftar diisi manual; sebutkan nama haknya secara lengkap (tanpa singkatan).',
-           fields:[
-             {label:'Nama Jenis Hak', ph:'Contoh: Hak Pengelolaan (HPL)', req:true},
-             {label:'Nomor Hak', ph:'Nomor Hak', req:true},
-             {label:'Keterangan', textarea:true, span2:true, ph:'Keterangan tambahan bila ada'}
-           ]}
-};
 
 let mode = 'manual';
 const el = id => document.getElementById(id);
@@ -374,24 +319,11 @@ function fieldHTML(f){
 }
 
 function render(){
-  const hak = el('jenisHak').value;
-  const cfg = FORMS[hak];
-  const seg = el('segMode'), hint = el('segHint');
-
-  seg.hidden = !cfg.toggle;
-  hint.hidden = !cfg.toggle;
-  el('certTitle').textContent = cfg.title || 'Input Sertifikat';
-
-  let fields, note = '';
-  if(cfg.toggle){
-    fields = mode === 'manual' ? cfg.manual : cfg.elektronik;
-    note = `<div class="note">${mode === 'manual' ? NOTE_MANUAL : NOTE_ELEKTRONIK}</div>`;
-    [...seg.children].forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === mode));
-  }else{
-    fields = cfg.fields;
-    note = `<div class="note-info">${cfg.info}</div>`;
-  }
-  el('certFields').innerHTML = `<div class="grid">${fields.map(fieldHTML).join('')}</div>${note}`;
+  const seg = el('segMode');
+  [...seg.children].forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === mode));
+  const fields = mode === 'manual' ? ISIAN_MANUAL : ISIAN_ELEKTRONIK;
+  const note   = mode === 'manual' ? NOTE_MANUAL  : NOTE_ELEKTRONIK;
+  el('certFields').innerHTML = `<div class="grid">${fields.map(fieldHTML).join('')}</div><div class="note">${note}</div>`;
 }
 
 el('jenisHak').addEventListener('change', render);
