@@ -322,8 +322,7 @@ function render(){
   const seg = el('segMode');
   [...seg.children].forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === mode));
   const fields = mode === 'manual' ? ISIAN_MANUAL : ISIAN_ELEKTRONIK;
-  const note   = mode === 'manual' ? NOTE_MANUAL  : NOTE_ELEKTRONIK;
-  el('certFields').innerHTML = `<div class="grid">${fields.map(fieldHTML).join('')}</div><div class="note">${note}</div>`;
+  el('certFields').innerHTML = `<div class="grid">${fields.map(fieldHTML).join('')}</div>`;
 }
 
 el('jenisHak').addEventListener('change', render);
