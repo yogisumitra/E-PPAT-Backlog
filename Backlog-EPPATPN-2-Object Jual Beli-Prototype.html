@@ -149,6 +149,10 @@
   .cert-fields .lbl{min-height:32px;display:flex;align-items:flex-end}
   .field label{min-height:16px}
   .pair{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .sec-title{
+    margin:22px 0 12px;padding-top:16px;border-top:1px solid var(--line);
+    font-size:12px;font-weight:600;letter-spacing:1.4px;text-transform:uppercase;color:var(--green);
+  }
 
   /* ---- footer ---- */
   .modal-foot{
@@ -182,6 +186,18 @@
     .close{top:14px;right:12px}
   }
 
+  .scen{
+    margin-top:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+    font-size:11.5px;line-height:16px;color:var(--muted);
+  }
+  .scen .tag{
+    font:600 11px Inter,sans-serif;letter-spacing:.6px;text-transform:uppercase;
+    color:var(--green);background:#fff;border:1px solid var(--line);border-radius:999px;padding:3px 9px;
+  }
+  .checks{display:flex;gap:18px;flex-wrap:wrap;margin-top:2px}
+  .check{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--label);cursor:pointer}
+  .check input{width:15px;height:15px;accent-color:var(--green);margin:0}
+
   .protonav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
   .protonav a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#E6EDEA;border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:4px 10px;font:500 11px Inter,sans-serif}
   .protonav a:hover{background:rgba(255,255,255,.08)}
@@ -195,7 +211,7 @@
   <span class="protonav"><a class="home" href="index.html">☰ Daftar prototipe</a><a href="Backlog-EPPATPN-2-Object%20Jual%20Beli-Prototype.html" aria-current="page">EPPATPN-2 · Object Jual Beli</a><a href="Backlog-EPPATPN-3-Minuta-01-Prototype.html">EPPATPN-3 · Minuta — 01</a></span>
   <span class="sep">•</span>
   <b>Prototipe UI</b><span class="sep">•</span><span>Tambah Objek (AJB) — E-PPAT</span>
-  <span class="sep">•</span><span class="hint">Isian sama untuk semua <b>Jenis Hak</b> dan untuk <b>Manual</b> maupun <b>Elektronik</b>.</span>
+  <span class="sep">•</span><span class="hint"><b>v3</b> — alur: Status Sertipikat → Format → Jenis Hak → Status Objek.</span>
   <button class="reopen" id="reopen" hidden>Buka kembali modal</button>
 </div>
 
@@ -209,56 +225,83 @@
 
     <div class="modal-body">
       <div class="tabbar" role="tablist">
-        <button role="tab" aria-selected="true" data-tab="umum">Data Umum</button>
-        <button role="tab" aria-selected="false" data-tab="khusus">Data Khusus AJB</button>
+        <button role="tab" aria-selected="true" data-tab="objek">Data Objek</button>
         <button role="tab" aria-selected="false" data-tab="harga">Data Harga</button>
       </div>
 
-      <!-- ================= DATA UMUM ================= -->
-      <section class="panel" id="panel-umum">
-        <div class="grid">
-          <div class="field">
-            <label for="jenisHak">Jenis Hak</label>
-            <select id="jenisHak">
-              <option value="SHM">Sertipikat Hak Milik (SHM)</option>
-              <option value="SHGB">Sertipikat Hak Guna Bangunan (SHGB)</option>
-              <option value="SHGU">Sertipikat Hak Guna Usaha (SHGU)</option>
-              <option value="HP">Sertipikat Hak Pakai (HP)</option>
-              <option value="GIRIK">Girik / Letter C</option>
-              <option value="LAINNYA">Lainnya</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- BLOK BARU: input sertipikat -->
-        <div class="cert" style="margin-top:16px">
+      <!-- ================= DATA OBJEK ================= -->
+      <section class="panel" id="panel-objek">
+        <!-- BLOK: input sertipikat -->
+        <div class="cert">
           <div class="cert-head">
             <div>
               <div class="cert-title" id="certTitle">Input Sertipikat</div>
             </div>
             <div class="seg" id="segMode">
-              <button type="button" data-mode="manual" aria-pressed="true">Manual</button>
+              <button type="button" data-mode="analog" aria-pressed="true">Analog</button>
               <button type="button" data-mode="elektronik" aria-pressed="false">Elektronik</button>
             </div>
           </div>
-          <div class="seg-hint" id="segHint">*klik untuk mengganti input sertipikat</div>
+          <div class="seg-hint" id="segHint">*klik untuk mengganti format sertipikat</div>
+
+          <div class="grid" style="margin-top:14px">
+            <div class="field">
+              <label for="statusSert">Status Sertipikat</label>
+              <select id="statusSert">
+                <option value="terdaftar">Sudah Terdaftar</option>
+                <option value="belum">Belum Terdaftar (bekas Hak Adat)</option>
+              </select>
+            </div>
+            <div class="field" id="wrapJenis">
+              <label for="jenisHak">Jenis Hak</label>
+              <select id="jenisHak">
+                <option value="SHM">Hak Milik</option>
+                <option value="HGB">Hak Guna Bangunan (HGB)</option>
+                <option value="HGU">Hak Guna Usaha (HGU)</option>
+                <option value="HP">Hak Pakai</option>
+                <option value="SRS">Hak Milik Atas Satuan Rumah Susun</option>
+              </select>
+            </div>
+            <div class="field" id="wrapObjek">
+              <label for="statusObjek">Status Objek</label>
+              <select id="statusObjek">
+                <option value="utuh">Utuh</option>
+                <option value="sebagian">Sebagian</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="scen"><span class="tag" id="scenTag">Pasal 14</span><span id="scenDesc"></span></div>
+
           <div class="cert-fields" id="certFields"></div>
         </div>
 
-      </section>
-
-      <!-- ================= DATA KHUSUS AJB (sama seperti aplikasi) ================= -->
-      <section class="panel" id="panel-khusus" hidden>
+        <!-- GABUNGAN: Data Khusus AJB -->
+        <div class="sec-title">Data Khusus AJB</div>
         <div class="grid">
           <div class="field col-2"><label>Nama</label><input type="text" placeholder="Nama pemilik terdaftar"></div>
           <div class="field"><label>Provinsi</label><input type="text" placeholder="Provinsi"></div>
           <div class="field"><label>Kota / Kabupaten</label><input type="text" placeholder="Kota / Kabupaten"></div>
           <div class="field"><label>Kecamatan</label><input type="text" placeholder="Kecamatan"></div>
-          <div class="field"><label>Kelurahan</label><input type="text" placeholder="Kelurahan"></div>
+          <div class="field"><label>Desa / Kelurahan</label><input type="text" placeholder="Desa / Kelurahan"></div>
           <div class="field col-2"><label>Jalan</label><input type="text" placeholder="Nama jalan, nomor, RT/RW"></div>
           <div class="field"><label>NPP (Nilai Perbandingan Proporsional)</label><input type="text" placeholder="0"></div>
-          <div class="field"><label>Luas (meter persegi)</label><input type="text" placeholder="0"></div>
           <div class="field"><label>Harga Jual Beli</label><input type="text" value="0"><div class="help">Belum diisi</div></div>
+        </div>
+
+        <!-- Cakupan jual beli (angka 19 akta) -->
+        <div class="sec-title">Cakupan Jual Beli</div>
+        <div class="grid">
+          <div class="field col-2">
+            <span class="lbl"><span>Yang ikut dijual di atas tanah</span></span>
+            <div class="checks">
+              <label class="check"><input type="checkbox" id="cbBangunan"> Termasuk bangunan</label>
+              <label class="check"><input type="checkbox" id="cbTanaman"> Termasuk tanaman</label>
+            </div>
+          </div>
+          <div class="field col-2"><label>Keterangan Bangunan dan/atau Tanaman</label><textarea placeholder="Uraian bangunan dan/atau tanaman yang ikut dijual"></textarea></div>
+          <div class="field"><label>Nomor IMB (Izin Mendirikan Bangunan)</label><input type="text" placeholder="Nomor izin mendirikan bangunan"></div>
+          <div class="field"><label>Tanggal IMB (Izin Mendirikan Bangunan)</label><input type="date"></div>
         </div>
       </section>
 
@@ -286,56 +329,138 @@
 <div class="toast" id="toast"></div>
 
 <script>
-/* ---------- isian sertipikat: kolomnya sama untuk semua Jenis Hak ---------- */
-const ISIAN_MANUAL = [
-  {label:'NIB (Nomor Identifikasi Bidang)', ph:'Nomor Identifikasi Bidang', req:true},
-  {label:'Nomor Kode Sertipikat', ph:'Nomor Kode Sertipikat', req:true},
-  {label:'NOP SPPT PBB (Nomor Objek Pajak — Surat Pemberitahuan Pajak Terutang Pajak Bumi dan Bangunan)', span2:true, ph:'00.00.000.000.000-0000.0', req:true}
-];
-const ISIAN_ELEKTRONIK = [
-  {label:'NIB Elektronik (Nomor Identifikasi Bidang Elektronik)', ph:'Nomor Identifikasi Bidang Elektronik', req:true},
-  {label:'Nomor Kode Sertipikat', ph:'Nomor Kode Sertipikat', req:true},
-  {label:'NOP SPPT PBB (Nomor Objek Pajak — Surat Pemberitahuan Pajak Terutang Pajak Bumi dan Bangunan)', span2:true, ph:'00.00.000.000.000-0000.0', req:true}
-];
-const NOTE_MANUAL = '* Catatan: Nomor Hak wajib diisi. NIB (Nomor Identifikasi Bidang), SU (Surat Ukur), atau Nomor Blanko Sertipikat diisi minimal salah satunya.';
-const NOTE_ELEKTRONIK = '* Catatan: NIB Elektronik (Nomor Identifikasi Bidang Elektronik) dan Kode Sertipikat wajib diisi.';
-
-let mode = 'manual';
+/* ===========================================================
+   v3 — alur isian Data Objek
+   Status Sertipikat → Format Sertipikat → Jenis Hak → Status Objek
+   =========================================================== */
 const el = id => document.getElementById(id);
+const state = { sertipikat:'terdaftar', format:'analog', jenis:'SHM', objek:'utuh' };
+
+const NOP = (awalan='') => ({
+  label:`${awalan}NOP SPPT PBB (Nomor Objek Pajak — Surat Pemberitahuan Pajak Terutang Pajak Bumi dan Bangunan)`,
+  span2:true, ph:'00.00.000.000.000-0000.0', req:true
+});
+const KODE = (awalan='') => ({label:`Nomor Kode Sertipikat${awalan}`, ph:'Nomor Kode Sertipikat', req:true});
+
+const FIELDS = {
+  /* ---- belum terdaftar (Pasal 16) ---- */
+  belum: () => [
+    {label:'Nomor Persil', ph:'Nomor Persil', req:true},
+    {label:'Blok', ph:'Blok', req:true},
+    {label:'Kohir', ph:'Kohir', req:true},
+    {label:'Luas Tanah (meter persegi)', ph:'0', req:true},
+    {label:'Batas-batas Tanah', span2:true, textarea:true, ph:'Utara, Timur, Selatan, Barat', req:true},
+    {label:'Tanggal Peta Bidang', type:'date', req:true},
+    {label:'Nomor Peta Bidang', ph:'Nomor Peta Bidang', req:true},
+    {label:'NIB (Nomor Identifikasi Bidang)', ph:'Nomor Identifikasi Bidang', req:true},
+    NOP(),
+    {label:'Alat Bukti Kepemilikan', span2:true, req:true,
+     select:['Girik','Petuk Pajak Bumi','Leter C','Verponding Indonesia','Segel']}
+  ],
+  /* ---- satuan rumah susun (Pasal 17) ---- */
+  srs: {
+    analog: () => [
+      {label:'Nomor Hak Milik Atas Satuan Rumah Susun', span2:true, ph:'Nomor Hak Milik Atas Satuan Rumah Susun', req:true}
+    ],
+    elektronik: () => [
+      {label:'NIB Elektronik (Nomor Identifikasi Bidang Elektronik) — Satuan Rumah Susun', ph:'Nomor Identifikasi Bidang Elektronik', req:true},
+      KODE()
+    ]
+  },
+  /* ---- sudah terdaftar ---- */
+  terdaftar: {
+    analog: {
+      utuh: () => [
+        {label:'Nomor Hak', ph:'Nomor Hak', req:true},
+        {label:'Luas Tanah (meter persegi)', ph:'0', req:true},
+        {label:'Tanggal Surat Ukur / Gambar Situasi', type:'date', req:true},
+        {label:'Nomor Surat Ukur / Gambar Situasi', ph:'Nomor Surat Ukur / Gambar Situasi', req:true},
+        {label:'NIB (Nomor Identifikasi Bidang)', ph:'Nomor Identifikasi Bidang', req:true},
+        NOP()
+      ],
+      sebagian: () => [
+        {label:'Nomor Hak Asal', ph:'Nomor Hak Asal', req:true},
+        {label:'NIB (Nomor Identifikasi Bidang) Tanah Asal', ph:'NIB tanah asal', req:true},
+        NOP('Tanah Asal — '),
+        {label:'Luas Bagian yang Dijual (meter persegi)', ph:'0', req:true},
+        {label:'Batas-batas Bidang Tanah yang Dijual', span2:true, textarea:true, ph:'Utara, Timur, Selatan, Barat', req:true},
+        {label:'Tanggal Surat Ukur / Peta Bidang Baru', type:'date', req:true},
+        {label:'Nomor Surat Ukur / Peta Bidang Baru', ph:'Nomor Surat Ukur / Peta Bidang Baru', req:true},
+        {label:'NIB (Nomor Identifikasi Bidang) Bidang Baru', ph:'NIB bidang baru', req:true}
+      ]
+    },
+    elektronik: {
+      utuh: () => [
+        {label:'NIB Elektronik (Nomor Identifikasi Bidang Elektronik)', ph:'Nomor Identifikasi Bidang Elektronik', req:true},
+        KODE(),
+        {label:'Luas Tanah (meter persegi)', ph:'0', req:true},
+        NOP()
+      ],
+      sebagian: () => [
+        {label:'NIB Elektronik (Nomor Identifikasi Bidang Elektronik) Tanah Asal', ph:'NIB Elektronik tanah asal', req:true},
+        KODE(' Tanah Asal'),
+        NOP('Tanah Asal — '),
+        {label:'Luas Bagian yang Dijual (meter persegi)', ph:'0', req:true},
+        {label:'Batas-batas Bidang Tanah yang Dijual', span2:true, textarea:true, ph:'Utara, Timur, Selatan, Barat', req:true},
+        {label:'NIB Elektronik (Nomor Identifikasi Bidang Elektronik) Bidang Baru', span2:true, ph:'Diisi bila bidang sudah dipecah di sistem', req:true,
+         help:'Diisi bila bidang baru sudah dipecah di sistem.'}
+      ]
+    }
+  }
+};
+
+const TAG = {
+  belum:               ['Pasal 16','Hak Milik atas bekas tanah adat yang belum bersertipikat.'],
+  srs:                 ['Pasal 17','Objek berupa satuan rumah susun — selalu satu unit utuh.'],
+  'terdaftar-utuh':    ['Pasal 14','Objek sudah bersertipikat dan dijual seluruhnya.'],
+  'terdaftar-sebagian':['Pasal 15','Objek sebagian dari hak yang sudah bersertipikat.']
+};
 
 function fieldHTML(f){
-  if(f.group){
-    return `<div class="field col-2">
-      <span class="lbl"><span>${f.group}</span></span>
-      <div class="pair">${f.pair.map(p=>`<input type="text" placeholder="${p.ph||''}">`).join('')}</div>
-    </div>`;
-  }
   const req = f.req ? '<span class="req">*</span>' : '';
   const help = f.help ? `<div class="help">${f.help}</div>` : '';
-  const ctl = f.textarea
-    ? `<textarea placeholder="${f.ph||''}"></textarea>`
-    : `<input type="${f.type||'text'}" placeholder="${f.ph||''}">`;
+  const ctl = f.select
+    ? `<select>${f.select.map(o=>`<option>${o}</option>`).join('')}</select>`
+    : f.textarea
+      ? `<textarea placeholder="${f.ph||''}"></textarea>`
+      : `<input type="${f.type||'text'}" placeholder="${f.ph||''}">`;
   return `<div class="field ${f.span2?'col-2':''}"><span class="lbl"><span>${f.label}${req}</span></span>${ctl}${help}</div>`;
 }
 
 function render(){
-  const seg = el('segMode');
-  [...seg.children].forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === mode));
-  const fields = mode === 'manual' ? ISIAN_MANUAL : ISIAN_ELEKTRONIK;
-  el('certFields').innerHTML = `<div class="grid">${fields.map(fieldHTML).join('')}</div>`;
+  const belum = state.sertipikat === 'belum';
+  const srs   = state.jenis === 'SRS';
+
+  /* Format sertipikat & Jenis Hak tidak berlaku bila belum terdaftar */
+  el('segMode').hidden = belum;
+  el('segHint').hidden = belum;
+  el('wrapJenis').hidden = belum;
+  el('wrapObjek').hidden = belum || srs;
+
+  [...el('segMode').children].forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === state.format));
+
+  let daftar, kunci;
+  if(belum){ daftar = FIELDS.belum(); kunci = 'belum'; }
+  else if(srs){ daftar = FIELDS.srs[state.format](); kunci = 'srs'; }
+  else { daftar = FIELDS.terdaftar[state.format][state.objek](); kunci = `terdaftar-${state.objek}`; }
+
+  el('scenTag').textContent  = TAG[kunci][0];
+  el('scenDesc').textContent = TAG[kunci][1];
+  el('certFields').innerHTML = `<div class="grid">${daftar.map(fieldHTML).join('')}</div>`;
 }
 
-el('jenisHak').addEventListener('change', render);
-
+el('statusSert').addEventListener('change', e => { state.sertipikat = e.target.value; render(); });
+el('jenisHak').addEventListener('change',  e => { state.jenis = e.target.value; render(); });
+el('statusObjek').addEventListener('change', e => { state.objek = e.target.value; render(); });
 el('segMode').addEventListener('click', e => {
   const b = e.target.closest('button'); if(!b) return;
-  mode = b.dataset.mode; render();
+  state.format = b.dataset.mode; render();
 });
 
 document.querySelectorAll('.tabbar button').forEach(b => {
   b.addEventListener('click', () => {
     document.querySelectorAll('.tabbar button').forEach(x => x.setAttribute('aria-selected', x === b));
-    ['umum','khusus','harga'].forEach(t => el('panel-' + t).hidden = (t !== b.dataset.tab));
+    ['objek','harga'].forEach(t => el('panel-' + t).hidden = (t !== b.dataset.tab));
   });
 });
 
