@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Prototipe Template Akta Kantor — Editor Bagian</title>
+<title>Prototipe Drafting Minuta — Naskah Akta</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -571,6 +571,26 @@
   .lamp-kartu .lencana{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:999px;background:#EEF3F1;border:1px solid #CFE0D9;color:var(--green-dark);font-size:11px;font-weight:600}
   .lamp-kartu .sub{display:block;font-size:11.5px;color:#94A3B8;margin-top:6px}
   .lamp-kartu .aksi-kanan{display:flex;gap:8px;flex:none;padding-top:2px}
+  .tpl-alatkanan{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .tpl-impor.utama{background:var(--green);border-color:var(--green);color:#fff}
+  .tpl-impor.utama:hover{background:var(--green-dark);border-color:var(--green-dark)}
+  .tpl-ident .chip{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:4px;background:#EEF3F1;border:1px solid var(--line);color:var(--green-dark);font-size:11.5px;font-weight:600;letter-spacing:.3px}
+  .tpl-ident .chip.lembut{background:#fff;color:var(--muted);font-weight:500}
+  .tpl-infobar{display:flex;align-items:center;gap:9px;background:#EEF5F2;border:1px solid #CFE0D9;border-radius:8px;padding:10px 14px;font-size:13px;color:var(--green-dark);margin:0 0 16px}
+  .tpl-item .kondisi{display:block;font-size:11px;color:#94A3B8;margin-top:2px}
+  .tpl-renvoi-note{background:#F8FAF9;border:1px solid var(--line);border-radius:8px;padding:11px 13px;font-size:13px;color:var(--muted);line-height:1.7;margin-bottom:12px}
+  .sis-info{display:flex;gap:9px;border-left:3px solid var(--green);background:#EEF5F2;border-radius:0 6px 6px 0;padding:10px 13px;font-size:13px;line-height:1.85;color:var(--green-dark);margin:12px 0 0}
+  .sis-info b{font-weight:600}
+  .sis-info .nilai{display:inline-flex;align-items:center;height:22px;padding:0 10px;border-radius:999px;background:var(--green);color:#fff;font-size:12px;font-weight:500;margin:0 2px}
+  .sis-tip{position:relative;display:inline-flex;align-items:center;vertical-align:-3px;margin-left:4px;color:var(--green);cursor:help;outline:0}
+  .sis-tip .balon{display:none;position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%);z-index:40;width:280px;
+    background:#0F172A;color:#E2E8F0;border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.7;box-shadow:0 10px 26px rgba(15,23,42,.28);text-align:left;font-weight:400}
+  .sis-tip:hover .balon,.sis-tip:focus .balon{display:block}
+  .sis-tip .balon::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:#0F172A}
+  .sis-tip .balon b{display:block;color:#fff;font-size:11px;letter-spacing:.5px;text-transform:uppercase;margin-bottom:5px}
+  .sis-tip .balon ol{margin:0;padding-left:18px}
+  .sis-tip .balon .kosong{color:#94A3B8}
+  .sis-tip .balon .kaki{display:block;margin-top:7px;padding-top:7px;border-top:1px solid rgba(255,255,255,.15);color:#94A3B8;font-size:11.5px}
   .tpl-konfirm .kotak.kiri{text-align:left}
   .tpl-konfirm .kotak.kiri h2{margin-bottom:6px}
   .tpl-konfirm .isian{display:block;margin:0 0 18px}
@@ -734,10 +754,11 @@
     <a href="Backlog-EPPATPN-17-Profil-Kantor-Prototype.html">EPPATPN-17 &middot; Profil Kantor</a>
     <a href="Backlog-EPPATPN-19-Pemilihan-Para-Pihak-Prototype.html">EPPATPN-19 &middot; Pemilihan Para Pihak</a>
     <a href="Backlog-EPPATPN-20-Registrasi-CA-Melalui-AsistenPPAT-Prototype.html">EPPATPN-20 &middot; Registrasi CA</a>
-    <a href="Backlog-EPPATPN-21-Editor-Template-Prototype.html" aria-current="page">EPPATPN-21 &middot; Editor Template</a><a href="Backlog-EPPATPN-Drafting-Minuta-Prototype.html">Drafting Minuta</a>
+    <a href="Backlog-EPPATPN-21-Editor-Template-Prototype.html">EPPATPN-21 &middot; Editor Template</a>
+    <a href="Backlog-EPPATPN-Drafting-Minuta-Prototype.html" aria-current="page">Drafting Minuta</a>
   </span>
   <span class="sep">&bull;</span>
-  <b>Prototipe UI</b><span class="sep">&bull;</span><span>Template Akta Kantor &mdash; Editor Bagian</span>
+  <b>Prototipe UI</b><span class="sep">&bull;</span><span>Minuta Akta &mdash; Drafting naskah</span>
 </div>
 
 <div class="app">
@@ -756,7 +777,7 @@
       <button class="grp" aria-expanded="false"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>System<svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
       <div class="items"><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dasbor</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Daftar User</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3l1.5 1.5-1.5 1.5 1.5 1.5-2.5 2.5-1.5-1.5-2 2"/></svg>Peran &amp; Izin</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M4 12h2M18 12h2M12 4v2M12 18v2"/></svg>Pengaturan</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h12"/></svg>Logs</a></div>
       <button class="grp" aria-expanded="false"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>CMS<svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
-      <button class="grp" aria-expanded="true"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/></svg>E-PPAT Module<svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button><div class="items"><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</a><a href="Backlog-EPPATPN-17-Profil-Kantor-Prototype.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M10 21v-6h4v6"/></svg>Profil Kantor</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Verifikasi</a><a href="Backlog-EPPATPN-3-Minuta-01-Prototype.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Minuta</a><a href="#" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Template Akta</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/></svg>E-Akta Wizard</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h4"/></svg>Akta Salinan</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Aktivasi E-Materai</a></div>
+      <button class="grp" aria-expanded="true"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/></svg>E-PPAT Module<svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button><div class="items"><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</a><a href="Backlog-EPPATPN-17-Profil-Kantor-Prototype.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M10 21v-6h4v6"/></svg>Profil Kantor</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Verifikasi</a><a href="#" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Minuta</a><a href="Backlog-EPPATPN-21-Editor-Template-Prototype.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Template Akta</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/></svg>E-Akta Wizard</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h4"/></svg>Akta Salinan</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Aktivasi E-Materai</a></div>
       <button class="grp" aria-expanded="false"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h12M3 18h6"/></svg>Layanan AJB<svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
       <button class="grp" aria-expanded="false"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h12M3 18h6"/></svg>Layanan APHT<svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
     </nav>
@@ -775,9 +796,9 @@
 
     <div class="content">
       <div class="page">
-        <div class="crumb">E-PPAT MODULE &nbsp;&rsaquo;&nbsp; TEMPLATE AKTA</div>
-        <h1>Template Akta Kantor</h1>
-        <p class="sub">Template minuta milik kantor per layanan</p>
+        <div class="crumb">E-PPAT MODULE &nbsp;&rsaquo;&nbsp; MINUTA</div>
+        <h1>Minuta Akta</h1>
+        <p class="sub">Drafting &amp; naskah minuta akta</p>
 
         <div class="tpl-head">
           <button class="tpl-back">
@@ -785,19 +806,38 @@
             Kembali
           </button>
           <div class="tpl-ident">
-            <h2>Akta Jual Beli <span class="kode">AJB</span></h2>
-            <p>Kelola pasal, catatan, dan pengaturan halaman template ini.</p>
+            <h2>Minuta Akta <span class="kode">ORD-260917-001</span></h2>
+            <p><span class="chip">AJB</span> <span class="chip lembut">Akta Jual Beli</span></p>
           </div>
-          <button class="tpl-impor" id="btnPreview" style="margin-left:auto">
-            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
-            Preview Akta
-          </button>
+          <div class="tpl-alatkanan">
+            <button class="tpl-impor" id="btnPreview">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+              Preview Akta
+            </button>
+            <button class="tpl-impor" id="btnEjaan">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>
+              Cek Ejaan
+            </button>
+            <button class="tpl-impor" id="btnBeritahu">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+              Beritahu PPAT
+            </button>
+            <button class="tpl-impor utama" id="btnFinalisasi">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8 12 11 15 16 9"/></svg>
+              Finalisasi Akta
+            </button>
           </div>
+        </div>
+
+        <div class="tpl-infobar">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Anda dapat mengedit pasal dan memfinalisasi akta.
+        </div>
 
         <div class="tpl-grid">
           <section class="tpl-kiri">
             <div class="hd hd-tab">
-              <button class="tabkiri on" data-kiri="bagian">Bagian <span class="n" id="jmlBagian">(8)</span></button>
+              <button class="tabkiri on" data-kiri="bagian">Pasal &amp; Catatan <span class="n" id="jmlBagian">(8)</span></button>
               <button class="tabkiri" data-kiri="lampiran">Lampiran <span class="n" id="jmlLampiran">(2)</span></button>
             </div>
             <div class="tpl-search" id="kotakCari"><input type="text" id="cariBagian" placeholder="Cari judul..."></div>
@@ -806,23 +846,19 @@
             <div class="tpl-tambah" id="tombolBagian">
               <button id="tambahPasal" class="utama">+&nbsp; Tambah Pasal</button>
               <button id="tambahCatatan">+&nbsp; Tambah Catatan</button>
-              <button class="tpl-impor" id="btnImpor">
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 9 12 4 17 9"/><line x1="12" y1="4" x2="12" y2="16"/></svg>
-                Impor dari Word
-              </button>
-              <input type="file" id="fileWord" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
-            </div>
+              </div>
             <div class="tpl-tambah" id="tombolLampiran" hidden>
-              <button id="tambahLampiran" class="utama">+&nbsp; Lampiran bawaan</button>
+              <button id="tambahLampiran" class="utama">+&nbsp; Lampiran</button>
+              <input type="file" id="fileLampiran" hidden>
             </div>
           </section>
 
           <section class="tpl-kanan">
             <div class="tpl-tabs" id="tabKanan">
-              <button data-tab="bagian" aria-selected="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Bagian</button>
+              <button data-tab="bagian" aria-selected="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Pasal</button>
               <button data-tab="variabel" aria-selected="false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18"/></svg>Variabel (80)</button>
-              <button data-tab="halaman" aria-selected="false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0 1.7 1.7 0 0 0-2.9-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 15a2 2 0 1 1 0-4 1.7 1.7 0 0 0 1.2-2.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 10 4.6a2 2 0 1 1 4 0 1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.7 1.7 0 0 0 21 11a2 2 0 1 1 0 4z"/></svg>Pengaturan Halaman</button>
-              <button data-tab="pratinjau" aria-selected="false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>Pratinjau</button>
+              <button data-tab="halaman" aria-selected="false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0 1.7 1.7 0 0 0-2.9-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 15a2 2 0 1 1 0-4 1.7 1.7 0 0 0 1.2-2.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 10 4.6a2 2 0 1 1 4 0 1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.7 1.7 0 0 0 21 11a2 2 0 1 1 0 4z"/></svg>Pengaturan Dokumen</button>
+              <button data-tab="renvoi" aria-selected="false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>Renvoi</button>
             </div>
             <div id="isiKanan"></div>
           </section>
@@ -1069,7 +1105,7 @@ function potDenganKode(sec, kode){ return pot(sec).filter(p => p.kode === kode)[
 
 /* ---- lampiran template ---- */
 const LAMPIRAN = [
- {id:'lamp1', judul:'Daftar Objek yang Dialihkan', asal:'bawaan', teks:
+ {id:'lamp1', jenis:'naskah', judul:'Daftar Objek yang Dialihkan', asal:'bawaan', teks:
 `DAFTAR OBJEK YANG DIALIHKAN
 
 Lampiran Akta {{akta_jenis}} Nomor {{deed_number}} tertanggal {{var_tanggal}}.
@@ -1081,7 +1117,7 @@ Lampiran Akta {{akta_jenis}} Nomor {{deed_number}} tertanggal {{var_tanggal}}.
 PIHAK PERTAMA                    PIHAK KEDUA
 
 ({{pihak_pertama.nama}})            ({{pihak_kedua.nama}})`},
- {id:'lamp2', judul:'Pernyataan Kesesuaian Data Objek', asal:'bawaan', teks:
+ {id:'lamp2', jenis:'naskah', judul:'Pernyataan Kesesuaian Data Objek', asal:'bawaan', teks:
 `PERNYATAAN KESESUAIAN DATA OBJEK
 
 Yang bertanda tangan di bawah ini {{pihak.sapaan}} {{pihak.nama}}, pemegang Kartu Tanda Penduduk Nomor {{orang.nik}}, menyatakan bahwa data objek yang diuraikan dalam Akta {{akta_jenis}} Nomor {{deed_number}} \u2014 {{jenis_hak}} seluas {{objek_luas}} M2 yang terletak di {{objek_jalan}}, {{objek_label_kelurahan}} {{objek_kelurahan}} \u2014 adalah benar dan sesuai dengan dokumen aslinya.
@@ -1090,7 +1126,9 @@ Apabila di kemudian hari terdapat ketidaksesuaian, segala akibat hukumnya menjad
 
 {{ppat_wilayah}}, {{var_tanggal}}
 
-({{pihak.nama}})`}
+({{pihak.nama}})`},
+ {id:'lamp3', jenis:'berkas', judul:'Kartu Keluarga.pdf', asal:'unggahan',
+  tanggal:'23 Sep 2026', tipe:'PDF', ukuran:'412 KB', teks:''}
 ];
 LAMPIRAN.forEach(function(l){ l.asli = l.teks; });
 
@@ -1123,7 +1161,8 @@ function gambarDaftar(){
     return '<div class="tpl-item" data-i="'+x.i+'" aria-current="'+(bagianAktif === x.i)+'">'
       + '<span class="tpl-drag">'+IKON_GESER+'</span>'
       + ikon
-      + '<button class="nm" data-pilih="'+x.i+'">'+esc(b.judul)+'</button>'
+      + '<button class="nm" data-pilih="'+x.i+'">'+esc(b.judul)
+        + (b.jenis === 'otomatis' ? '<span class="kondisi">Kondisi \u00b7 disusun sistem</span>' : '') + '</button>'
       + '<button class="aksi" data-ubah="'+x.i+'" title="Ubah judul">'+IKON_PENA+'</button>'
       + (b.jenis === 'otomatis' ? ''   /* bagian otomatis terkunci: tidak bisa dihapus */
           : '<button class="aksi hapus" data-hapus="'+x.i+'" title="Hapus bagian">'+IKON_SAMPAH+'</button>')
@@ -1222,17 +1261,21 @@ function konfirmasi(opsi, aksi){
 /* ============ Daftar lampiran ============ */
 function gambarLampiran(){
   const kotak = el('daftarLampiran');
+  const IKON_BERKAS = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 13h6M9 17h4"/></svg>';
   kotak.innerHTML =
       '<div class="lamp-info">'
       + '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" style="flex:none;margin-top:2px"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg>'
       + '<span><b>Satu baris di daftar ini adalah satu lampiran utuh</b> \u2014 satu berkas atau satu naskah lampiran yang berdiri sendiri, bukan potongan atau bagian dari lampiran lain. Urutannya di daftar menentukan urutan lampiran pada akta.</span></div>'
-    + '<p class="lamp-ket">Lampiran bawaan template. Isinya ditulis sekarang memakai variabel, lalu terisi data sebenarnya ketika akta didraf. Tidak ada unggah berkas di layar ini.</p>'
+    + '<p class="lamp-ket">Berkas di sini tetap terpisah dan tidak digabung ke naskah. Untuk lampiran yang menyatu, pakai tombol di tab Pasal &amp; Catatan.</p>'
     + LAMPIRAN.map(function(l, i){
+        const berkas = l.jenis === 'berkas';
         return '<div class="lamp-kartu" data-lamp="'+i+'" aria-current="'+(lampiranAktif === i)+'">'
           + '<span class="tpl-drag">'+IKON_GESER+'</span>'
           + '<span class="isi"><span class="jd">'+esc(l.judul)+'</span>'
-            + '<span class="lencana">Lampiran '+esc(l.asal)+'</span>'
-            + '<span class="sub">Disiapkan saat membuat template</span></span>'
+            + (berkas ? '' : '<span class="lencana">Bawaan template</span>')
+            + '<span class="sub">'+(berkas
+                ? 'Diunggah '+esc(l.tanggal)+' \u00b7 '+esc(l.tipe)+' \u00b7 '+esc(l.ukuran)
+                : 'Disiapkan saat membuat template')+'</span></span>'
           + '<span class="aksi-kanan">'
             + '<button class="aksi" data-unduh="'+i+'" title="Unduh lampiran">'+IKON_UNDUH+'</button>'
             + '<button class="aksi hapus" data-hapuslamp="'+i+'" title="Hapus lampiran">'+IKON_SAMPAH+'</button>'
@@ -1255,13 +1298,13 @@ function gambarLampiran(){
       const i = parseInt(b.dataset.hapuslamp, 10);
       konfirmasi({
         judul: 'Hapus lampiran ini?',
-        pesan: '\u201c' + LAMPIRAN[i].judul + '\u201d akan dikeluarkan dari template ini beserta naskahnya. Lampiran yang sudah dihapus tidak bisa dikembalikan.',
+        pesan: '\u201c' + LAMPIRAN[i].judul + '\u201d akan dikeluarkan dari minuta ini. Lampiran yang sudah dihapus tidak bisa dikembalikan.',
         tombol: 'Hapus lampiran', bahaya: true
       }, function(){
         LAMPIRAN.splice(i, 1);
         if(lampiranAktif !== null && lampiranAktif >= LAMPIRAN.length) lampiranAktif = LAMPIRAN.length ? LAMPIRAN.length - 1 : null;
         gambarLampiran(); gambarKanan();
-        toast('Lampiran dihapus dari template.');
+        toast('Lampiran dihapus dari minuta.');
       });
     };
   });
@@ -1435,21 +1478,11 @@ function segarkanTab(){
 }
 
 function barisIsian(b, i){
-  const tipe = b.jenis === 'pasal' ? 'Pasal' : 'Catatan';
-  const nomor = b.jenis === 'pasal' ? String(nomorPasal(i)) : '';
-  /* bagian otomatis: tipenya terkunci, jadi pilihan Tipe tidak ditampilkan */
-  const kolomTipe = b.jenis === 'otomatis' ? ''
-    : '<div class="fld"><label>Tipe</label><select id="fTipe">'
-      + ['Catatan','Pasal'].map(t => '<option'+(t===tipe?' selected':'')+'>'+t+'</option>').join('')
-      + '</select></div>';
-  return '<div class="tpl-f"'+(b.jenis === 'otomatis' ? ' style="grid-template-columns:120px minmax(0,1fr)"' : '')+'>'
-      + kolomTipe
-      + '<div class="fld"><label>Nomor</label><input type="text" id="fNomor" value="'+esc(nomor)+'" placeholder="mis. 1"><span class="tpl-help">Opsional</span></div>'
-      + '<div class="fld"><label>Judul <span class="wajib">*</span></label><input type="text" id="fJudul" value="'+esc(b.judul)+'"></div>'
+  return '<div class="tpl-f" style="grid-template-columns:minmax(0,1fr)">'
+      + '<div class="fld"><label>Judul</label><input type="text" id="fJudul" value="'+esc(b.judul)+'"></div>'
     + '</div>'
     + '<div class="tpl-checks">'
-      + '<label><input type="checkbox" checked> Tampilkan judul di dokumen</label>'
-      + '<label><input type="checkbox" checked> Wajib</label>'
+      + '<label><input type="checkbox" checked> Tampilkan judul di dokumen <span class="tpl-help">(Preview, PDF)</span></label>'
     + '</div>';
 }
 
@@ -1465,7 +1498,7 @@ function viewBagian(){
     : ('Catatan: '+b.judul);
   let isi;
   if(b.jenis === 'otomatis'){
-    isi = '<p class="tpl-ketsec">'+KET_OTO+'</p>' + daftarPotongan(b);
+    isi = blokSistem(b);
   } else {
     isi = '<p class="tpl-ketsec">'+KET_BEBAS+'</p>'
       + (b.nota ? '<div class="tpl-nota">'+tandai(b.nota)+'</div>' : '')
@@ -1474,6 +1507,38 @@ function viewBagian(){
   }
   return '<div class="tpl-bar">'+IKON_PENSIL+esc(judulBar)+'</div>'
     + '<div class="tpl-pad">' + barisIsian(b, bagianAktif) + isi + '</div>';
+}
+
+
+/* ---- bagian yang disusun sistem: satu naskah, dirangkai dari kondisi order ---- */
+function kondisiOrder(kode){
+  const k = kasusSekarang(kode);
+  return k ? k.nama : '\u2014';
+}
+function naskahSistem(b){
+  if(typeof b.teks === 'string' && b.teks !== '') return b.teks;        /* sudah pernah disunting */
+  return naskahKasus(b, false).map(r => r.teks).join('\n');
+}
+function blokSistem(b){
+  const k = kasusSekarang(b.kode);
+  const potList = k ? k.urut.map(function(u){
+      const p = potDenganKode(b, u[0]);
+      return p ? (p.j + (u[1] ? ' \u2014 ' + u[1] : '')) : '';
+    }).filter(Boolean) : [];
+  const balon = '<span class="sis-tip" tabindex="0">'
+      + '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="7.8" r="1" fill="currentColor" stroke="none"/></svg>'
+      + '<span class="balon"><b>Potongan yang dirangkai</b>'
+        + (potList.length ? '<ol>' + potList.map(function(t){ return '<li>'+esc(t)+'</li>'; }).join('') + '</ol>'
+                          : '<span class="kosong">Belum ada potongan pada kondisi ini.</span>')
+        + '<span class="kaki">Kondisi dipilih saat order dibuat \u2014 tidak diubah dari layar ini.</span>'
+      + '</span></span>';
+  return '<div class="sis-info">'
+      + '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" style="flex:none;margin-top:2px"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>'
+      + '<span>Bagian ini <b>disusun sistem</b> dari template akta, mengikuti kondisi order '
+      + '<span class="nilai">'+esc(kondisiOrder(b.kode))+'</span>'+balon+'. '
+      + 'Isinya satu naskah utuh \u2014 potongan redaksi yang dipakai sudah dirangkai, dan masih bisa disunting di sini sebelum finalisasi.</span></div>'
+    + '<div class="tpl-cap">Isi</div>'
+    + kotakNaskah('edSistem', naskahSistem(b));
 }
 
 function kartuPot(sec, p, idx){
@@ -1522,56 +1587,10 @@ function daftarPotongan(sec){
 function pasangBagian(){
   const b = SECTIONS[bagianAktif];
   if(!b) return;
-  const fj = el('fJudul'), fn = el('fNomor'), ft = el('fTipe');
+  const fj = el('fJudul');
   if(fj) fj.oninput = function(){ b.judul = fj.value; gambarDaftar(); };
-  if(ft) ft.onchange = function(){
-    b.jenis = ft.value === 'Pasal' ? 'pasal' : 'catatan';
-    gambarDaftar(); gambarKanan();
-  };
   if(b.jenis === 'otomatis'){
-    [].forEach.call(document.querySelectorAll('.tpl-pot .baris'), function(btn){
-      btn.onclick = function(){
-        const i = parseInt(btn.dataset.pot, 10);
-        potAktif = (potAktif === i) ? null : i;
-        modeKode = false;
-        gambarKanan();
-      };
-    });
-    if(potAktif !== null){
-      const p = pot(b)[potAktif];
-      pasangAlat('edPot', function(teks){ p.t = teks; p.ubah = true; });
-      const sv = document.querySelector('[data-simpan]');
-      if(sv) sv.onclick = function(){
-        p.t = bacaNaskah('edPot'); p.ubah = true;
-        sv.textContent = 'Tersimpan'; sv.classList.add('ok');
-        setTimeout(function(){ gambarKanan(); }, 900);
-      };
-    }
-    [].forEach.call(document.querySelectorAll('[data-reset]'), function(btn){
-      if(btn.disabled) return;
-      btn.onclick = function(ev){
-        ev.stopPropagation();
-        const i = parseInt(btn.dataset.reset, 10);
-        const q = pot(b)[i];
-        konfirmasi({
-          judul: 'Kembalikan ke redaksi bawaan?',
-          pesan: 'Tulisan potongan \u201c' + q.j + '\u201d yang diubah kantor akan diganti dengan redaksi bawaan platform.',
-          tombol: 'Kembalikan',
-          ikon: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10"/></svg>'
-        }, function(){
-          q.t = q.asli; q.ubah = false;
-          gambarKanan();
-          toast('Redaksi \u201c'+q.j+'\u201d dikembalikan ke bawaan.');
-        });
-      };
-    });
-    [].forEach.call(document.querySelectorAll('.tpl-grup .kep'), function(k){
-      k.onclick = function(){
-        const kunci = k.parentElement.dataset.grup;
-        grupBuka[kunci] = !(grupBuka[kunci] === true);
-        gambarKanan();
-      };
-    });
+    pasangAlat('edSistem', function(teks){ b.teks = teks; });
   } else {
     pasangAlat('edBebas', function(teks){ b.teks = teks; });
   }
@@ -1657,7 +1676,7 @@ function blokNaskah(){
       blok.push({ jenis:'baris', teks: baris, tengah: sebelumIsi && baris.trim() !== '' });
     });
   });
-  LAMPIRAN.forEach(function(l){
+  LAMPIRAN.filter(function(l){ return l.jenis !== 'berkas'; }).forEach(function(l){
     blok.push({ jenis:'judul', teks: 'Lampiran: ' + l.judul });
     isiVariabel(l.teks || '').split('\n').forEach(function(baris){
       blok.push({ jenis:'baris', teks: baris });
@@ -1725,9 +1744,9 @@ function bukaPreviewAkta(){
   const ov = document.createElement('div');
   ov.className = 'akta-layar';
   ov.innerHTML =
-      '<div class="akta-remah">Template Akta <span>/</span> Akta Jual Beli <span>/</span> <b>Preview Akta</b></div>'
+      '<div class="akta-remah">Minuta <span>/</span> Drafting <span>/</span> <b>Preview Akta</b></div>'
     + '<div class="akta-alat">'
-      + '<div class="jd">AJB \u2014 Akta Jual Beli</div>'
+      + '<div class="jd">ORD-260917-001 \u2014 Akta Jual Beli</div>'
       + '<div class="kanan">'
         + '<button class="prev">\u2039 Prev</button>'
         + '<span class="nav">Hal. <input class="hal" type="text" value="1"> <span class="dari">dari 1</span></span>'
@@ -1928,6 +1947,7 @@ function isiVariabel(teks, tambahan){
 /* susun naskah satu bagian untuk pratinjau */
 function naskahBagian(b){
   if(b.jenis !== 'otomatis') return isiVariabel(b.teks || '');
+  if(typeof b.teks === 'string' && b.teks !== '') return isiVariabel(b.teks);   /* naskah sistem yang sudah disunting */
   if(b.kode === 'para_pihak'){
     /* satu akta memuat dua pihak: susunan kasus dipakai untuk masing-masing pihak */
     return PIHAK.map(function(p, i){
@@ -1959,13 +1979,26 @@ function viewLampiran(){
   if(!l){
     return '<div class="tpl-pad"><div class="tpl-empty"><span>Klik lampiran di panel kiri untuk mengedit.</span></div></div>';
   }
+  if(l.jenis === 'berkas'){
+    return '<div class="tpl-bar">'+IKON_PENSIL+'Lampiran berkas: '+esc(l.judul)+'</div>'
+      + '<div class="tpl-pad">'
+      + '<div class="sis-info"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" style="flex:none;margin-top:2px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
+        + '<span>Berkas unggahan \u2014 ikut sebagai lampiran terpisah dan <b>tidak digabung ke naskah akta</b>.</span></div>'
+      + '<div class="tpl-f" style="grid-template-columns:minmax(0,1fr) 150px 150px;margin-top:14px">'
+        + '<div class="fld"><label>Nama berkas</label><input type="text" id="lJudul" value="'+esc(l.judul)+'"></div>'
+        + '<div class="fld"><label>Tipe</label><input type="text" value="'+esc(l.tipe)+'" disabled></div>'
+        + '<div class="fld"><label>Ukuran</label><input type="text" value="'+esc(l.ukuran)+'" disabled></div>'
+      + '</div>'
+      + '<div class="tpl-checks"><span class="tpl-help">Diunggah '+esc(l.tanggal)+'</span></div>'
+      + '</div>';
+  }
   return '<div class="tpl-bar">'+IKON_PENSIL+'Lampiran: '+esc(l.judul)+'</div>'
     + '<div class="tpl-pad">'
     + '<div class="tpl-f" style="grid-template-columns:minmax(0,1fr) 200px">'
       + '<div class="fld"><label>Judul lampiran <span class="wajib">*</span></label><input type="text" id="lJudul" value="'+esc(l.judul)+'"></div>'
-      + '<div class="fld"><label>Asal</label><input type="text" value="Lampiran '+esc(l.asal)+'" disabled><span class="tpl-help">Disiapkan saat membuat template</span></div>'
+      + '<div class="fld"><label>Asal</label><input type="text" value="Bawaan template" disabled><span class="tpl-help">Disiapkan saat membuat template</span></div>'
     + '</div>'
-    + '<p class="tpl-ketsec">Naskah lampiran \u2014 ditulis memakai variabel, lalu terisi data sebenarnya ketika akta didraf. Tidak ada unggah berkas di layar ini.</p>'
+    + '<p class="tpl-ketsec">Naskah lampiran \u2014 sudah terisi data order ini dan masih bisa disunting sebelum finalisasi.</p>'
     + '<div class="tpl-cap">Isi</div>'
     + kotakNaskah('edLamp', l.teks || '')
     + '</div>';
@@ -1973,6 +2006,10 @@ function viewLampiran(){
 
 function viewPratinjauLampiran(){
   const l = LAMPIRAN[lampiranAktif];
+  if(l && l.jenis === 'berkas'){
+    return '<div class="tpl-bar">'+IKON_MATA_BESAR+'Lampiran berkas: '+esc(l.judul)+'</div>'
+      + '<div class="tpl-pad"><div class="tpl-empty"><span>Berkas unggahan tidak dirangkai ke naskah akta \u2014 ikut sebagai lampiran terpisah.</span></div></div>';
+  }
   if(!l) return '<div class="tpl-pad"><div class="tpl-empty"><span>Klik lampiran di panel kiri untuk melihat pratinjaunya.</span></div></div>';
   const teks = dataContoh ? isiVariabel(l.teks || '') : (l.teks || '');
   return '<div class="tpl-bar">'+IKON_MATA_BESAR+'Lampiran: '+esc(l.judul)+'</div>'
@@ -1983,6 +2020,19 @@ function viewPratinjauLampiran(){
       + '<div class="hasil"><div class="pot-prev"><div class="jd">'+esc(l.judul)+'</div>'
       + '<div class="tk pra">'+(dataContoh ? esc(teks) : tandai(teks))+'</div></div></div>'
     + '</div></div>';
+}
+
+
+/* ---- Renvoi: catatan koreksi pada badan minuta ---- */
+let renvoiTeks = '';
+function viewRenvoi(){
+  return '<div class="tpl-bar">'+IKON_PENSIL+'Renvoi</div>'
+    + '<div class="tpl-pad">'
+    + '<div class="tpl-renvoi-note">Catatan koreksi pada badan minuta, tercetak tepat di atas blok tanda tangan. '
+      + 'Ikut pada kedua rangkap asli (Lembar Pertama &amp; Lembar Kedua) dan pada salinan. '
+      + 'Pastikan renvoi sudah final sebelum minuta ditandatangani di E-Akta Wizard \u2014 menandatangani ulang membatalkan tanda tangan yang sudah ada.</div>'
+    + kotakNaskah('edRenvoi', renvoiTeks)
+    + '</div>';
 }
 
 function viewVariabel(){
@@ -2032,7 +2082,7 @@ function viewHalaman(){
     + '</div>'
     + '<hr class="tpl-hr">'
     + '<h3 class="tpl-sec-title">Footer</h3>'
-    + '<div class="tpl-note">Penanda halaman: <code>{page}</code>, <code>{total}</code>, <code>{date}</code>, <code>{{ppat_nama}}</code>, <code>{{ppat_wilayah}}</code>, <code>{{deed_number}}</code>, <code>{{jenis_akta}}</code>.</div>'
+    + '<div class="tpl-note">Hanya muncul di PDF (minuta/salinan), bukan di preview. Variabel: <code>{page}</code>, <code>{total}</code>, <code>{date}</code>, <code>{{ppat_nama}}</code>, <code>{{ppat_wilayah}}</code>, <code>{{deed_number}}</code>, <code>{{jenis_akta}}</code>.</div>'
     + '<div class="tpl-checks"><label><input type="checkbox" checked> Aktifkan Footer (bawah)</label></div>'
     + '<div class="tpl-set" style="margin-top:12px">'
       + '<div class="fld"><label>Ukuran Font Footer (pt)</label><input type="text" value="9"></div>'
@@ -2055,7 +2105,7 @@ function gambarKanan(){
       gambarVariabel();
     }
     else if(tabAktif === 'halaman'){ k.innerHTML = viewHalaman(); }
-    else { k.innerHTML = viewPratinjauLampiran(); pasangPratinjau(); }
+    else { k.innerHTML = viewRenvoi(); pasangAlat('edRenvoi', function(t){ renvoiTeks = t; }); }
     return;
   }
   if(tabAktif === 'bagian'){ k.innerHTML = viewBagian(); pasangBagian(); }
@@ -2066,7 +2116,7 @@ function gambarKanan(){
     gambarVariabel();
   }
   else if(tabAktif === 'halaman'){ k.innerHTML = viewHalaman(); }
-  else { k.innerHTML = viewPratinjauBagian(); pasangPratinjau(); }
+  else { k.innerHTML = viewRenvoi(); pasangAlat('edRenvoi', function(t){ renvoiTeks = t; }); }
 }
 
 function pasangLampiran(){
@@ -2074,7 +2124,7 @@ function pasangLampiran(){
   if(!l) return;
   const j = el('lJudul');
   if(j) j.oninput = function(){ l.judul = j.value; gambarLampiran(); };
-  pasangAlat('edLamp', function(teks){ l.teks = teks; });
+  if(l.jenis !== 'berkas') pasangAlat('edLamp', function(teks){ l.teks = teks; });
 }
 
 function pasangPratinjau(){
@@ -2114,20 +2164,43 @@ el('tambahCatatan').onclick = function(){
 [].forEach.call(document.querySelectorAll('.tabkiri'), function(b){
   b.onclick = function(){ gantiModeKiri(b.dataset.kiri); };
 });
-el('tambahLampiran').onclick = function(){
-  LAMPIRAN.push({ id:'lamp'+Date.now(), judul:'Lampiran baru', asal:'bawaan', teks:'', asli:'' });
+el('tambahLampiran').onclick = function(){ el('fileLampiran').click(); };
+el('fileLampiran').onchange = function(e){
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  const kb = Math.max(1, Math.round(f.size / 1024));
+  const d = new Date();
+  const tgl = d.getDate()+' '+['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][d.getMonth()]+' '+d.getFullYear();
+  const ext = (f.name.split('.').pop() || '').toUpperCase();
+  LAMPIRAN.push({ id:'lamp'+Date.now(), jenis:'berkas', judul:f.name, asal:'unggahan',
+    tanggal:tgl, tipe:ext || 'Berkas', ukuran:(kb > 1024 ? (kb/1024).toFixed(1)+' MB' : kb+' KB'), teks:'', asli:'' });
   lampiranAktif = LAMPIRAN.length - 1;
+  e.target.value = '';
   tabAktif = 'bagian'; segarkanTab(); gambarLampiran(); gambarKanan();
+  toast('Lampiran ditambahkan (simulasi \u2014 berkas tidak benar-benar diunggah).');
 };
 gambarLampiran();
 
 el('btnPreview').onclick = bukaPreviewAkta;
-el('btnImpor').onclick = function(){ el('fileWord').click(); };
-el('fileWord').onchange = function(e){
-  const f = e.target.files && e.target.files[0];
-  if(!f) return;
-  toast('\u201c'+f.name+'\u201d diterima \u2014 naskah akan dipecah menjadi pasal & catatan.');
-  e.target.value = '';
+
+el('btnEjaan').onclick = function(){
+  toast('Cek ejaan belum aktif di prototipe \u2014 di aplikasi, hasilnya muncul sebagai daftar koreksi.');
+};
+el('btnBeritahu').onclick = function(){
+  konfirmasi({
+    judul: 'Beritahu PPAT?',
+    pesan: 'PPAT akan menerima pemberitahuan bahwa naskah minuta ORD-260917-001 siap diperiksa.',
+    tombol: 'Kirim pemberitahuan',
+    ikon: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>'
+  }, function(){ toast('Pemberitahuan terkirim ke PPAT (simulasi).'); });
+};
+el('btnFinalisasi').onclick = function(){
+  konfirmasi({
+    judul: 'Finalisasi akta ini?',
+    pesan: 'Setelah difinalisasi, naskah minuta dikunci dan diteruskan ke E-Akta Wizard untuk stempel dan tanda tangan. Perubahan naskah tidak bisa dilakukan lagi dari layar ini.',
+    tombol: 'Finalisasi akta',
+    ikon: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><polyline points="8 12 11 15 16 9"/></svg>'
+  }, function(){ toast('Akta difinalisasi (simulasi) \u2014 lanjut ke E-Akta Wizard.'); });
 };
 
 gambarDaftar();
