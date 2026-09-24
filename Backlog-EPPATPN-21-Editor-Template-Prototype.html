@@ -663,6 +663,8 @@
   .tpl-ta:focus{outline:2px solid #CFE0D9;outline-offset:-1px}
 
   .tpl-grup{border:1px solid var(--line);border-radius:8px;background:#FAFCFB;padding:8px;margin:10px 0}
+  .tpl-grup.tutup > .kep{padding-bottom:2px}
+  .tpl-grup.tutup .tpl-pot{display:none}
   .tpl-grup > .kep{display:flex;align-items:center;gap:6px;width:100%;background:none;border:0;font:inherit;font-size:11px;letter-spacing:.6px;font-weight:600;color:var(--muted);text-transform:uppercase;cursor:pointer;padding:2px 4px 8px}
   .tpl-grup > .kep .jml{font-weight:500;opacity:.75}
   .tpl-pot{border:1px solid var(--line);border-radius:8px;background:#fff;margin:6px 0;overflow:hidden}
@@ -848,7 +850,8 @@ Pada hari ini, hari {{var_hari}} Tanggal {{var_tanggal}} ({{var_tanggal:terbilan
  {id:'ttd', jenis:'otomatis', kode:'ttd', judul:'Tanda Tangan'}
 ];
 
-const OTO_TERSEDIA = {para_pihak:'Para Pihak', objek:'Objek Jual Beli', saksi:'Saksi & Penutup', ttd:'Tanda Tangan'};
+/* Bagian otomatis ditentukan platform: tidak bisa ditambah dari layar ini,
+   dan bagian lain tidak bisa diubah menjadi otomatis. */
 
 /* potongan: [grup, judul, syarat, dipakai pada, dipakai di kasus terpilih, teks] */
 const POTONGAN = {
@@ -1069,6 +1072,7 @@ Apabila di kemudian hari terdapat ketidaksesuaian, segala akibat hukumnya menjad
 ];
 LAMPIRAN.forEach(function(l){ l.asli = l.teks; });
 
+let grupBuka = {};          /* kelompok potongan: bawaan terlipat */
 let modeKiri = 'bagian';       /* daftar kiri: bagian | lampiran */
 let lampiranAktif = null;
 
@@ -1335,12 +1339,15 @@ function segarkanTab(){
 }
 
 function barisIsian(b, i){
-  const tipe = b.jenis === 'pasal' ? 'Pasal' : b.jenis === 'otomatis' ? 'Otomatis' : 'Catatan';
+  const tipe = b.jenis === 'pasal' ? 'Pasal' : 'Catatan';
   const nomor = b.jenis === 'pasal' ? String(nomorPasal(i)) : '';
-  return '<div class="tpl-f">'
-      + '<div class="fld"><label>Tipe</label><select id="fTipe">'
-        + ['Catatan','Pasal','Otomatis'].map(t => '<option'+(t===tipe?' selected':'')+'>'+t+'</option>').join('')
-        + '</select></div>'
+  /* bagian otomatis: tipenya terkunci, jadi pilihan Tipe tidak ditampilkan */
+  const kolomTipe = b.jenis === 'otomatis' ? ''
+    : '<div class="fld"><label>Tipe</label><select id="fTipe">'
+      + ['Catatan','Pasal'].map(t => '<option'+(t===tipe?' selected':'')+'>'+t+'</option>').join('')
+      + '</select></div>';
+  return '<div class="tpl-f"'+(b.jenis === 'otomatis' ? ' style="grid-template-columns:120px minmax(0,1fr)"' : '')+'>'
+      + kolomTipe
       + '<div class="fld"><label>Nomor</label><input type="text" id="fNomor" value="'+esc(nomor)+'" placeholder="mis. 1"><span class="tpl-help">Opsional</span></div>'
       + '<div class="fld"><label>Judul <span class="wajib">*</span></label><input type="text" id="fJudul" value="'+esc(b.judul)+'"></div>'
     + '</div>'
@@ -1398,7 +1405,11 @@ function daftarPotongan(sec){
   const tutupGrup = function(){
     if(grupSekarang !== null){
       const n = (isiGrup.match(/class="tpl-pot/g) || []).length;
-      h += '<div class="tpl-grup"><button class="kep" type="button">\u25be '+esc(grupSekarang)+' <span class="jml">('+n+')</span></button>'+isiGrup+'</div>';
+      const kunci = sec.kode + '|' + grupSekarang;
+      const buka = grupBuka[kunci] === true;                 /* bawaan: terlipat */
+      h += '<div class="tpl-grup'+(buka ? '' : ' tutup')+'" data-grup="'+esc(kunci)+'">'
+        + '<button class="kep" type="button">'+(buka ? '\u25be' : '\u25b8')+' '+esc(grupSekarang)+' <span class="jml">('+n+')</span></button>'
+        + isiGrup + '</div>';
       grupSekarang = null; isiGrup = '';
     }
   };
@@ -1417,7 +1428,10 @@ function pasangBagian(){
   if(!b) return;
   const fj = el('fJudul'), fn = el('fNomor'), ft = el('fTipe');
   if(fj) fj.oninput = function(){ b.judul = fj.value; gambarDaftar(); };
-  if(ft) ft.onchange = function(){ toast('Tipe bagian pada template ini dikunci oleh struktur akta.'); ft.value = b.jenis === 'pasal' ? 'Pasal' : b.jenis === 'otomatis' ? 'Otomatis' : 'Catatan'; };
+  if(ft) ft.onchange = function(){
+    b.jenis = ft.value === 'Pasal' ? 'pasal' : 'catatan';
+    gambarDaftar(); gambarKanan();
+  };
   if(b.jenis === 'otomatis'){
     [].forEach.call(document.querySelectorAll('.tpl-pot .baris'), function(btn){
       btn.onclick = function(){
@@ -1451,10 +1465,9 @@ function pasangBagian(){
     });
     [].forEach.call(document.querySelectorAll('.tpl-grup .kep'), function(k){
       k.onclick = function(){
-        const box = k.parentElement;
-        const tutup = box.classList.toggle('tutup');
-        [].forEach.call(box.querySelectorAll('.tpl-pot'), function(p){ p.style.display = tutup ? 'none' : ''; });
-        k.innerHTML = k.innerHTML.replace(tutup ? '\u25be' : '\u25b8', tutup ? '\u25b8' : '\u25be');
+        const kunci = k.parentElement.dataset.grup;
+        grupBuka[kunci] = !(grupBuka[kunci] === true);
+        gambarKanan();
       };
     });
   } else {
