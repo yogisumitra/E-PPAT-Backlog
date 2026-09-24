@@ -223,10 +223,10 @@
 <body>
 
 <div class="protobar">
-  <span class="protonav"><a class="home" href="index.html">☰ Daftar prototipe</a><a href="Backlog-EPPATPN-2-Object%20Jual%20Beli-Prototype.html" aria-current="page">EPPATPN-2 · Object Jual Beli</a><a href="Backlog-EPPATPN-3-Minuta-01-Prototype.html">EPPATPN-3 · Minuta — 01</a></span>
+  <span class="protonav"><a class="home" href="index.html">☰ Daftar prototipe</a><a href="Backlog-EPPATPN-2-Object%20Jual%20Beli-Prototype.html" aria-current="page">EPPATPN-2 · Object Jual Beli</a><a href="Backlog-EPPATPN-3-Minuta-01-Prototype.html">EPPATPN-3 · Minuta — 01</a><a href="Backlog-EPPATPN-17-Profil-Kantor-Prototype.html">EPPATPN-17 · Profil Kantor</a><a href="Backlog-EPPATPN-19-Pemilihan-Para-Pihak-Prototype.html">EPPATPN-19 · Pemilihan Para Pihak</a></span>
   <span class="sep">•</span>
   <b>Prototipe UI</b><span class="sep">•</span><span>Tambah Objek (AJB) — E-PPAT</span>
-  <span class="sep">•</span><span class="hint"><b>v4</b> — isian mengikuti simulator objek (butir 14/15/16/17, letak 18, meliputi pula 19).</span>
+  <span class="sep">•</span><span class="hint">Isian objek menyesuaikan Status Sertipikat, Jenis Hak, Format Sertipikat, dan Status Objek.</span>
   <button class="reopen" id="reopen" hidden>Buka kembali modal</button>
 </div>
 
@@ -280,7 +280,7 @@
             </div>
           </div>
 
-          <div class="scen"><span class="tag" id="scenTag">Butir 14</span><span id="scenDesc"></span></div>
+          <div class="scen"><span class="tag" id="scenTag">Bidang Terdaftar</span><span id="scenDesc"></span></div>
 
           <div id="wrapBersama">
             <div class="sub-title">Bagian Hak Bersama</div>
@@ -296,8 +296,8 @@
               <div class="field col-2">
                 <label for="redaksi17">Bentuk Redaksi</label>
                 <select id="redaksi17">
-                  <option value="ringkas">Ringkas — blanko butir 17</option>
-                  <option value="lengkap">Lengkap — pola draf 2 &amp; 3</option>
+                  <option value="ringkas">Ringkas</option>
+                  <option value="lengkap">Lengkap</option>
                 </select>
               </div>
             </div>
@@ -307,14 +307,14 @@
           <div class="cert-fields" id="certFields"></div>
 
           <div id="wrapBukti" hidden>
-            <div class="sub-title">Alat Bukti Hak — butir 16f</div>
+            <div class="sub-title">Alat Bukti Hak</div>
             <div id="buktiRows"></div>
             <button type="button" class="addbtn" id="addBukti">+ Tambah alat bukti</button>
           </div>
         </div>
 
         <!-- LETAK OBJEK -->
-        <div class="sec-title">Letak Objek — butir 18</div>
+        <div class="sec-title">Letak Objek</div>
         <div class="grid">
           <div class="field"><label>Provinsi</label><input type="text" placeholder="Provinsi"></div>
           <div class="field"><label>Label</label><select><option>Kota</option><option>Kabupaten</option></select></div>
@@ -326,18 +326,18 @@
         </div>
 
         <!-- MELIPUTI PULA -->
-        <div class="sec-title">Meliputi Pula — butir 19</div>
+        <div class="sec-title">Meliputi Pula</div>
         <div class="grid">
           <div class="field col-2">
             <label for="redaksi19">Bentuk Redaksi</label>
             <select id="redaksi19">
-              <option value="bebas">Diisi sendiri (blanko butir 19)</option>
-              <option value="benda" selected>Benda tidak bergerak (pola draf 4)</option>
-              <option value="bersama">Bagian bersama satuan rumah susun (pola draf 2 &amp; 3)</option>
+              <option value="bebas">Diisi sendiri</option>
+              <option value="benda" selected>Benda tidak bergerak</option>
+              <option value="bersama">Bagian bersama satuan rumah susun</option>
             </select>
           </div>
           <div class="field col-2" id="wrapIsiKeterangan" hidden>
-            <label>Isi Keterangan</label><input type="text" placeholder="Redaksi butir 19 yang diisi sendiri">
+            <label>Isi Keterangan</label><input type="text" placeholder="Redaksi yang diisi sendiri">
           </div>
           <div class="field col-2" id="wrapNPP" hidden>
             <label>Nilai Perbandingan Proporsional (%)</label><input type="text" placeholder="0">
@@ -392,7 +392,7 @@ const JENIS_HAK = [
 ];
 
 const F = {
-  /* butir 14 — bidang terdaftar (analog, utuh) */
+  /* sertipikat analog, objek utuh */
   b14: [
     {label:'Nomor Hak', ph:'Nomor hak', req:true},
     {label:'Tanggal Surat Ukur / Gambar Situasi', type:'date', req:true},
@@ -401,7 +401,7 @@ const F = {
     {label:'NIB', ph:'Nomor Identifikasi Bidang', req:true},
     {label:'SPPT PBB — Nomor Objek Pajak', ph:'00.00.000.000.000-0000.0', req:true}
   ],
-  /* butir 15 — sebagian bidang (analog, sebagian) */
+  /* sertipikat analog, objek sebagian */
   b15: [
     {label:'Nomor Hak Asal', ph:'Nomor hak asal', req:true},
     {label:'NIB Tanah Asal', ph:'NIB tanah asal', req:true},
@@ -415,7 +415,7 @@ const F = {
     {label:'Nomor Surat Ukur / Peta Bidang', ph:'Nomor Surat Ukur / Peta Bidang', req:true},
     {label:'NIB Bidang yang Dijual', span2:true, ph:'NIB bidang yang dijual', req:true}
   ],
-  /* sertipikat elektronik (draf 4) */
+  /* sertipikat elektronik */
   elektronik: [
     {label:'NIB Elektronik', ph:'Nomor Identifikasi Bidang Elektronik', req:true},
     {label:'Nomor Kode Sertipikat', ph:'Nomor Kode Sertipikat', req:true},
@@ -424,11 +424,11 @@ const F = {
     {label:'Terdaftar Atas Nama', ph:'Nama pemegang hak', req:true},
     {label:'SPPT PBB — Nomor Objek Pajak', ph:'00.00.000.000.000-0000.0', req:true}
   ],
-  /* butir 17 — satuan rumah susun, redaksi ringkas */
+  /* satuan rumah susun — redaksi ringkas */
   b17ringkas: [
     {label:'Nomor SHMSRS', span2:true, ph:'Nomor Sertipikat Hak Milik Atas Satuan Rumah Susun', req:true}
   ],
-  /* butir 17 — satuan rumah susun, redaksi lengkap (pola draf 2 & 3) */
+  /* satuan rumah susun — redaksi lengkap */
   b17lengkap: [
     {label:'Nomor SHMSRS', ph:'Nomor Sertipikat Hak Milik Atas Satuan Rumah Susun', req:true},
     {label:'Kelurahan pada Nomor Sertipikat', ph:'Kelurahan', req:true},
@@ -439,7 +439,7 @@ const F = {
     {label:'NIB', ph:'Nomor Identifikasi Bidang', req:true},
     {label:'SPPT PBB — Nomor Objek Pajak', ph:'00.00.000.000.000-0000.0', req:true}
   ],
-  /* butir 16 — bekas Hak Milik Adat */
+  /* bekas Hak Milik Adat, belum bersertipikat */
   b16: [
     {label:'Persil Nomor', ph:'Persil', req:true},
     {label:'Blok', ph:'Blok', req:true},
@@ -456,13 +456,13 @@ const F = {
   ]
 };
 
-const BUTIR = {
-  b14:        ['Butir 14','bidang terdaftar'],
-  b15:        ['Butir 15','sebagian bidang'],
-  b16:        ['Butir 16','bekas Hak Milik Adat'],
-  b17ringkas: ['Butir 17','satuan rumah susun'],
-  b17lengkap: ['Butir 17','satuan rumah susun'],
-  elektronik: ['Draf 4','sertipikat elektronik']
+const KONDISI = {
+  b14:        ['Bidang Terdaftar','sertipikat analog, dijual utuh'],
+  b15:        ['Sebagian Bidang','sertipikat analog, dijual sebagian'],
+  b16:        ['Bekas Hak Milik Adat','belum bersertipikat'],
+  b17ringkas: ['Satuan Rumah Susun','redaksi ringkas'],
+  b17lengkap: ['Satuan Rumah Susun','redaksi lengkap'],
+  elektronik: ['Sertipikat Elektronik','berlaku untuk objek utuh maupun sebagian']
 };
 
 /* nama hak ikut pilihan Jenis Hak — dipakai pada label nomor hak */
@@ -499,7 +499,7 @@ function fieldHTML(f){
   return `<div class="field ${f.span2?'col-2':''}"><span class="lbl"><span>${f.label}${req}</span></span>${ctl}${help}</div>`;
 }
 
-/* ---- baris alat bukti (butir 16f) ---- */
+/* ---- baris alat bukti kepemilikan ---- */
 let buktiN = 0;
 function buktiRow(){
   buktiN++;
@@ -549,12 +549,12 @@ function render(){
   [...el('segMode').children].forEach(b => b.setAttribute('aria-pressed', b.dataset.mode === state.format));
 
   const k = kondisi();
-  el('scenTag').textContent  = BUTIR[k][0];
-  el('scenDesc').textContent = BUTIR[k][1];
-  el('uraianTitle').textContent = `Uraian Objek — ${BUTIR[k][0].toLowerCase()} — ${BUTIR[k][1]}`;
+  el('scenTag').textContent  = KONDISI[k][0];
+  el('scenDesc').textContent = KONDISI[k][1];
+  el('uraianTitle').textContent = `Uraian Objek — ${KONDISI[k][0]}`;
   el('certFields').innerHTML = `<div class="grid">${sesuaikanNamaHak(k, F[k]).map(fieldHTML).join('')}</div>`;
 
-  /* alat bukti hanya pada butir 16 */
+  /* alat bukti hanya untuk bidang belum terdaftar */
   el('wrapBukti').hidden = (k !== 'b16');
   if(k === 'b16' && !el('buktiRows').children.length) el('buktiRows').appendChild(buktiRow());
 }
