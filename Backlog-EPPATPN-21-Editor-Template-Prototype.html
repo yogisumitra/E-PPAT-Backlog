@@ -1,0 +1,2041 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prototipe Template Akta Kantor — Editor Bagian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green:#3D6B5E; --green-dark:#33594E; --line:#D2DDD9; --muted:#5A6B66;
+    --field-bg:#FBFDFC; --tint:rgba(238,243,241,.4); --pdf-bg:#4B4F55; --ok-bg:#E6F2EC;
+    --side:#2C3C42; --kantor:#DDCD99; --slate-bg:#F1F5F9; --slate-bd:#CBD5E1; --slate-tx:#475569;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#0f172a;background:#EDF1F0;-webkit-font-smoothing:antialiased}
+
+  .protobar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:calc(9px + env(safe-area-inset-top,0px)) 16px 9px;background:#0f1a17;color:#E6EDEA;font-size:12px}
+  .protobar b{color:#fff;font-weight:600}
+  .protobar .sep{opacity:.35}
+  .unlock{margin-left:auto;border:1px solid rgba(255,255,255,.25);background:transparent;color:#E6EDEA;font:500 12px Inter,sans-serif;padding:5px 10px;border-radius:6px;cursor:pointer}
+  .unlock:hover{background:rgba(255,255,255,.08)}
+
+  .app{display:flex;min-height:100vh}
+  .sidebar{width:240px;flex:none;background:var(--side);border-right:1px solid rgba(61,107,94,.4);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:auto}
+  .brand{padding:18px 16px 14px;display:flex;align-items:center}
+  .brand img{width:150px;height:auto;display:block}
+  .kantor{margin:0 16px;background:var(--kantor);border-radius:12px;padding:12px 16px;color:#1F1F1F}
+  .kantor .eyebrow{font-size:10px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;line-height:15px}
+  .kantor .nm{font-size:13px;font-weight:600;line-height:17.9px;margin:4px 0 8px}
+  .kantor .row{display:flex;gap:6px;align-items:flex-start;font-size:11px;line-height:16.5px}
+  .kantor .row svg{width:11px;height:11px;flex:none;margin-top:3px;opacity:.8}
+  nav{padding:16px 12px 8px;flex:1}
+  .grp{display:flex;align-items:center;gap:8px;width:100%;background:transparent;border:0;cursor:pointer;padding:10px 8px;color:rgba(255,255,255,.6);font:600 10px Inter,sans-serif;letter-spacing:1.8px;text-transform:uppercase}
+  .grp .chev{margin-left:auto;transition:.15s}
+  .grp[aria-expanded="true"] .chev{transform:rotate(90deg)}
+  .grp svg.ico{width:14px;height:14px;opacity:.75}
+  .items{display:flex;flex-direction:column;gap:3px;margin:2px 0 6px}
+  .items a{display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border-radius:8px;color:rgba(255,255,255,.8);font:500 13px Inter,sans-serif;text-decoration:none}
+  .items a svg{width:16px;height:16px;opacity:.85;flex:none}
+  .items a:hover{background:rgba(255,255,255,.06)}
+  .items a.on{background:var(--green);color:#fff}
+  .sidefoot{padding:10px 16px 14px;font-size:10px;letter-spacing:1px;color:rgba(255,255,255,.45)}
+
+  .main{flex:1;min-width:0;display:flex;flex-direction:column}
+  header{height:65px;flex:none;display:flex;align-items:center;gap:12px;padding:0 24px;background:#F7F9F8;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:4}
+  .icon-btn{width:34px;height:34px;display:grid;place-items:center;border:0;background:transparent;border-radius:8px;color:var(--muted);cursor:pointer}
+  .spacer{margin-left:auto}
+  .btn-landing{height:32px;padding:6px 12px;display:inline-flex;align-items:center;gap:8px;font:600 12px Inter,sans-serif;color:#4C5D58;background:#fff;border:1px solid var(--line);border-radius:6px;cursor:pointer}
+  .user{display:flex;align-items:center;gap:10px;padding-left:6px}
+  .ava{width:32px;height:32px;border-radius:999px;background:var(--green);color:#fff;display:grid;place-items:center;font:600 12px Inter,sans-serif}
+  .uname{font:600 12px Inter,sans-serif;color:var(--green);line-height:14px;display:block}
+  .urole{font:400 10px Inter,sans-serif;color:var(--muted);letter-spacing:.8px;text-transform:uppercase}
+
+  .content{flex:1;background-image:url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAoHCAkIBgoJCAkMCwoMDxoRDw4ODx8WGBMaJSEnJiQhJCMpLjsyKSw4LCMkM0Y0OD0/QkNCKDFITUhATTtBQj//2wBDAQsMDA8NDx4RER4/KiQqPz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz8/Pz//wgARCAMqBaADASIAAhEBAxEB/8QAGgABAQEBAQEBAAAAAAAAAAAAAAECAwUGBP/EABcBAQEBAQAAAAAAAAAAAAAAAAABAgP/2gAMAwEAAhADEAAAAfqysywCksAFlhYCwWAAURYCksApLAAABAAAJYAgCWAAAgAAFQAACAAAgAACAAAgFAAIAACAAAIAACAAACACAIAUAIAACAAAgAAAgAAJYAACUAABAAAesOegFgVBZSAKIsCwAWUlQLABYAAAEsAABAEAEAAAEAABLKAASwAAEAAAEAABCgABAAAQAAAgAAEAABLAAEEAoACAAAgAAEsAABAAACAACkAABAAAEPXHPQCwWKSwAAWAUIApCkAAqAAAEAAAggACAAAlgAAJQAAEAAAgAAJYAAJYBQAEAABAAAJYAAJYAAAQAIBABQCWAACWAACWAAAEAAAgAAJZQAAgAAAgeuOerAAAAFICkACiWCywAsAAABAAAQAAQQAAEAAApAAAQAAEsAABAAACCgAEAABAAAEAABAAABAABEsAoAQAAEAAAIAABAAAEAAAIKAAgAAEsAPXWc9AAAACiAAsAABYFgAAAIAAAQAIAgAAIAACWUAAIAAAQAACWAACFAACAAAgAAAgAAIAAAgCACAUAAgAAIAACWAAAgAAAgAAIUAAIAACAAHrrOelgAWCxSWCwBRLAsFgFIsAAAIAABABAEsAABAAAKgAAEAABAAAEAABAKAAgAAEAABLAAAQAAAgAQBACgEsAABAAAQAAAQAABAAASgAAIAABAAA9iHPSwWAWFQCiAUAQBRCkAAAlgAAIAgAEAABAAAIUAAIAACAAACAAAhQACWAACWAAAgAAAgAAIAIAIBQAgAABAAAIAACWAAAEAAFIAACAAAIAACHsyuepZSFIsAAFgAAWAAAAAQAAAgQABAAASwAAEoAACAAAgAAEsAAEsAoAQAAAgAAEsAAEsAABAAEAQAoBAAASwAASwAAAgAAEAAASgAAIAACAAAQPYHPQCoWAWAApCkAAAAAAgAAJYAgAgAAIAABSAAAgAAJYAAAQAAEFAAIAACAAAIAACAAACACAIAUAIAACAAAEAAAlgAAIAACUAAAgAAIAACWAHsWOerLAsALAAWAUgLAAAASwAAEAQACAAAQAAEsoAAQAAAgAAEAABCgABAAACAAAQAAEAABLAEAEAAoBAAAQAAEAAAQAAAgAAEKAAEAABAAACAA9ixz0BYFgLAABYAolgAAIAAAIAIAlgAAIAACUAABAAAIAAAgAAIBQACAAAgAACAACWAAAEACAIAUAlgAAIAAAQAACAAAlgAAJQAAEAAAgAAJYAAews56AWACwFQVBUAAAAEAAAQABAIAACAAAQoABLAAAQAAAgAAEKAAQAAEsAAAIAACAAAQAARLAKAEAAAIAABAAAEAAAIAABCgAEAABLAAAQAAA9gvPUsApLABZYVAsFgAACAAAEACAIAACWAAAlAACAAAEAAAgAAJYBQAgAAAgAAJYAAJYAACAAIBABQCAAAlgAAIAACAAACAAAhQAAgAABAAAIAACWHsjnoBYFQWUgCiLAAABAAAQAQAQAAEAAAIKAAQAAEsAAAIAACCgAEsAAEsAABAAAQAAAQAARACgEsAABAAACAAAQAABAAASgAAEAABAAASwAAEAPZHPQCwWKSwAAWAAAlgAAIAAgEAAAgAAIUAAIAACAAACAAAhQACWAAAgAAAgAAIAAAgCACAUABAAAQAACWAAAgAAAgAAIUAAlgAAIAAAQAACAB7I56sAAAAUgAAAIAABABAEsAAEsAABKAAAgAAEAABLAABLAKAAQAAEAABLAABLAAAQsAEAQAoAQAAEAAAIAABAAASwAASygAAIAACAAAQAABAAD2VnPQAAAApAAAIAAAgCACAAAEAAAhQACAAAIAACAAAEFAAIAAAgAAIAAAQAACWAIAlgFACAAAEAAAgAAJYAACAAAEFAAIAACWAAAgAABAAAeys56WABYLFIAAAQAAAgQABAAASwAAEoAAQAAAQAAEAABLKAAAgABAAABAAASwAASwABBAAKAQAAEAABLAAAQAAAQAAEsoABLAAACAAAQAAEsAABD24c9LBYBYVAAAAgAAIAIAIAACAAAVAAAIAACWAAAgAAIBQACAAAgAACAAAgAAAgAgCAFACAAAEAABAAAQAAAgAAJQAAEAAAlgAAlgAAIAAAIHtyuepZSFIsLAAASwAAEAAQCAAAgAAEsoAAQAAEAAAIAABLKAASwAAEAAAEAABAAASwABBAKAAgAAIAABAAASwAAAgAAEKAASwAAEAAAIAABAAASwA9oc9AKhYAAAEAABAAgCAAAlgAAJQAAEAAAgAAJYAACAUABAAAIAACWAACWAAAgACAIUAAlgAAlgAAlgAABAAAJYAACUAABAAAIAACAAAlgAAIAAe1Y56ssFQAAAQAAEsAAQQAAAgAAqAAASwAASwAAEAAAEKAASwAASwAAAgAAIAABLEAAQAoAQAAEAAAEAABLAAAQAAAgoABAAAIAABAAACAAAQAAr2rHLQFgAACAAAEACAIAACAAAJQAAEAABAAAIAACWAUAIAACAAACAAAgAACAIAIABQCAAAgAACAAAgAAAgAAJZQAAgAAIAAAIAACWAACWAAAle2s5aAAAAQAAEAEASwAAEAAAqAAAQAAEsAABAAAQCgAIAABAAASwAAEAAAIAEAQAoBLAAAQAAEAAAEAAAQAAEoAACAAAQAAEsAABAAAQAACkD2y8tQAACWAAAiAAAQAACAAAhQACWAAAgAAAgAAIUAAlgAAIAAAIAAEAAAliAACAAUAgAAQAACAAAIAAAIAACFAAIAAAgAABAAAQAACWAAUIAe2OWgABAAABABAEsAAEsAABKAAAgAAEAAAQAAEAoACAAAgAAEsAABAAAQABAIKAASwAASwAASwAAAgAAEAABLKAAAgAAIAABAAAEAABAAKAgAPbHLQAEAAAIAAggAAIAABSAAAlgAAlgAABAAAQUAAgAAIAAAEAAIAAAIAIAlgFACAAAEAAAgAAJYAACAAAlAAAIAACWAAAgAABAAAIAAUlgAB7Y5aASwAAAgQACAAAQAAEsoAAQAAAgAAEAABLAKAEAABAAABAAAQAAEsAAQQACgIAABAAASwAAEAAAEAABLKAASwAAAgAAIAABAAASwAAEoAAD2xy0IWAAAgAgCWAAAgAAFQAACAAAgAACAAAgFAAQAACAAAIAACAAAgAACIAUAlgAAIAACAAAEAAAlgAAJQAAEAAAgAAJYAACAAAEAAFIAACWHuDlpLAAAQBAAIAABAAAQoAAQAAEAAAEAABCgAEsAAEsAAAEAACAAAQAAQQCgAIAABAAAQAABAAACAAAQoABLAABLAAACAAAgAAEsAApLAAAQA9wnLQAACACAJYAAJYAACUAABAAAIAACWAACWAUAIAAAQAACWAAAgAAIAgAEAFAIAACWAAAgAABAAAJYAAJZQAAEAAAgAAIAACWAAAgAAFQAACAB7kOWgAEAEAEAABAAAKQAAEsAAEsAAAIAACCgAEAABLAAAQAAEAAAEAAESwCgBAAAQAAAgAAEsAABAAAKgAAIAABAAAEAABAAACAACkAABLAAD2xy0ABAAgCAAAgAAJZQACWAAAEAAAgAAIUAAIAACAAACAAAgAACAAIIABQCAAAgAAJYAACAAAEAAAllAACAAAgAAAgAAIAACWAAAlAAAIAAHtjloBBAAEsAABAAASgAAEAABAAAEAABAKAAQAAEAAAQAAEAAAIAEAgAoAQAAEAABAAABAAAEAABKAAAgAAIAABLAAACNUxdDLQzNjE6Dm3DDUqAASwAAEPcHLQgACCAAAEAAFIAACWAAAgAABAAAQUAAlgAAIAAAQAAEAAAgAAggFAAQAACAABAAAJYAACAAAEFAAIAACWAAAEANGbQMmmIdM87LqURQucnVy1Ztz0XOhhvNZAABAe4OWkAEAQAAEsAABKAAEAAAIAABAAASwCgBAAACAAAQAABAAAQABAIKAAQAAEsAAEsAABAAABAAASygABAAAQAAARSWgYN4lljW8sN5zdOfSDh0rbkOr8/cmWjGO8s51nbpMasudKwsEsAPclnLQAIlgAAIAABUAAAgAAJYAAAQAAgFAAIAACAAAIAACAAACACAIAUAIAAAQAAEAAAgAACAAAlAAAIAACAAAAoJMLV6ZY2mKcO5ePbmZ6Y6Vw68ulmc0Y/Tx3HKtV0zjcunLrHPPbOpjWG5uVWGsgHtjlQAIAABAAASygABAAAQAAAQAAEKAASwAAEAAAEAABAAASwABBAAKAQAAIAABAAAAgAAEAABCgAEsAABAAAABGRbvFOe83h0znU7c9I3KlzrErbBOkwNzMJ0mjjarfNzOnTCN8t05bzOk3KrIPbHKgCAAAgAAJQAAEAAAgAAJYAACAUABAAAIAAAgAAlgAABAAgEAFAJYAACAAAgAAAgAACAAAlAAAQAACAAASiMDU6YrLWbxWbnTN1kYlWJZWJZuSpLgvS5JWaut82da59LDldVNkOXWHPWXSalle2OVEAAAIAABCgAEsAABAAACAAAQoABAAAEAABAAACAAAQAQAQCgBAAAQAAAgAAEAAAQAAAgoABAAASwAAEAMxqXVk53lenLc3VyvM0QuIuCzUWaExbbWKJvGklmV6XGpejnvFucZq9eXUzjrzqs61PbHOoAACWAAAlAACAAACAAAgAAJYBQAgAABAAAIAACAAAIAAggAFAIAACAAAIAACAAACAAAhQAAgAAIAAAQgzrI6ZuKxqxz3z6VcFM3NzqZG80iXdvPUqopi6iZsJNAIaZs105bZt55tdZncctM7nvSznQAAIAAKgAAEAABLAAAQAAEAoABAAAQAABAAAQAAAQAQBACgEsAABAAABAAAQAABAAASgAAEAABAAASwQMypd8+kyxvOa3WYks1mSxSw1l1sZlXUz0MFNYsLzaJJWSaVJDe+es6x0SLMytZ6c690YAAQAACFAACAAAgAAAgAAIUAAlgAAIAAAIAACAAAIAgCWAUAAgAAIAACAAAIAAAIAACFAACAAAgAABAZBnWOmbMaya1z3FxZUzqXOdZqqWbmsrNskudGdZpN89mW8km+aWXJZuLLnRrOsZu5im83J7oyASwAAEoAACAAAQAAEsAABAKAAgAAIAABLAAAQAAAgAQCACgEAABLAAAQAAAgAAEsAABKAAAgAAEAABAS5JLBvGs0IAzLnUk1AoCzphF3m0xWjnpo56miTWDpy1goQzszZTUms6560pLI9wZAQAAUgAAJYAACAAAEAAAhQACAAAlgAABAAAQAACACAJYBQAgAABAAAIAAAgAAIAABUAAAlgAAgAACADOskzYXWbm5zVN43GZc2JrJbFlQdM3C7mdmK0YspKBIdOWslliXKquaXWUupmG2dJ7gxUsAABKAAEAAAIAABAAAQoAACAAAgAAEAABAAAEAAQQACgEAACAAAEAABAAABAAAQoABLAAAQAAAQAGN4JLBrNlszC6zqJmyxLKqChJZVuVCUEALlSBALEWpRZYMU0g94mKAAJQAACAAAlgAAIAACAUAAgAAIAAAgAAIAAAQAIBABQAgAAIAAAQAACAAAIAABUAABAAAIAACAAAzrJgE1jUWQtZoIglWSlQgFSrFgqADNAiKi2ABqJAtJZHvDFAAQoABLAAAQAAAgAAEKAASwAAEAABCwAAEAABABAEsAoACAAA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");background-size:cover;background-position:center;background-repeat:no-repeat}
+  .page{width:100%;padding:28px 24px calc(48px + env(safe-area-inset-bottom,0px))}
+  .crumb{font-size:11px;font-weight:500;letter-spacing:1.1px;text-transform:uppercase;color:var(--muted)}
+  h1{margin:6px 0 0;font-size:27.2px;line-height:40.8px;font-weight:400;letter-spacing:-.544px;color:var(--green)}
+  .sub{margin:0;font-size:13px;color:var(--muted)}
+  .toprow{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:26px}
+  .btn-back{height:32px;padding:0 12px;display:inline-flex;align-items:center;gap:6px;font:500 12px Inter,sans-serif;color:#000;background:var(--field-bg);border:1px solid var(--line);border-radius:6px;cursor:pointer}
+  .meta{font-size:14px;color:var(--muted)}
+
+  .tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-top:18px;overflow-x:auto}
+  .tabs button{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;height:38px;padding:8px 16px;border:0;border-bottom:2px solid transparent;background:transparent;font:500 14px Inter,sans-serif;color:var(--muted);cursor:pointer}
+  .tabs button[aria-selected="true"]{color:var(--green);border-bottom-color:var(--green)}
+  .tabs svg{width:14px;height:14px;flex:none}
+
+  .stepper{margin-top:20px;display:flex;align-items:flex-start;justify-content:center;padding:16px 8px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.78),rgba(238,243,241,.5))}
+  .step{display:flex;flex-direction:column;align-items:center;gap:10px;min-width:120px}
+  .dot{width:64px;height:64px;border-radius:50%;background:var(--green);display:grid;place-items:center;color:#fff}
+  .dot.idle{background:#B9C6C1}
+  .dot svg{width:28px;height:28px}
+  .step span{font:600 14px Inter,sans-serif;color:var(--green);text-align:center}
+  .step.idle span{color:var(--muted)}
+  .conn{flex:1;max-width:180px;height:3px;background:var(--line);margin-top:31px;border-radius:2px}
+
+  .work{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:24px;margin-top:20px;align-items:start}
+  .pdf{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--pdf-bg)}
+  .pdf-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--green);color:#fff;padding:10px 16px}
+  .pdf-head .ttl{font:600 14px Inter,sans-serif;margin-right:auto}
+  .pdf-ctl{display:flex;align-items:center;gap:8px;font-size:12px;color:#E6EDEA}
+  .pdf-ctl .mini{border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.08);color:#fff;border-radius:6px;padding:3px 9px;font:500 12px Inter,sans-serif;cursor:pointer}
+  .pdf-ctl input{width:42px;height:24px;border-radius:5px;border:1px solid rgba(255,255,255,.28);background:#fff;color:#0f172a;font:500 12px Inter,sans-serif;text-align:center}
+  .pdf-body{padding:16px;max-height:520px;overflow:auto;position:relative}
+  .sheet{background:#fff;border-radius:2px;padding:36px 42px;font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:13px;line-height:1.9;color:#1a1a1a;position:relative}
+  .sheet .c{text-align:center}.sheet .b{font-weight:700}.sheet .big{font-size:15px;letter-spacing:1px}.sheet .it{font-style:italic}
+  .sheet p{margin:0 0 14px}
+  .stamp-on-pdf{position:absolute;right:48px;bottom:40px;width:104px;height:104px;border:1px solid var(--line);border-radius:8px;background:#fff;display:grid;place-items:center;padding:6px}
+  .stamp-on-pdf img{width:100%;height:100%}
+
+  .side{display:flex;flex-direction:column;gap:16px}
+  .card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px}
+  .card h3{margin:0 0 12px;font:600 15px Inter,sans-serif;color:var(--green);display:flex;align-items:center;gap:8px}
+  .kv{font-size:12px;color:var(--muted);margin-bottom:2px}
+  .kv-val{font-size:14px;color:var(--green);font-weight:500;margin-bottom:10px}
+  .status{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+  .pill{border-radius:999px;padding:2px 10px;font:500 12px Inter,sans-serif;border:1px solid transparent}
+  .pill.wait{background:var(--slate-bg);border-color:var(--slate-bd);color:var(--slate-tx)}
+  .pill.ok{background:var(--ok-bg);border-color:#BFDDD0;color:var(--green)}
+  .note{font-size:12px;line-height:16px;color:var(--muted)}
+  .drag{display:flex;align-items:center;gap:8px;margin:12px 0 10px;border:1px dashed var(--line);background:rgba(238,243,241,.45);border-radius:8px;padding:10px 12px;color:var(--green);font:500 14px Inter,sans-serif;cursor:grab}
+  .drag .grip{opacity:.5;letter-spacing:-2px}
+  .btn-primary{width:100%;height:36px;border:0;border-radius:6px;background:var(--green);color:#fff;font:500 14px Inter,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;padding:8px 16px}
+  .btn-primary:hover{background:var(--green-dark)}
+  .btn-primary[disabled]{background:#B9C6C1;cursor:not-allowed}
+  .qr{border:1px solid var(--line);border-radius:10px;background:var(--field-bg);display:grid;place-items:center;padding:18px}
+  .qr img{width:150px;height:150px;image-rendering:pixelated}
+  .qr-ref{margin-top:8px;text-align:center;font-size:11px;color:var(--muted)}
+  .ok-line{display:flex;align-items:center;gap:8px;font:600 13px Inter,sans-serif;color:var(--green);margin:12px 0}
+
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);display:grid;place-items:start center;padding:80px 16px;z-index:8;overflow:auto}
+  .overlay[hidden]{display:none!important}
+  .modal{width:520px;max-width:100%;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 45px rgba(15,26,23,.28)}
+  .modal-head{padding:24px 24px 16px;border-bottom:1px solid var(--line);position:relative}
+  .modal-head h2{margin:0;font-size:19.2px;line-height:28.8px;font-weight:400;letter-spacing:-.48px;color:var(--green)}
+  .modal-body{padding:20px 24px}
+  .modal-foot{display:flex;justify-content:flex-end;gap:12px;padding:16px 24px;border-top:1px solid var(--line)}
+  .btn{height:36px;padding:8px 16px;border-radius:6px;font:500 14px Inter,sans-serif;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+  .btn-ghost{background:var(--field-bg);border:1px solid var(--line);color:#000}
+  .otp{width:100%;height:44px;border:1px solid var(--line);border-radius:8px;background:var(--field-bg);text-align:center;font:600 20px "IBM Plex Mono",monospace;letter-spacing:8px}
+
+  .confirm{background:#fff;border-radius:14px;overflow:hidden}
+  .confirm-head{display:flex;align-items:flex-start;gap:12px;padding:22px 24px 14px}
+  .confirm-ico{width:38px;height:38px;flex:none;border-radius:999px;background:#FEE2E2;color:#B91C1C;display:grid;place-items:center}
+  .confirm h2{margin:0;font:600 17px Inter,sans-serif;color:#0f172a}
+  .confirm p{margin:6px 0 0;font-size:13px;line-height:19px;color:var(--muted)}
+  .confirm ul{margin:10px 0 0;padding-left:18px;font-size:13px;line-height:20px;color:var(--muted)}
+  .confirm-foot{display:flex;justify-content:flex-end;gap:12px;padding:16px 24px;border-top:1px solid var(--line);background:var(--field-bg)}
+  .btn-danger{background:#B91C1C;border:0;color:#fff}
+  .btn-danger:hover{background:#991B1B}
+  .otp-modal{background:var(--field-bg);border-radius:14px;padding:24px;position:relative;text-align:center}
+  .otp-modal .x{position:absolute;top:18px;right:18px;border:0;background:transparent;color:var(--muted);font-size:16px;cursor:pointer}
+  .otp-title{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;font:600 18px Inter,sans-serif;color:#000}
+  .otp-ico{margin:18px 0 10px}
+  .otp-desc{margin:0 0 14px;font-size:14px;color:var(--muted)}
+  .otp-foot{display:flex;justify-content:center;gap:12px;margin-top:18px}
+  .modal{width:384px}
+  .modal:has(.confirm){width:460px}
+  .pill.info{background:#E6EFF7;border-color:#BBD3E8;color:#2A5C86}
+  .signer{border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:12px;background:#fff}
+  .signer .top{display:flex;align-items:center;gap:8px}
+  .signer .grip{opacity:.45;letter-spacing:-2px;cursor:grab}
+  .signer .nm{font:500 14px Inter,sans-serif;color:#000;margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .signer .mail{font-size:12px;color:var(--muted);margin:8px 0 10px}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .chip{border-radius:999px;padding:2px 10px;font:500 12px Inter,sans-serif;border:1px solid var(--slate-bd);background:var(--slate-bg);color:var(--slate-tx)}
+  .chip.ca{background:#ECFDF5;border-color:#A7F3D0;color:#047857}
+  .chip.placed{background:#EFF6FF;border-color:#BFDBFE;color:#1D4ED8}
+  .btn-ghost-w{width:100%;height:36px;border:1px solid var(--line);background:var(--field-bg);border-radius:6px;font:500 14px Inter,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;color:#000}
+  .sig-ph{position:absolute;border:1px dashed var(--green);background:rgba(238,243,241,.75);border-radius:4px;width:166px;height:44px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+  .sig-ph b{font:600 9px Inter,sans-serif;color:var(--green)}
+  .sig-ph.signed{background:rgba(255,255,255,.9);border-style:solid}
+  .sig-ph .ink{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:.85}
+  .sig-ph i{font:500 8px Inter,sans-serif;color:var(--muted);font-style:normal;letter-spacing:.6px}
+  .meterai-card{border:1px solid var(--line);border-radius:10px;background:var(--field-bg);padding:14px;text-align:center}
+  .meterai-card .cap{font-size:12px;color:var(--muted);margin-bottom:10px}
+  .meterai-img{width:130px;height:130px;margin:0 auto;border-radius:4px;display:block}
+  .sn{font:500 13px "IBM Plex Mono",monospace;color:#000;word-break:break-all}
+  .ph-meterai{position:absolute;width:104px;height:104px;border:1px dashed var(--green);background:rgba(238,243,241,.6);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:var(--green);font:500 9px Inter,sans-serif}
+  .upload-row{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-top:20px}
+  .upload-row .f{flex:1;min-width:260px}
+  .upload-row label{display:block;font-size:12px;font-weight:500;color:var(--muted);margin-bottom:6px}
+  .upload-row input[type=text]{width:100%;height:38px;border:1px solid var(--line);border-radius:8px;background:#fff;padding:8px 12px;font:400 14px Inter,sans-serif;outline:none}
+  .btn-upload{height:32px;padding:0 12px;border:0;border-radius:6px;background:var(--green);color:#fff;font:500 12px Inter,sans-serif;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+  .empty{margin-top:20px;border:1px dashed var(--line);border-radius:12px;background:rgba(238,243,241,.2);min-height:138px;display:grid;place-items:center;gap:10px;padding:24px;text-align:center}
+  .empty p{margin:0;font-size:14px;color:var(--muted)}
+  .tabs button.locked{color:#94A3B8;cursor:not-allowed}
+  .tabs button.locked .tag-new{background:var(--slate-bg);color:var(--slate-tx);border:1px solid var(--slate-bd)}
+  .lockico{width:13px;height:13px;flex:none}
+  .tag-new{font:600 10px Inter,sans-serif;letter-spacing:.6px;text-transform:uppercase;color:var(--green);background:var(--ok-bg);border-radius:999px;padding:2px 6px}
+  .sheet-note{margin:16px 0 0;font-size:12px;color:var(--muted)}
+  .infobox{border:1px solid var(--line);border-radius:8px;background:var(--field-bg);padding:10px 12px;font-size:12px;line-height:16px;color:var(--muted);margin-bottom:12px}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(8px);background:#0f1a17;color:#E6EDEA;font-size:12px;padding:9px 14px;border-radius:8px;opacity:0;transition:.18s;pointer-events:none;z-index:9}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .scrim{display:none}
+  @media (max-width:1024px){
+    .sidebar{position:fixed;z-index:6;left:0;top:0;transform:translateX(-100%);transition:.22s}
+    .sidebar.open{transform:none}
+    .scrim{display:block;position:fixed;inset:0;background:rgba(15,26,23,.45);z-index:5;opacity:0;pointer-events:none;transition:.22s}
+    .scrim.on{opacity:1;pointer-events:auto}
+    .work{grid-template-columns:1fr}
+    .stepper{overflow-x:auto;justify-content:flex-start}
+    .conn{min-width:40px}
+  }
+  @media (max-width:640px){
+    header{padding:0 14px}.btn-landing span{display:none}
+    .page{padding:20px 16px 40px}
+    h1{font-size:23px;line-height:32px}
+    .sheet{padding:22px 18px;font-size:12px}
+    .user .txt{display:none}
+  }
+
+  .protonav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .protonav a{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#E6EDEA;border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:4px 10px;font:500 11px Inter,sans-serif}
+  .protonav a:hover{background:rgba(255,255,255,.08)}
+  .protonav a[aria-current="page"]{background:#3D6B5E;border-color:#3D6B5E;color:#fff}
+  .protonav .home{border-style:dashed}
+  .pp-page{max-width:1120px;margin:0 auto;padding:22px 18px calc(48px + env(safe-area-inset-bottom,0px))}
+  .pp-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px}
+
+  .pp-tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:-4px -4px 16px}
+  .pp-tabs button{border:0;background:transparent;font:500 14px Inter,sans-serif;color:var(--muted);padding:10px 16px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+  .pp-tabs button[aria-selected="true"]{color:var(--green);border-bottom-color:var(--green);font-weight:600}
+
+  .bar{display:flex;justify-content:flex-end;margin-bottom:14px}
+
+  table{width:100%;border-collapse:collapse}
+  thead th{text-align:left;font:600 10.5px Inter,sans-serif;letter-spacing:.9px;text-transform:uppercase;color:var(--muted);
+    padding:12px;background:#F4F7F6;border-bottom:1px solid var(--line)}
+  thead th:first-child{border-radius:8px 0 0 0}
+  thead th:last-child{border-radius:0 8px 0 0}
+  tbody td{padding:14px 12px;border-bottom:1px solid #EAF0EE;vertical-align:top;font-size:13.5px}
+  tbody tr:last-child td{border-bottom:0}
+  .tipe{display:inline-flex;align-items:center;font:600 10.5px Inter,sans-serif;letter-spacing:.8px;text-transform:uppercase;
+    border-radius:999px;padding:3px 10px;background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8}
+  .tipe.turunan{background:#F1F5F9;border-color:#CBD5E1;color:#475569}
+  .bentuk{display:inline-flex;font:500 12px Inter,sans-serif;color:#475569;background:#F1F5F4;border:1px solid var(--line);border-radius:6px;padding:3px 9px}
+  .pp-nm{font-weight:600;color:#111827}
+  .pp-sub{font-size:11.5px;color:#94A3B8;margin-top:3px}
+  .aksi{display:flex;gap:8px;justify-content:flex-end}
+  .pp-btn-sm{font:500 12.5px Inter,sans-serif;padding:6px 12px;border-radius:6px;border:1px solid var(--line);background:var(--field-bg);color:#374151;cursor:pointer}
+  .pp-btn-sm:hover{background:#F1F5F4}
+  .pp-btn-sm.danger{border-color:#DC2626;background:#DC2626;color:#fff;font-weight:600}
+  .pp-btn-sm.danger:hover{background:#B91C1C;border-color:#B91C1C}
+  .tablenote{margin:14px 2px 0;font-size:11.5px;line-height:17px;color:var(--muted)}
+
+  /* ---------- modal ---------- */
+  .pp-overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:flex-start;justify-content:center;
+    padding:60px 16px calc(24px + env(safe-area-inset-bottom,0px));overflow:auto;z-index:7}
+  .pp-modal{width:620px;max-width:100%;background:#FBFDFC;border-radius:14px;box-shadow:0 20px 45px rgba(15,26,23,.28);overflow:hidden}
+  .pp-modal-head{position:relative;padding:20px 24px 12px}
+  .pp-modal-head h2{margin:0;font-size:19.2px;line-height:28.8px;font-weight:400;letter-spacing:-.48px;color:var(--green)}
+  .close{position:absolute;top:18px;right:18px;width:26px;height:26px;display:grid;place-items:center;border:0;background:transparent;border-radius:6px;color:#64748B;cursor:pointer;font-size:17px}
+  .close:hover{background:#F1F5F4}
+  .pp-modal-body{padding:0 24px 8px;max-height:calc(100vh - 230px);overflow:auto}
+  .pp-modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px}
+
+  .field{margin-bottom:14px}
+  .field label,.field .lbl{display:block;font-size:11px;line-height:15px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .req{color:var(--danger);margin-left:3px}
+  .usulan{color:var(--usulan);font-weight:500;letter-spacing:.2px;text-transform:none}
+  input[type=text],input[type=date],select{
+    width:100%;height:36px;padding:4px 12px;font:400 14px Inter,sans-serif;color:#000;background:var(--field-bg);
+    border:1px solid var(--line);border-radius:6px;box-shadow:0 1px 2px rgba(0,0,0,.05);outline:none}
+  select{appearance:none;padding-right:34px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat:no-repeat;background-position:right 12px center}
+  input::placeholder{color:var(--ph)}
+  input:focus,select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(61,107,94,.16)}
+  .help{margin-top:5px;font-size:11px;line-height:16px;color:var(--help)}
+  .derived{margin-top:5px;font-size:11px;line-height:16px;color:var(--green);font-weight:500}
+
+  .seg{display:flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:6px;background:var(--field-bg)}
+  .seg button{flex:1;border:0;border-radius:6px;background:transparent;color:var(--muted);font:500 14px Inter,sans-serif;padding:6px 14px;cursor:pointer}
+  .seg button[aria-pressed="true"]{background:var(--green);color:#fff}
+
+  .grup{border:1px solid var(--line);border-radius:8px;background:#fff;padding:14px;margin-bottom:14px}
+  .grup-title{font-size:11px;font-weight:600;letter-spacing:.9px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;
+    display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+
+  .check{display:flex;align-items:flex-start;gap:9px;font-size:13.5px;line-height:20px;color:#1F2937;cursor:pointer;margin:2px 0 12px}
+  .check input{width:16px;height:16px;accent-color:var(--green);margin:2px 0 0}
+
+  .ident{border:1px solid var(--line);border-radius:8px;background:#fff;padding:14px;margin-bottom:14px}
+  .ident .pp-cap{font-size:10.5px;font-weight:600;letter-spacing:.9px;text-transform:uppercase;color:var(--muted)}
+  .ident .nama{margin:6px 0 12px;font-size:14.5px;font-weight:600;color:#111827}
+  .ident .pp-kv{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px}
+  .ident .k{font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--help)}
+  .ident .v{font-size:13px;color:#111827;margin-top:2px}
+  .ident .full{grid-column:1 / -1}
+  .ident .act{margin-top:12px}
+  .ktp{border-top:1px solid var(--line);margin-top:14px;padding-top:14px}
+
+  .pp-btn{height:36px;padding:8px 16px;border-radius:6px;font:500 14px Inter,sans-serif;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+  .pp-btn-ghost{background:var(--field-bg);border:1px solid var(--line);color:#000}
+  .pp-btn-ghost:hover{background:#F1F5F4}
+  .pp-btn-primary{background:var(--green);border:0;color:#fff}
+  .pp-btn-primary:hover{background:var(--green-dark)}
+  .pp-btn-line{border:1px solid var(--line);background:var(--field-bg);color:#374151;font:500 12.5px Inter,sans-serif;padding:7px 12px;border-radius:6px;cursor:pointer}
+  .pp-btn-line:hover{background:#F1F5F4}
+
+  .ca-box{border:1px solid #FDE68A;background:#FFFBEB;border-radius:10px;padding:14px 16px;color:#92400E;
+    font-size:13px;line-height:20px}
+  .ca-box ul{margin:8px 0 10px;padding-left:20px}
+  .ca-box li{margin:2px 0}
+  .ca-box a{display:inline-flex;align-items:center;gap:5px;color:#92400E;font-weight:600;text-decoration:none;cursor:pointer}
+  .ca-box a:hover{text-decoration:underline}
+  .ca-aksi{margin-top:14px}
+  .ca-aksi .help{margin-top:6px}
+  .mini{width:470px;max-width:100%;background:#FBFDFC;border-radius:14px;box-shadow:0 20px 45px rgba(15,26,23,.28);overflow:hidden}
+  .mini-head{position:relative;padding:20px 24px 10px}
+  .mini-head h2{margin:0;font-size:17px;line-height:24px;font-weight:600;color:#111827}
+  .mini-body{padding:4px 24px 8px}
+  .mini-foot{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px}
+  .ok-box{border:1px solid #A7F3D0;background:#ECFDF5;border-radius:10px;padding:14px 16px;color:#065F46;font-size:13px;line-height:20px}
+
+  .pp-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(8px);background:#0f1a17;color:#E6EDEA;
+    font-size:12px;padding:9px 14px;border-radius:8px;opacity:0;transition:.18s;pointer-events:none;z-index:9}
+  .pp-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media (max-width:760px){
+    .two,.ident .pp-kv{grid-template-columns:1fr}
+    thead{display:none}
+    tbody td{display:block;border:0;padding:4px 12px}
+    tbody tr{display:block;border-bottom:1px solid #EAF0EE;padding:10px 0}
+    .aksi{justify-content:flex-start;margin-top:8px}
+    .pp-modal-body{max-height:none}
+  }
+
+  /* ---- kartu order + stepper status ---- */
+  .ord{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px}
+  .ord .kode{font:600 11.5px Inter,sans-serif;letter-spacing:.4px;color:var(--green)}
+  .ord h2{margin:4px 0 2px;font-size:21px;font-weight:600;color:#111827}
+  .ord .dibuat{margin:0 0 18px;font-size:12.5px;color:var(--muted)}
+  .steps{display:flex;align-items:flex-start;gap:0;overflow:auto;padding-bottom:4px}
+  .step{flex:1 1 0;min-width:96px;text-align:center}
+  .step .dot{width:38px;height:38px;border-radius:50%;margin:0 auto 8px;display:grid;place-items:center;
+    border:1px solid var(--line);background:#fff;color:#94A3B8}
+  .step .dot svg{width:17px;height:17px}
+  .step.done .dot{background:#2F7A5B;border-color:#2F7A5B;color:#fff}
+  .step.now .dot{background:#33594E;border-color:#33594E;color:#fff}
+  .step.blue .dot{background:#2563EB;border-color:#2563EB;color:#fff}
+  .step .t{font-size:12.5px;font-weight:600;color:#111827}
+  .step.done .t,.step.now .t{color:#2F7A5B}
+  .step.blue .t{color:#2563EB}
+  .step .s{font-size:11px;color:var(--muted);margin-top:2px}
+  .bar-line{flex:0 0 40px;height:2px;background:#E2E8F0;margin-top:18px;border-radius:2px}
+  .bar-line.done{background:#2F7A5B}
+  .bar-line.blue{background:#2563EB}
+  .ord-foot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+    border-top:1px solid var(--line);margin-top:16px;padding-top:14px}
+  .ord-foot .st{font-size:13.5px;color:#111827}
+  .ord-foot .st b{font-weight:600}
+  @media (max-width:760px){ .bar-line{flex-basis:16px} }
+
+  /* ---------- Daftar User ---------- */
+  .pp-page{max-width:1180px;margin:0 auto;padding:22px 18px calc(48px + env(safe-area-inset-bottom,0px))}
+  .warnbar{display:flex;align-items:center;gap:12px;background:#FFFBEB;border:1px solid #FDE68A;border-radius:12px;
+    padding:12px 16px;margin-bottom:16px;font-size:13.5px;line-height:20px;color:#92400E}
+  .warnbar .sp{flex:1}
+  .warnbar .x{border:0;background:transparent;color:#92400E;cursor:pointer;font-size:16px;line-height:1}
+  .pp-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px 18px}
+  .filters{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+  .chips{display:flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:999px;background:var(--field-bg)}
+  .chips button{border:0;border-radius:999px;background:transparent;color:var(--muted);font:500 13px Inter,sans-serif;padding:6px 14px;cursor:pointer}
+  .chips button[aria-pressed="true"]{background:var(--green);color:#fff}
+  .filters select{width:auto;min-width:145px}
+  .filters .count{font-size:13px;color:var(--muted)}
+  .filters .sp{flex:1}
+  .search-user{position:relative}
+  .search-user input{width:250px;padding-left:34px}
+  .search-user svg{position:absolute;left:11px;top:10px;width:15px;height:15px;color:#94A3B8}
+  table{width:100%;border-collapse:collapse}
+  thead th{text-align:left;font:600 10.5px Inter,sans-serif;letter-spacing:.9px;text-transform:uppercase;color:var(--muted);
+    padding:12px;background:#F4F7F6;border-bottom:1px solid var(--line)}
+  thead th:first-child{border-radius:8px 0 0 0} thead th:last-child{border-radius:0 8px 0 0}
+  tbody td{padding:14px 12px;border-bottom:1px solid #EAF0EE;vertical-align:middle;font-size:13.5px}
+  tbody tr:last-child td{border-bottom:0}
+  .u-nama{font-weight:600;color:#111827}
+  .u-kode{font:400 11px "IBM Plex Mono",ui-monospace,monospace;color:#94A3B8;margin-top:3px}
+  .peran{display:inline-flex;font:500 11.5px Inter,sans-serif;border-radius:999px;padding:3px 11px;
+    background:#EFF6FF;border:1px solid #BFDBFE;color:#1D4ED8}
+  .peran.ppat{background:#F5F3FF;border-color:#DDD6FE;color:#6D28D9}
+  .peran.asisten{background:#ECFDF5;border-color:#A7F3D0;color:#047857}
+  .status{display:inline-flex;font:500 11.5px Inter,sans-serif;border-radius:999px;padding:3px 11px;
+    background:#ECFDF5;border:1px solid #A7F3D0;color:#047857}
+  .kebab{border:1px solid var(--line);background:var(--field-bg);border-radius:6px;padding:6px 8px;cursor:pointer;color:#475569;line-height:0}
+  .kebab:hover{background:#F1F5F4}
+
+  /* ---------- modal ---------- */
+  .pp-overlay{position:fixed;inset:0;background:rgba(15,23,42,.45);display:flex;align-items:flex-start;justify-content:center;
+    padding:60px 16px calc(24px + env(safe-area-inset-bottom,0px));overflow:auto;z-index:7}
+  .pp-modal{width:558px;max-width:100%;background:#FBFDFC;border-radius:14px;box-shadow:0 20px 45px rgba(15,26,23,.28);overflow:hidden}
+  .pp-modal-head{position:relative;padding:20px 24px 12px}
+  .pp-modal-head .eyebrow{font-size:10.5px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted)}
+  .pp-modal-head h2{margin:4px 0 0;font-size:19.2px;line-height:28.8px;font-weight:400;letter-spacing:-.48px;color:var(--green)}
+  .pp-close{position:absolute;top:18px;right:18px;width:26px;height:26px;display:grid;place-items:center;border:0;background:transparent;border-radius:6px;color:#64748B;cursor:pointer;font-size:17px}
+  .pp-close:hover{background:#F1F5F4}
+  .pp-modal-body{padding:4px 24px 8px;max-height:calc(100vh - 230px);overflow:auto}
+  .pp-modal-foot{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px}
+
+  .field{margin-bottom:14px}
+  .field label,.field .lbl{display:block;font-size:12.5px;line-height:17px;font-weight:500;color:var(--label);margin-bottom:6px;text-transform:none;letter-spacing:.12px}
+  .req{color:var(--danger);margin-left:3px}
+  input[type=text],input[type=email],input[type=password],input[type=date],select,textarea{
+    width:100%;height:36px;padding:4px 12px;font:400 14px Inter,sans-serif;color:#000;background:var(--field-bg);
+    border:1px solid var(--line);border-radius:6px;box-shadow:0 1px 2px rgba(0,0,0,.05);outline:none}
+  textarea{height:78px;padding:8px 12px;resize:vertical;line-height:1.45}
+  select{appearance:none;padding-right:34px;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+    background-repeat:no-repeat;background-position:right 12px center}
+  input::placeholder,textarea::placeholder{color:var(--ph)}
+  input:focus,select:focus,textarea:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(61,107,94,.16)}
+  .help{margin-top:5px;font-size:11px;line-height:16px;color:#94A3B8}
+  .tiga{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px 14px}
+  .dua{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px}
+
+  .akordeon{border:1px solid var(--line);border-radius:8px;background:#fff;margin-bottom:6px;overflow:hidden}
+  .akordeon-head{display:flex;align-items:center;justify-content:space-between;width:100%;border:0;background:transparent;
+    padding:13px 14px;font:500 14px Inter,sans-serif;color:#111827;cursor:pointer}
+  .akordeon-head b{font-weight:600}
+  .akordeon-head .opsional{color:var(--muted);font-weight:400}
+  .akordeon-head svg{width:15px;height:15px;color:#64748B;transition:.15s}
+  .akordeon[aria-expanded="true"] .akordeon-head svg{transform:rotate(180deg)}
+  .akordeon-isi{padding:0 14px 14px}
+
+  .pp-btn{height:38px;padding:8px 16px;border-radius:6px;font:500 14px Inter,sans-serif;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+  .pp-btn-ghost{background:var(--field-bg);border:1px solid var(--line);color:#000}
+  .pp-btn-ghost:hover{background:#F1F5F4}
+  .pp-btn-primary{background:var(--green);border:0;color:#fff}
+  .pp-btn-primary:hover{background:var(--green-dark)}
+
+  .ca-box{border:1px solid #FDE68A;background:#FFFBEB;border-radius:10px;padding:14px 16px;color:#92400E;
+    font-size:13px;line-height:20px}
+  .ca-box ul{margin:8px 0 10px;padding-left:20px}
+  .ca-box li{margin:2px 0}
+  .ca-box a{display:inline-flex;align-items:center;gap:5px;color:#92400E;font-weight:600;text-decoration:none;cursor:pointer}
+  .ca-box a:hover{text-decoration:underline}
+  .ca-aksi{margin-top:14px}
+  .ca-aksi .help{margin-top:6px}
+  .mini{width:470px;max-width:100%;background:#FBFDFC;border-radius:14px;box-shadow:0 20px 45px rgba(15,26,23,.28);overflow:hidden}
+  .mini-head{position:relative;padding:20px 24px 10px}
+  .mini-head h2{margin:0;font-size:17px;line-height:24px;font-weight:600;color:#111827}
+  .mini-body{padding:4px 24px 8px}
+  .mini-foot{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px}
+  .ok-box{border:1px solid #A7F3D0;background:#ECFDF5;border-radius:10px;padding:14px 16px;color:#065F46;font-size:13px;line-height:20px}
+
+  .pp-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(8px);background:#0f1a17;color:#E6EDEA;
+    font-size:12px;padding:9px 14px;border-radius:8px;opacity:0;transition:.18s;pointer-events:none;z-index:9}
+  .pp-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media (max-width:760px){
+    .tiga,.dua{grid-template-columns:1fr}
+    .search-user input{width:100%}
+    thead{display:none}
+    tbody td{display:block;border:0;padding:4px 12px}
+    tbody tr{display:block;border-bottom:1px solid #EAF0EE;padding:10px 0}
+    .pp-modal-body{max-height:none}
+  }
+
+  /* ===== EPPATPN-21 Editor Template ===== */
+  .tpl-head{display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;margin:14px 0 16px}
+  .tpl-back{display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px;border:1px solid var(--line);border-radius:6px;background:var(--field-bg);color:#000;font:inherit;font-size:12px;font-weight:500;cursor:pointer;flex:none}
+  .tpl-back:hover{background:#F2F7F5}
+  .tpl-ident{min-width:0}
+  .tpl-ident h2{margin:0;font-size:18px;font-weight:600;color:#000;line-height:28px}
+  .tpl-ident h2 .kode{font-size:14px;font-weight:600;color:var(--green);margin-left:8px}
+  .tpl-ident p{margin:0;font-size:14px;color:var(--muted);line-height:20px}
+
+  .tpl-grid{display:grid;grid-template-columns:320px minmax(0,1fr);gap:16px;align-items:start}
+
+  /* panel kiri */
+  .tpl-kiri{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:16px;background:rgba(238,243,241,.3);overflow:hidden}
+  .tpl-kiri .hd{background:var(--green);color:#fff;font-size:13px;font-weight:600;padding:10px 12px;line-height:20px}
+  .tpl-kiri .hd .n{font-weight:500;opacity:.82;margin-left:4px}
+  .tpl-search{padding:10px 10px 0}
+  .tpl-search input{width:100%;height:36px;border:1px solid var(--line);border-radius:8px;background:var(--field-bg);padding:0 12px;font:inherit;font-size:14px;color:#0F172A}
+  .tpl-search input::placeholder{color:#94A3B8}
+  .tpl-list{max-height:64vh;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:6px}
+  .tpl-list::-webkit-scrollbar{width:8px}
+  .tpl-list::-webkit-scrollbar-thumb{background:#C7D2CE;border-radius:999px}
+  .tpl-list::-webkit-scrollbar-track{background:transparent}
+  .tpl-item{display:flex;align-items:center;gap:8px;width:100%;min-height:52px;text-align:left;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px;cursor:pointer;font:inherit;color:#000}
+  .tpl-item:hover{border-color:#BFD2CB}
+  .tpl-item[aria-current="true"]{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}
+  .tpl-item .tpl-drag,.lamp-kartu .tpl-drag{display:flex;flex-direction:column;align-items:center;justify-content:space-between;width:12px;height:34px;flex:none;color:var(--muted);cursor:grab}
+  .tpl-item .tpl-drag .ar,.lamp-kartu .tpl-drag .ar{display:grid;place-items:center;width:11px;height:11px;opacity:.2}
+  .tpl-item .tpl-drag .gr,.lamp-kartu .tpl-drag .gr{display:grid;place-items:center;width:12px;height:12px;opacity:.4}
+  .tpl-item .ic{flex:none;width:24px;height:24px;border-radius:999px;display:grid;place-items:center;background:#EEF3F1;color:var(--muted)}
+  .tpl-item .ic.num{background:var(--green);color:#fff;font-size:11px;font-weight:600}
+  .tpl-item .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:inherit;font-size:14px;line-height:20px;color:#000;background:none;border:0;padding:0;text-align:left;cursor:pointer}
+  .tpl-item .eye{flex:none;width:13px;height:13px;color:var(--muted);display:grid;place-items:center}
+  .tpl-item:hover .eye{color:var(--green)}
+
+  /* panel kanan */
+  .tpl-kanan{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  .tpl-tabs{display:flex;align-items:center;gap:4px;padding:8px 8px 0;background:rgba(238,243,241,.4);border-bottom:1px solid var(--line);overflow-x:auto}
+  .tpl-tabs button{display:inline-flex;align-items:center;gap:6px;height:33px;padding:6px 12px;border:1px solid transparent;border-bottom:0;border-radius:8px 8px 0 0;background:transparent;font:inherit;font-size:14px;font-weight:500;color:var(--muted);cursor:pointer;white-space:nowrap;margin-bottom:-1px}
+  .tpl-tabs button[aria-selected="true"]{background:#fff;border-color:var(--line);color:var(--green)}
+  .tpl-bar{display:flex;align-items:center;gap:8px;background:var(--green);color:#fff;padding:10px 16px;font-size:14px;font-weight:600;line-height:20px}
+  .tpl-pad{padding:16px}
+  .tpl-empty{display:grid;place-items:center;min-height:260px;color:#94A3B8;font-size:14px;text-align:center;gap:10px}
+
+  /* isian bagian */
+  .tpl-f{display:grid;grid-template-columns:160px 120px minmax(0,1fr);gap:12px;align-items:start}
+  .tpl-f .fld{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .tpl-f label,.tpl-set label{display:block;font-size:12px;line-height:16px;color:#334155;font-weight:500;text-transform:none;letter-spacing:normal}
+  .tpl-f .wajib{color:#DC2626}
+  .tpl-f input,.tpl-f select,.tpl-set input,.tpl-set select{width:100%;height:36px;border:1px solid var(--line);border-radius:6px;background:var(--field-bg);padding:4px 12px;font:inherit;font-size:14px;color:#0F172A}
+  .tpl-f input:disabled,.tpl-f select:disabled,.tpl-set input:disabled,.tpl-set select:disabled{color:#5A6B66;cursor:not-allowed}
+  .tpl-help{font-size:12px;line-height:16px;color:#94A3B8}
+  .tpl-checks{display:flex;align-items:center;gap:20px;flex-wrap:wrap;margin:12px 0 0}
+  .tpl-checks label{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:#334155}
+  .tpl-checks input[type=checkbox],.tpl-set input[type=checkbox],.tpl-f input[type=checkbox]{flex:none;width:16px;height:16px;min-width:16px;min-height:16px;margin:0;padding:0;accent-color:var(--green)}
+  .tpl-cap{font-size:12px;line-height:16px;color:#334155;font-weight:500;margin:12px 0 4px}
+
+  /* --- penyunting naskah --- */
+  .tpl-rte{border:1px solid var(--line);border-radius:6px;background:#fff;overflow:hidden}
+  .tpl-bar2{display:flex;flex-wrap:wrap;align-items:center;gap:2px;padding:4px 6px;background:rgba(238,243,241,.3);border-bottom:1px solid var(--line);border-radius:6px 6px 0 0;position:relative}
+  .tpl-bar2 button{display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:26px;padding:6px;border:0;border-radius:4px;background:none;font:inherit;font-size:12.5px;color:#4C5D58;cursor:pointer}
+  .tpl-bar2 button:hover{background:#EEF3F1}
+  .tpl-bar2 button.on{background:var(--green);color:#fff}
+  .tpl-bar2 .pisah{width:1px;height:16px;background:var(--line);margin:0 4px}
+  .tpl-bar2 .ukuran{flex:0 0 auto;width:66px;height:26px;border:1px solid var(--line);border-radius:5px;background:#fff;font:inherit;font-size:12px;padding:0 8px}
+  .tpl-bar2 select.spasi{flex:0 0 auto;width:132px;height:26px;border:1px solid var(--line);border-radius:5px;background:#fff;font:inherit;font-size:12px;padding:0 6px;color:#334155}
+  .tpl-bar2 .var{padding:4px 8px;font-size:12px;color:var(--muted);gap:4px}
+  .tpl-bar2 .layar{margin-left:auto}
+  .tpl-kanvas{background:#ECEBE6;padding:12px 8px;max-height:52vh;overflow:auto}
+  .tpl-lembar{position:relative;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.18);padding:56.7px 37.8px 56.7px 226.8px;min-height:320px;
+    font-family:"Courier New",Courier,monospace;font-size:16px;line-height:2;color:#111;white-space:pre-wrap;word-break:break-word;outline:0}
+  .tpl-lembar:focus{box-shadow:0 1px 4px rgba(0,0,0,.18),0 0 0 2px #CFE0D9}
+  .tpl-lembar .v{color:#3D6B5E}
+  .tpl-kode{width:100%;min-height:300px;border:0;padding:14px 16px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;line-height:1.85;color:#1F2A37;resize:vertical;background:#F8FAF9}
+  .tpl-kode:focus{outline:2px solid #CFE0D9;outline-offset:-2px}
+
+  /* daftar variabel */
+  .tpl-varpop{position:absolute;top:calc(100% + 2px);left:8px;z-index:30;width:320px;max-width:calc(100vw - 40px);background:#fff;border:1px solid var(--line);border-radius:6px;box-shadow:0 10px 26px rgba(15,23,42,.12);overflow:hidden}
+  .tpl-varpop .cari{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line)}
+  .tpl-varpop .cari input{flex:1;height:20px;min-height:0;border:0;border-radius:0;background:transparent;box-shadow:none;padding:0;font:inherit;font-size:14px;outline:0;color:#0F172A}
+  .tpl-varpop .isi{max-height:315px;overflow:auto;padding:0 0 4px}
+  .tpl-varpop .gp{font-size:11px;letter-spacing:.6px;font-weight:600;color:#94A3B8;padding:8px 12px 4px;text-transform:uppercase;background:#fff;position:sticky;top:0}
+  .tpl-varpop button{display:block;width:100%;min-width:0;height:auto;text-align:left;border:0;border-radius:0;background:none;padding:6px 12px;cursor:pointer;font:inherit;color:#0F172A}
+  .tpl-varpop button:hover{background:#EEF3F1;color:#0F172A}
+  .tpl-varpop button .lb{display:block;font-size:14px;line-height:20px;color:#0F172A}
+  .tpl-varpop button .ky{display:block;font-size:11px;line-height:16px;color:#4C5D58}
+
+  .tpl-item .aksi,.lamp-kartu .aksi{flex:none;width:13px;height:13px;color:var(--muted);display:grid;place-items:center;cursor:pointer;background:none;border:0;padding:0}
+  .tpl-item .aksi:hover,.lamp-kartu .aksi:hover{color:var(--green)}
+  .tpl-item .aksi.hapus:hover,.lamp-kartu .aksi.hapus:hover{color:#B91C1C}
+  .tpl-toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#33594E;color:#fff;font-size:13px;padding:10px 16px;border-radius:8px;box-shadow:0 8px 24px rgba(15,23,42,.2);z-index:80}
+  .tpl-prevbag{margin-top:16px;border:1px solid var(--line);border-radius:8px;background:#FAFCFB;padding:12px}
+  .tpl-prevbag .kepala{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .tpl-prevbag .cap{font-size:11px;letter-spacing:.6px;font-weight:600;color:var(--muted);text-transform:uppercase}
+  .tpl-prevbag .contoh{margin-left:auto;display:inline-flex;align-items:center;gap:8px;font-size:13px;color:#334155}
+  .tpl-prevbag .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .tpl-chip-kasus{height:28px;padding:0 12px;border:1px solid var(--line);border-radius:6px;background:#fff;font:inherit;font-size:12.5px;color:#334155;cursor:pointer}
+  .tpl-chip-kasus:hover{background:#F2F7F5;border-color:#BFD2CB}
+  .tpl-chip-kasus.on{background:var(--green);border-color:var(--green);color:#fff;font-weight:500}
+  .tpl-prevbag .hasil{background:#fff;border:1px solid var(--line);border-radius:6px;padding:12px 14px;max-height:46vh;overflow:auto}
+  .pot-prev + .pot-prev{margin-top:12px;padding-top:12px;border-top:1px dashed #E3EAE8}
+  .pot-prev .jd{font-size:10.5px;letter-spacing:.6px;font-weight:600;color:var(--green);text-transform:uppercase;margin-bottom:4px}
+  .pot-prev .jd .pr{color:#94A3B8;font-weight:500;letter-spacing:.3px}
+  .pot-prev .tk{font-size:13px;line-height:1.85;color:#1F2A37;text-align:justify;word-break:break-word}
+  .pot-prev .tk .v{color:var(--green-dark);background:#EEF3F1;border-radius:3px;padding:0 2px;font-family:"IBM Plex Mono",monospace;font-size:12px}
+  .pot-prev .tk.pra{white-space:pre-wrap;font-family:"Courier New",Courier,monospace;font-size:12.5px;line-height:1.9;text-align:left}
+  @media (max-width:640px){ .tpl-overlay{padding:10px} }
+  /* --- tab kiri: Bagian | Lampiran --- */
+  .tpl-kiri .hd.hd-tab{display:flex;gap:0;padding:0}
+  .tpl-kiri .tabkiri{flex:1;background:none;border:0;border-bottom:2px solid transparent;color:rgba(255,255,255,.72);font:inherit;font-size:13px;font-weight:600;padding:10px 12px;cursor:pointer}
+  .tpl-kiri .tabkiri .n{font-weight:500;opacity:.8;margin-left:4px}
+  .tpl-kiri .tabkiri:hover{color:#fff}
+  .tpl-kiri .tabkiri.on{color:#fff;border-bottom-color:#fff;background:rgba(255,255,255,.08)}
+  .tpl-lampiran{padding:10px;display:flex;flex-direction:column;gap:8px;max-height:64vh;overflow-y:auto}
+  .tpl-lampiran::-webkit-scrollbar{width:8px}
+  .tpl-lampiran::-webkit-scrollbar-thumb{background:#C7D2CE;border-radius:999px}
+  .lamp-info{display:flex;gap:9px;border-left:3px solid var(--green);background:#EEF5F2;border-radius:0 6px 6px 0;padding:10px 12px;font-size:12.5px;line-height:1.65;color:var(--green-dark)}
+  .lamp-info b{font-weight:600}
+  .lamp-ket{font-size:12px;line-height:1.65;color:var(--muted);padding:0 2px}
+  .lamp-kartu{display:flex;align-items:flex-start;gap:8px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px;cursor:pointer}
+  .lamp-kartu:hover{border-color:#BFD2CB}
+  .lamp-kartu[aria-current="true"]{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}
+  .lamp-kartu .tpl-drag{margin-top:2px}
+  .lamp-kartu .isi{flex:1;min-width:0;display:flex;flex-direction:column;align-items:flex-start}
+  .lamp-kartu .jd{display:block;width:100%;font-size:14px;line-height:20px;color:#000;font-weight:500;margin-bottom:5px;word-break:break-word}
+  .lamp-kartu .lencana{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:999px;background:#EEF3F1;border:1px solid #CFE0D9;color:var(--green-dark);font-size:11px;font-weight:600}
+  .lamp-kartu .sub{display:block;font-size:11.5px;color:#94A3B8;margin-top:6px}
+  .lamp-kartu .aksi-kanan{display:flex;gap:8px;flex:none;padding-top:2px}
+  /* --- layar Preview Akta (pola layar Minuta → Preview) --- */
+  .akta-layar{position:fixed;inset:0;z-index:95;background:var(--pdf-bg);display:flex;flex-direction:column}
+  .akta-remah{background:#E7EAE9;border-bottom:1px solid #CFD6D4;padding:7px 16px;font-size:12.5px;color:var(--muted)}
+  .akta-remah span{opacity:.5;margin:0 4px}
+  .akta-remah b{color:var(--green);font-weight:600}
+  .akta-alat{display:flex;align-items:center;gap:12px;flex-wrap:wrap;background:var(--green);color:#fff;padding:10px 16px}
+  .akta-alat .jd{font-size:14px;font-weight:600}
+  .akta-alat .kanan{margin-left:auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .akta-alat button{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 11px;border:1px solid rgba(255,255,255,.35);border-radius:6px;background:rgba(255,255,255,.08);color:#fff;font:inherit;font-size:12.5px;cursor:pointer}
+  .akta-alat button:hover{background:rgba(255,255,255,.18)}
+  .akta-alat button:disabled{opacity:.4;cursor:not-allowed}
+  .akta-alat .nav{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:#EAF2EF}
+  .akta-alat .hal{width:46px;height:28px;border:1px solid rgba(255,255,255,.35);border-radius:6px;background:#fff;color:#0F172A;font:inherit;font-size:12.5px;text-align:center;padding:0 4px}
+  .akta-alat .zoom{font-size:12.5px;min-width:44px;text-align:center}
+  .akta-alat .pisah{width:1px;height:18px;background:rgba(255,255,255,.3)}
+  .akta-panggung{flex:1;overflow:auto;padding:24px 16px;display:flex;justify-content:center;align-items:flex-start}
+  .akta-lembar{position:relative;width:813px;min-height:1247px;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.35);
+    padding:56.7px 37.8px 56.7px 226.8px;font-family:"Courier New",Courier,monospace;font-size:16px;line-height:2;color:#111;
+    transform-origin:top center;overflow:hidden}
+  .akta-lembar.ukur{position:absolute;left:-9999px;top:0;visibility:hidden;min-height:0}
+  .akta-judul{font-weight:700;text-align:center;margin:14px 0 6px}
+  .akta-baris{white-space:pre-wrap;word-break:break-word}
+  .akta-baris.tengah{text-align:center}
+  .akta-air{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%) rotate(-30deg);pointer-events:none;z-index:0}
+  .akta-air span{font-family:Inter,sans-serif;font-size:160px;font-weight:700;color:rgba(180,60,60,.08);white-space:nowrap}
+  .akta-judul,.akta-baris{position:relative;z-index:1}
+  @media (max-width:760px){
+    .akta-alat{gap:8px;padding:8px 12px}
+    .akta-alat .jd{flex-basis:100%}
+    .akta-panggung{padding:12px 8px}
+  }
+  /* kertas akta (dipakai di tab Bagian & Pratinjau) */
+  .tpl-kotak{border:1px solid var(--line);border-radius:6px;background:#fff;overflow:hidden}
+  .tpl-kertas{background:#ECEBE6;padding:12px 8px;max-height:52vh;overflow:auto}
+  .tpl-halaman{position:relative;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.18);
+    padding:56.7px 37.8px 56.7px 226.8px;font-family:"Courier New",Courier,monospace;font-size:16px;line-height:2;color:#111;white-space:break-spaces;word-break:break-word;overflow:hidden}
+  .tpl-halaman .blok{outline:1px dashed #CBD5E1;outline-offset:6px}
+  .tpl-halaman .v{color:#3D6B5E}
+  .tpl-wm{position:sticky;top:40%;height:0;display:flex;justify-content:center;z-index:0;pointer-events:none}
+  .tpl-wm span{transform:rotate(-30deg);font-family:Inter,sans-serif;font-size:160px;font-weight:700;color:rgba(180,60,60,.08);white-space:nowrap;line-height:1}
+  .tpl-prev{background:rgba(238,243,241,.4);padding:16px;max-height:64vh;overflow:auto}
+  .tpl-prev .tpl-halaman{min-height:600px;overflow:visible}
+  .akta-section{margin-bottom:10px;position:relative;z-index:1}
+  .akta-title{font-weight:bold;text-align:center;font-size:16px;margin:14px 0 6px}
+  .rata-tengah{text-align:center}
+
+  /* variabel */
+  .tpl-note{background:#F8FAF9;border:1px solid var(--line);border-radius:8px;padding:11px 13px;font-size:13px;color:var(--muted);line-height:1.65;margin-bottom:14px}
+  .tpl-note code{font-family:"IBM Plex Mono",monospace;font-size:12.5px;background:#EEF3F1;border-radius:3px;padding:1px 4px;color:var(--green-dark)}
+  .tpl-vgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .tpl-vcard{border:1px solid var(--line);border-radius:8px;padding:10px 11px;background:#fff;min-width:0}
+  .tpl-vcard .lb{font-size:13px;color:#0F172A;font-weight:500;margin-bottom:5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tpl-vcard .ky{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--green-dark);background:#EEF3F1;border-radius:4px;padding:2px 6px;display:inline-block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tpl-vcard .gp{font-size:11.5px;color:#94A3B8;margin-top:5px}
+  .tpl-vsearch{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+  .tpl-vsearch input{height:36px;border:1px solid var(--line);border-radius:6px;background:var(--field-bg);padding:0 12px;font:inherit;font-size:14px;min-width:220px;flex:1}
+  .tpl-vsearch select{height:36px;border:1px solid var(--line);border-radius:6px;background:var(--field-bg);padding:0 8px;font:inherit;font-size:14px}
+
+  /* pengaturan halaman */
+  .tpl-sec-title{font-size:14px;font-weight:600;color:#0F172A;margin:0 0 6px}
+  .tpl-set{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+  .tpl-set .fld{display:flex;flex-direction:column;gap:6px;min-width:0}
+  .tpl-set .fld.cek{flex-direction:row;align-items:center;gap:8px;flex-wrap:wrap;min-height:36px}
+  .tpl-set .fld.cek label{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:#334155}
+  .tpl-set .fld.cek .tpl-help{flex-basis:100%}
+  .tpl-sub{grid-column:1/-1;font-size:11px;letter-spacing:.7px;color:#94A3B8;font-weight:600;margin-top:6px}
+  .tpl-hr{border:0;border-top:1px solid #EAF0EE;margin:18px 0}
+
+  .tpl-tambah{display:flex;gap:8px;flex-wrap:wrap;padding:12px 10px 12px;border-top:1px solid var(--line)}
+  .tpl-tambah button{flex:1 1 0;min-width:0;display:inline-flex;align-items:center;justify-content:center;height:36px;border:1px solid var(--line);border-radius:8px;background:#fff;font:inherit;font-size:13px;color:var(--green-dark);cursor:pointer;padding:0 12px;white-space:nowrap}
+  .tpl-tambah button.utama{background:var(--green);border-color:var(--green);color:#fff;font-weight:500}
+  .tpl-tambah button.utama:hover{background:var(--green-dark)}
+  .tpl-tambah button:hover{background:#F2F7F5;border-color:#BFD2CB}
+  .tpl-tambah button.utama:hover{border-color:var(--green-dark)}
+  .tpl-impor{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:8px 16px;border:1px solid var(--line);border-radius:6px;background:var(--field-bg);font:inherit;font-size:14px;font-weight:500;color:#000;cursor:pointer}
+  .tpl-tambah .tpl-impor{flex:1 0 100%}
+  .tpl-impor:hover{background:#F2F7F5;border-color:#BFD2CB}
+  .tpl-item .tag{flex:none;font-size:10px;letter-spacing:.5px;font-weight:600;text-transform:uppercase;color:var(--muted);background:#F4F7F6;border:1px solid var(--line);border-radius:4px;padding:2px 6px}
+  .tpl-item .tag.oto{color:var(--green-dark);background:#EEF3F1;border-color:#CFE0D9}
+  .tpl-item .tag.pasal{color:#5A6B66}
+
+  .tpl-ketsec{font-size:13px;color:var(--muted);line-height:1.6;margin:12px 0 0}
+  .tpl-nota{border-left:3px solid #B91C1C;background:#FDF6F5;border-radius:0 6px 6px 0;padding:10px 14px;font-size:13px;line-height:1.75;color:#5A4B4B;margin:12px 0 0}
+  .tpl-nota code{font-family:"IBM Plex Mono",monospace;font-size:12px;color:#B91C1C}
+  .tpl-alat{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 8px}
+  .tpl-varbtn{display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 12px;border:1px solid var(--line);border-radius:6px;background:#F4F7F6;font:inherit;font-size:12.5px;font-family:"IBM Plex Mono",monospace;color:var(--green-dark);cursor:pointer}
+  .tpl-varbtn:hover{background:#EAF2EF;border-color:#BFD2CB}
+  .tpl-alat .ket{font-size:12px;color:#94A3B8}
+  .tpl-ta{width:100%;min-height:240px;border:1px solid var(--line);border-radius:6px;background:#fff;padding:14px 16px;font-family:"IBM Plex Mono",monospace;font-size:12.5px;line-height:1.9;color:#1F2A37;resize:vertical}
+  .tpl-ta:focus{outline:2px solid #CFE0D9;outline-offset:-1px}
+
+  .tpl-grup{border:1px solid var(--line);border-radius:8px;background:#FAFCFB;padding:8px;margin:10px 0}
+  .tpl-grup > .kep{display:flex;align-items:center;gap:6px;width:100%;background:none;border:0;font:inherit;font-size:11px;letter-spacing:.6px;font-weight:600;color:var(--muted);text-transform:uppercase;cursor:pointer;padding:2px 4px 8px}
+  .tpl-grup > .kep .jml{font-weight:500;opacity:.75}
+  .tpl-pot{border:1px solid var(--line);border-radius:8px;background:#fff;margin:6px 0;overflow:hidden}
+  .tpl-pot{position:relative}
+  .tpl-pot > .baris{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;padding:10px 12px;padding-right:104px;font:inherit;text-align:left;cursor:pointer}
+  .tpl-reset{position:absolute;top:9px;right:12px;display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px;border:1px solid var(--line);border-radius:5px;background:#fff;font:inherit;font-size:11.5px;color:#94A3B8;cursor:not-allowed}
+  .tpl-reset.aktif{color:var(--green-dark);border-color:#CFE0D9;background:#EEF3F1;cursor:pointer}
+  .tpl-reset.aktif:hover{background:#E2EDE8;border-color:#BFD2CB}
+  .tpl-pot > .baris:hover{background:#F6FAF8}
+  .tpl-pot .nmpot{flex:1;min-width:0;font-size:14px;color:#0F172A;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tpl-pot .syarat{flex:none;font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--muted)}
+  .tpl-pot .asal{flex:none;font-size:10px;letter-spacing:.5px;font-weight:600;text-transform:uppercase;color:var(--muted);background:#F4F7F6;border:1px solid var(--line);border-radius:4px;padding:2px 6px}
+  .tpl-pot .asal.kantor{color:var(--green-dark);background:#EEF3F1;border-color:#CFE0D9}
+  .tpl-pot .editor{border-top:1px solid var(--line);background:#FAFCFB;padding:12px}
+  .tpl-pot .editor .tpl-ta{min-height:150px;background:#fff}
+  .tpl-dipakai{font-size:12px;color:var(--muted);line-height:1.6;margin:8px 0 10px}
+  .tpl-simpan{height:32px;padding:0 16px;border:0;border-radius:6px;background:var(--green);color:#fff;font:inherit;font-size:13px;font-weight:500;cursor:pointer}
+  .tpl-simpan:hover{background:var(--green-dark)}
+  .tpl-simpan.ok{background:#15803D}
+  @media (max-width:760px){
+    .tpl-pot > .baris{flex-wrap:wrap}
+    .tpl-pot .syarat{flex-basis:100%;order:3}
+  }
+  @media (max-width:1100px){
+    .tpl-grid{grid-template-columns:1fr}
+    .tpl-list{max-height:none}
+    .tpl-vgrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .tpl-set{grid-template-columns:repeat(2,minmax(0,1fr))}
+  }
+  @media (max-width:760px){
+    .tpl-f{grid-template-columns:1fr}
+    .tpl-vgrid,.tpl-set{grid-template-columns:1fr}
+    .tpl-halaman{padding:28px 16px 28px 56px;font-size:13px}
+    .tpl-wm{font-size:80px}
+  }
+</style>
+</head>
+<body>
+
+<div class="protobar">
+  <span class="protonav">
+    <a class="home" href="index.html">&#9776; Daftar prototipe</a>
+    <a href="Backlog-EPPATPN-2-Object%20Jual%20Beli-Prototype.html">EPPATPN-2 &middot; Object Jual Beli</a>
+    <a href="Backlog-EPPATPN-3-Minuta-01-Prototype.html">EPPATPN-3 &middot; Minuta &mdash; 01</a>
+    <a href="Backlog-EPPATPN-17-Profil-Kantor-Prototype.html">EPPATPN-17 &middot; Profil Kantor</a>
+    <a href="Backlog-EPPATPN-19-Pemilihan-Para-Pihak-Prototype.html">EPPATPN-19 &middot; Pemilihan Para Pihak</a>
+    <a href="Backlog-EPPATPN-20-Registrasi-CA-Melalui-AsistenPPAT-Prototype.html">EPPATPN-20 &middot; Registrasi CA</a>
+    <a href="Backlog-EPPATPN-21-Editor-Template-Prototype.html" aria-current="page">EPPATPN-21 &middot; Editor Template</a>
+  </span>
+  <span class="sep">&bull;</span>
+  <b>Prototipe UI</b><span class="sep">&bull;</span><span>Template Akta Kantor &mdash; Editor Bagian</span>
+</div>
+
+<div class="app">
+  <div class="scrim" id="scrim"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><img src="data:image/png;base64,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" alt="E-PPAT"></div>
+    <div class="kantor">
+      <div class="eyebrow">Kantor Notaris &amp; PPAT</div>
+      <div class="nm">Dr. Andi Prasetyo, S.H., M.Kn.</div>
+      <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><span>SK · 112/KEP-17.3/PPAT/XI/2021</span></div>
+      <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></svg><span>Wilayah · Kota Bandung</span></div>
+      <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .3 1.9.6 2.8a2 2 0 0 1-.5 2.1L8.1 9.8a16 16 0 0 0 6 6l1.2-1.1a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.8.6a2 2 0 0 1 1.8 2z"/></svg><span>(022) 86012345</span></div>
+      <div class="row"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Jl. Ir. H. Juanda No. 128</span></div>
+    </div>
+    <nav>
+      <button class="grp" aria-expanded="false"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/></svg>System<svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <div class="items"><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dasbor</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Daftar User</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2 20 3l1.5 1.5-1.5 1.5 1.5 1.5-2.5 2.5-1.5-1.5-2 2"/></svg>Peran &amp; Izin</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M4 12h2M18 12h2M12 4v2M12 18v2"/></svg>Pengaturan</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h12"/></svg>Logs</a></div>
+      <button class="grp" aria-expanded="false"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>CMS<svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <button class="grp" aria-expanded="true"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/></svg>E-PPAT Module<svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button><div class="items"><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>Dashboard</a><a href="Backlog-EPPATPN-17-Profil-Kantor-Prototype.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V7l7-4 7 4v14"/><path d="M10 21v-6h4v6"/></svg>Profil Kantor</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Verifikasi</a><a href="Backlog-EPPATPN-3-Minuta-01-Prototype.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Minuta</a><a href="#" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Template Akta</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"/></svg>E-Akta Wizard</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 7h8M8 11h8M8 15h4"/></svg>Akta Salinan</a><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Aktivasi E-Materai</a></div>
+      <button class="grp" aria-expanded="false"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h12M3 18h6"/></svg>Layanan AJB<svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <button class="grp" aria-expanded="false"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h12M3 18h6"/></svg>Layanan APHT<svg class="chev" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </nav>
+    <div class="sidefoot">E-PPAT</div>
+  </aside>
+
+  <div class="main">
+    <header>
+      <button class="icon-btn" id="burger" aria-label="Menu"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <div class="spacer"></div>
+      <button class="btn-landing"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg><span>Lihat Landing</span></button>
+      <button class="icon-btn" aria-label="Notifikasi"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></button>
+      <div class="user"><span class="ava">A</span><span class="txt"><span class="uname">Admin Default</span><span class="urole">Super Admin</span></span>
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#5A6B66" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </header>
+
+    <div class="content">
+      <div class="page">
+        <div class="crumb">E-PPAT MODULE &nbsp;&rsaquo;&nbsp; TEMPLATE AKTA</div>
+        <h1>Template Akta Kantor</h1>
+        <p class="sub">Template minuta milik kantor per layanan</p>
+
+        <div class="tpl-head">
+          <button class="tpl-back">
+            <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Kembali
+          </button>
+          <div class="tpl-ident">
+            <h2>AJB Persetujuan Pasangan <span class="kode">AJB02</span></h2>
+            <p>Kelola pasal, catatan, dan pengaturan halaman template ini.</p>
+          </div>
+          <button class="tpl-impor" id="btnPreview" style="margin-left:auto">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            Preview Akta
+          </button>
+          </div>
+
+        <div class="tpl-grid">
+          <section class="tpl-kiri">
+            <div class="hd hd-tab">
+              <button class="tabkiri on" data-kiri="bagian">Bagian <span class="n" id="jmlBagian">(8)</span></button>
+              <button class="tabkiri" data-kiri="lampiran">Lampiran <span class="n" id="jmlLampiran">(2)</span></button>
+            </div>
+            <div class="tpl-search" id="kotakCari"><input type="text" id="cariBagian" placeholder="Cari judul..."></div>
+            <div class="tpl-list" id="daftarBagian"></div>
+            <div class="tpl-lampiran" id="daftarLampiran" hidden></div>
+            <div class="tpl-tambah" id="tombolBagian">
+              <button id="tambahPasal" class="utama">+&nbsp; Tambah Pasal</button>
+              <button id="tambahCatatan">+&nbsp; Tambah Catatan</button>
+              <button class="tpl-impor" id="btnImpor">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 9 12 4 17 9"/><line x1="12" y1="4" x2="12" y2="16"/></svg>
+                Impor dari Word
+              </button>
+              <input type="file" id="fileWord" accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" hidden>
+            </div>
+            <div class="tpl-tambah" id="tombolLampiran" hidden>
+              <button id="tambahLampiran" class="utama">+&nbsp; Lampiran bawaan</button>
+            </div>
+          </section>
+
+          <section class="tpl-kanan">
+            <div class="tpl-tabs" id="tabKanan">
+              <button data-tab="bagian" aria-selected="true"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Bagian</button>
+              <button data-tab="variabel" aria-selected="false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18"/></svg>Variabel (80)</button>
+              <button data-tab="halaman" aria-selected="false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2 2 2 0 1 1-4 0 1.7 1.7 0 0 0-2.9-1.2l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.7 1.7 0 0 0 3 15a2 2 0 1 1 0-4 1.7 1.7 0 0 0 1.2-2.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.7 1.7 0 0 0 10 4.6a2 2 0 1 1 4 0 1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1A1.7 1.7 0 0 0 21 11a2 2 0 1 1 0 4z"/></svg>Pengaturan Halaman</button>
+              <button data-tab="pratinjau" aria-selected="false"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>Pratinjau</button>
+            </div>
+            <div id="isiKanan"></div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ Data bagian (disalin dari simulator Editor Template Dokumen) ============ */
+/* Tiga jenis bagian:
+   - catatan / pasal : naskah bebas, tanpa syarat
+   - otomatis        : kumpulan potongan redaksi, muncul-hilang sesuai kondisi order.
+                       Struktur, syarat tampil, dan urutannya terkunci; yang bisa
+                       disunting hanya tulisannya.                                   */
+
+const CATATAN_PEMBUKAAN = 'Bagian ini Catatan \u2014 naskah bebas, tanpa kondisi, karena kop dan komparisi selalu sama susunannya. Yang perlu diperhatikan: {{deed_number}} dan {{var_tanggal}} tidak terisi saat order dibuat \u2014 keduanya baru terisi pada proses finalisasi oleh PPAT. Kata \u201cLembar Kedua\u201d di sini masih diketik manual, padahal satu akta dicetak dua lembar, jadi sebaiknya menjadi variabel {{lembar}} yang diisi sistem saat berkas dihasilkan. Tanggal SK juga masih diketik manual karena Profil Kantor belum punya field Tanggal SK.';
+
+const SECTIONS = [
+ {id:'pembukaan', jenis:'catatan', judul:'PEMBUKAAN AKTA', nota: CATATAN_PEMBUKAAN, teks:
+`PEJABAT PEMBUAT AKTA TANAH
+(PPAT)
+{{ppat_nama}}
+DAERAH KERJA {{ppat_wilayah}},
+SK Menteri Agraria dan Tata Ruang /Kepala Bagian Pertanahan
+Nasional Republik Indonesia
+Nomor : {{ppat_sk}}, Tanggal :16 Juni 2023
+{{ppat_alamat}},
+Telp. {{ppat_telepon}}, E-mail : {{ppat_email}}
+
+AKTA JUAL BELI
+Nomor : {{deed_number}}.-
+Lembar Kedua
+
+Pada hari ini, hari {{var_hari}} Tanggal {{var_tanggal}} ({{var_tanggal:terbilang}}) pukul {{var_pukul}} ({{var_pukul:terbilang}})
+-Hadir di hadapan saya, {{ppat_nama}}, Sarjana Hukum, Magister Kenotariatan, yang berdasarkan Surat Keputusan Kepala Badan Pertanahan Nasional Republik Indonesia tanggal 16 Juni 2023, Nomor : {{ppat_sk}}, diangkat/ditunjuk sebagai Pejabat Pembuat Akta Tanah, yang selanjutnya disebut PPAT, yang dimaksud dalam Pasal 7 Peraturan Pemerintah Nomor 24 Tahun 1997 tentang Pendaftaran Tanah, dengan daerah kerja {{ppat_wilayah}}, dan berkantor di {{ppat_alamat}}, dengan dihadiri oleh saksi - saksi yang, Saya, PPAT kenal dan akan disebut pada bagian akhir akta ini :`},
+
+ {id:'para_pihak', jenis:'otomatis', kode:'para_pihak', judul:'Para Pihak'},
+ {id:'objek', jenis:'otomatis', kode:'objek', judul:'Objek Jual Beli'},
+
+ {id:'p1', jenis:'pasal', judul:'Pasal 1', teks:'Mulai hari ini Objek Jual Beli yang diuraikan dalam akta ini telah menjadi milik PIHAK KEDUA \u2026'},
+ {id:'p2', jenis:'pasal', judul:'Pasal 2', teks:'PIHAK PERTAMA menjamin bahwa Objek Jual Beli tersebut tidak tersangkut dalam suatu sengketa \u2026'},
+ {id:'p3', jenis:'pasal', judul:'Pasal 3', teks:'PIHAK KEDUA dengan ini menyatakan bahwa dengan jual beli ini kepemilikan tanahnya tidak melebihi ketentuan maksimum \u2026'},
+
+ {id:'saksi', jenis:'otomatis', kode:'saksi', judul:'Saksi & Penutup'},
+ {id:'ttd', jenis:'otomatis', kode:'ttd', judul:'Tanda Tangan'}
+];
+
+const OTO_TERSEDIA = {para_pihak:'Para Pihak', objek:'Objek Jual Beli', saksi:'Saksi & Penutup', ttd:'Tanda Tangan'};
+
+/* potongan: [grup, judul, syarat, dipakai pada, dipakai di kasus terpilih, teks] */
+const POTONGAN = {
+ para_pihak: [
+  {g:'', j:'Identitas orang', y:'selalu', d:'Perorangan, + pasangan, + pasangan diwakili, Dikuasakan, Perseroan, Perseroan + kuasa, Ahli waris bersama, Harta bersama + waris', pakai:true, t:
+`{{orang.sapaan}} {{orang.nama}}, lahir di {{orang.tempat_lahir}}, pada tanggal {{orang.tanggal_lahir}} ({{orang.tanggal_lahir_terbilang}}), Warga Negara {{orang.kewarganegaraan}}, {{orang.pekerjaan}}, bertempat tinggal di {{orang.alamat}}, Rukun Tetangga {{orang.rt}}, Rukun Warga {{orang.rw}}, {{orang.label_kelurahan}} {{orang.kelurahan}}, Kecamatan {{orang.kecamatan}}, {{orang.label_kota}} {{orang.kota}}, Provinsi {{orang.provinsi}}, Pemegang Kartu Tanda Penduduk Nomor: {{orang.nik}}.`},
+  {g:'', j:'Domisili sementara', y:'bila diisi', d:'Dikuasakan', pakai:false, t:
+`Untuk sementara berada di {{orang.domisili_sementara}};`},
+
+  {g:'PERWAKILAN / KUASA', j:'Dasar kuasa \u2014 di bawah tangan', y:'bila dikuasakan, kuasa di bawah tangan', d:'Dikuasakan', pakai:false, t:
+`Menurut keterangannya dalam melakukan tindakan hukum yang dimaksud dalam akta ini bertindak berdasarkan Surat Kuasa di bawah tangan, bermeterai cukup, tertanggal {{kuasa_tanggal}} ({{kuasa_tanggal_terbilang}}), yang aslinya dilekatkan pada minuta akta ini, dari dan oleh karena itu sah bertindak untuk dan atas nama:`},
+  {g:'PERWAKILAN / KUASA', j:'Dasar kuasa \u2014 notariil', y:'bila dikuasakan, akta kuasa notariil', d:'Perseroan + kuasa', pakai:false, t:
+`Menurut keterangannya dalam melakukan tindakan hukum yang dimaksud dalam akta ini bertindak berdasarkan Akta Kuasa tertanggal {{kuasa_tanggal}} ({{kuasa_tanggal_terbilang}}) Nomor {{kuasa_nomor}}, yang dibuat di hadapan {{kuasa_notaris}}, Notaris di {{kuasa_notaris_kota}}, yang salinannya dilekatkan pada minuta akta ini, dari dan oleh karena itu sah bertindak untuk dan atas nama:`},
+
+  {g:'PASANGAN', j:'Persetujuan pasangan \u2014 hadir', y:'bila ada pasangan & hadir', d:'+ pasangan', pakai:false, t:
+`Menurut keterangannya dalam melakukan tindakan hukum yang dimaksud dalam akta ini telah mendapat persetujuan dari {{pasangan_hubungan}}nya yang sah dan satu-satunya demikian berdasarkan {{nikah_dokumen_jenis}} tertanggal {{nikah_dokumen_tanggal}} ({{nikah_dokumen_tanggal_terbilang}}) Nomor: {{nikah_dokumen_nomor}}, yang dikeluarkan oleh {{nikah_dokumen_penerbit}}, yang fotokopinya dilekatkan pada minuta akta ini, yaitu {{pasangan.nama}}, lahir di {{pasangan.tempat_lahir}}, pada tanggal {{pasangan.tanggal_lahir}} ({{pasangan.tanggal_lahir_terbilang}}), Warga Negara {{pasangan.kewarganegaraan}}, {{pasangan.pekerjaan}}, bertempat tinggal sama dengan {{pasangan_hubungan_balik}} {{pihak.sapaan}} {{pihak.nama}}, tersebut, pemegang Kartu Tanda Penduduk Nomor: {{pasangan.nik}}, yang turut hadir di hadapan saya, PPAT, dan menandatangani akta ini sebagai bukti persetujuannya.`},
+  {g:'PASANGAN', j:'Persetujuan pasangan \u2014 diwakili', y:'bila pasangan diwakili', d:'+ pasangan diwakili', pakai:false, t:
+`Menurut keterangannya dalam melakukan tindakan hukum yang dimaksud dalam akta ini telah mendapat persetujuan dari {{pasangan_hubungan}}nya yang sah dan satu-satunya demikian berdasarkan {{nikah_dokumen_jenis}} tertanggal {{nikah_dokumen_tanggal}} ({{nikah_dokumen_tanggal_terbilang}}) Nomor: {{nikah_dokumen_nomor}}, yang dikeluarkan oleh {{nikah_dokumen_penerbit}}, yang fotokopinya dilekatkan pada minuta akta ini, yaitu {{pasangan.nama}}, lahir di {{pasangan.tempat_lahir}}, pada tanggal {{pasangan.tanggal_lahir}} ({{pasangan.tanggal_lahir_terbilang}}), Warga Negara {{pasangan.kewarganegaraan}}, {{pasangan.pekerjaan}}, bertempat tinggal sama dengan {{pasangan_hubungan_balik}} {{pihak.sapaan}} {{pihak.nama}}, tersebut, pemegang Kartu Tanda Penduduk Nomor: {{pasangan.nik}}, yang dalam hal ini tidak hadir dan diwakili oleh:`},
+  {g:'PASANGAN', j:'Dasar kuasa pasangan', y:'bila pasangan diwakili', d:'+ pasangan diwakili', pakai:false, t:
+`Menurut keterangannya dalam melakukan tindakan hukum yang dimaksud dalam akta ini bertindak berdasarkan {{kuasa_pasangan_jenis}} tertanggal {{kuasa_pasangan_tanggal}} ({{kuasa_pasangan_tanggal_terbilang}}), yang aslinya dilekatkan pada minuta akta ini, dari dan oleh karena itu sah bertindak untuk dan atas nama {{pasangan.nama}} tersebut, dan turut menandatangani akta ini sebagai bukti persetujuannya.`},
+
+  {g:'PERSEROAN', j:'Kedudukan wakil perseroan', y:'bila berbentuk PT', d:'Perseroan, Perseroan + kuasa', pakai:false, t:
+`Menurut keterangannya dalam melakukan tindakan hukum yang dimaksud dalam akta ini bertindak dalam jabatannya selaku {{pt.jabatan_wakil}} dari perseroan terbatas {{pt.nama}}, yang disebutkan dalam akta ini, dari dan oleh karena itu sah bertindak mewakili untuk dan atas nama {{pt.nama}}, berkedudukan di {{pt.kedudukan}},`},
+  {g:'PERSEROAN', j:'Persetujuan Dewan Komisaris', y:'bila disyaratkan', d:'Perseroan', pakai:false, t:
+`dan telah memperoleh persetujuan dari Komisaris Perseroan tersebut demikian berdasarkan Surat Persetujuan Dewan Komisaris tertanggal {{pt.komisaris_tanggal}} ({{pt.komisaris_tanggal_terbilang}}) Nomor {{pt.komisaris_nomor}}, yang aslinya diperlihatkan kepada saya, PPAT dan fotokopinya dilekatkan pada minuta akta ini,`},
+  {g:'PERSEROAN', j:'Akta pendirian', y:'bila berbentuk PT', d:'Perseroan, Perseroan + kuasa', pakai:false, t:
+`yang didirikan berdasarkan Akta tertanggal {{pt.pendirian_tanggal}} ({{pt.pendirian_tanggal_terbilang}}) Nomor {{pt.pendirian_nomor}}, yang dibuat di hadapan {{pt.pendirian_notaris}}, Notaris di {{pt.pendirian_notaris_kota}}, dan telah mendapat pengesahan dari {{pt.pendirian_pengesah}} Republik Indonesia sebagaimana tercantum dalam Surat Keputusannya tertanggal {{pt.pendirian_sk_tanggal}} ({{pt.pendirian_sk_tanggal_terbilang}}), Nomor: {{pt.pendirian_sk_nomor}}`},
+  {g:'PERSEROAN', j:'Penyesuaian UU 40/2007', y:'bila ada', d:'Perseroan', pakai:false, t:
+`, anggaran dasar mana telah disesuaikan dengan Undang-Undang Nomor 40 tahun 2007 (dua ribu tujuh) tentang Perseroan Terbatas, sebagaimana tercantum dalam Akta tertanggal {{pt.uu40_tanggal}} ({{pt.uu40_tanggal_terbilang}}) Nomor {{pt.uu40_nomor}}, yang dibuat di hadapan {{pt.uu40_notaris}}, Notaris di {{pt.uu40_notaris_kota}}`},
+  {g:'PERSEROAN', j:'Riwayat perubahan (berulang)', y:'bila ada', d:'Perseroan', pakai:false, t:
+`. Anggaran Dasar dan data perseroan mana telah beberapa kali mengalami perubahan terakhir, yang mana:
+- {{jenis_perubahan}} terakhir termuat dalam Akta tertanggal {{pt.perubahan_tanggal}} ({{pt.perubahan_tanggal_terbilang}}) Nomor {{pt.perubahan_nomor}}, yang dibuat di hadapan {{pt.perubahan_notaris}}, Notaris di {{pt.perubahan_notaris_kota}};`},
+
+  {g:'WARIS', j:'Ahli waris bersama-sama', y:'bila pihak = ahli waris bersama', d:'Ahli waris bersama', pakai:false, t:
+`menurut keterangannya {{jumlah_ahli_waris_sebutan}} bersama - sama untuk melakukan tindakan hukum dalam akta ini tidak memerlukan persetujuan dari siapapun, karena {{objek_sebutan_singkat}} yang akan disebutkan dibawah ini diperoleh dari warisan, demikian berdasarkan SURAT PERNYATAAN AHLI WARIS, tertanggal {{spaw_tanggal}} ({{spaw_tanggal_terbilang}}), yang dibuat dibawah tangan dan bermeterai cukup,`},
+  {g:'WARIS', j:'Pembuka dua kapasitas', y:'bila pihak = harta bersama + ahli waris', d:'Harta bersama + waris', pakai:false, t:
+`Menurut keterangannya dalam hal ini bertindak :`},
+  {g:'WARIS', j:'Setengah bagian harta bersama', y:'bila pihak = harta bersama + ahli waris', d:'Harta bersama + waris', pakai:false, t:
+`Untuk diri sendiri selaku pemilik dari setengah bagian tak terbagi dalam harta bersama yang diperoleh selama perkawinan dengan {{pewaris_sebutan}} {{pewaris_nama}}, yang telah meninggal dunia di {{pewaris_meninggal_kota}}, pada tanggal {{pewaris_meninggal_tanggal}} ({{pewaris_meninggal_tanggal_terbilang}}) demikian berdasarkan Kutipan Akta Kematian tertanggal {{akta_kematian_tanggal}} ({{akta_kematian_tanggal_terbilang}}) Nomor: {{akta_kematian_nomor}}, yang dikeluarkan oleh {{akta_kematian_penerbit}};`},
+  {g:'WARIS', j:'Ahli waris lain turut hadir', y:'bila pihak = harta bersama + ahli waris', d:'Harta bersama + waris', pakai:false, t:
+`Selaku ahli waris dari {{pewaris_sebutan}} {{pewaris_nama}}, tersebut, bersama-sama dengan ahli waris lainnya yang turut hadir menghadap kepada Saya, PPAT, serta ikut menandatangani Akta ini sebagai tanda persetujuannya yaitu :`},
+  {g:'WARIS', j:'Penutup selaku ahli waris', y:'bila pihak = harta bersama + ahli waris', d:'Harta bersama + waris', pakai:false, t:
+`dalam hal ini bertindak bersama-sama selaku ahli waris dari {{pewaris_sebutan}} {{pewaris_nama}}, tersebut, demikian berdasarkan Surat Pernyataan Ahli Waris yang dibuat di bawah tangan bermaterai cukup tertanggal {{spaw_tanggal}} ({{spaw_tanggal_terbilang}}),`},
+  {g:'WARIS', j:'Register SPAW \u2014 lengkap', y:'bila redaksi register = lengkap', d:'Ahli waris bersama', pakai:false, t:
+`yang diketahui dan telah dicatat dalam Buku Register oleh Ketua Rukun Tetangga {{spaw_rt}} oleh Ketua Rukun Warga {{spaw_rw}} tertanggal {{spaw_rt_rw_tanggal}} ({{spaw_rt_rw_tanggal_terbilang}}) dengan Nomor: {{spaw_rt_rw_nomor}}, yang telah dicatatkan dan diregister dalam Buku Register Kelurahan {{spaw_kelurahan}} oleh Lurah Kelurahan {{spaw_kelurahan}} tertanggal {{spaw_kelurahan_tanggal}} ({{spaw_kelurahan_tanggal_terbilang}}), Nomor: {{spaw_kelurahan_nomor}}, yang telah dicatatkan dan diregister dalam Buku Register Kecamatan {{spaw_kecamatan}} oleh Camat Kecamatan {{spaw_kecamatan}} tertanggal {{spaw_kecamatan_tanggal}} ({{spaw_kecamatan_tanggal_terbilang}}) Nomor: {{spaw_kecamatan_nomor}}, yang aslinya diperlihatkan kepada saya, PPAT, dan fotokopinya dilekatkan pada minuta akta ini;`},
+  {g:'WARIS', j:'Register SPAW \u2014 ringkas', y:'bila redaksi register = ringkas', d:'Harta bersama + waris', pakai:false, t:
+`yang diketahui oleh Rukun Tetangga {{spaw_rt}} tertanggal {{spaw_rt_tanggal}} ({{spaw_rt_tanggal_terbilang}}) dan Rukun Warga {{spaw_rw}} tertanggal {{spaw_rw_tanggal}} ({{spaw_rw_tanggal_terbilang}}) dan telah dicatat dalam buku register Kelurahan {{spaw_kelurahan}} tertanggal {{spaw_kelurahan_tanggal}} ({{spaw_kelurahan_tanggal_terbilang}}) Nomor: {{spaw_kelurahan_nomor}}, dan telah dicatat dalam buku register Kecamatan {{spaw_kecamatan}} tertanggal {{spaw_kecamatan_tanggal}} ({{spaw_kecamatan_tanggal_terbilang}}) Nomor: {{spaw_kecamatan_nomor}}, yang aslinya diperlihatkan kepada saya, PPAT, dan fotokopinya dilekatkan pada minuta akta ini;`},
+
+  {g:'', j:'Peran pihak', y:'selalu', d:'Perorangan, + pasangan, + pasangan diwakili, Dikuasakan, Perseroan, Perseroan + kuasa, Ahli waris bersama, Harta bersama + waris', pakai:true, t:
+`Selaku {{peran}}, selanjutnya disebut \u201c{{sebutan_pihak}}\u201d.`}
+ ],
+
+ objek: [
+  {g:'URAIAN OBJEK', j:'Tanah bekas Milik Adat', y:'bila belum terdaftar', d:'Bekas Milik Adat', pakai:true, t:
+`- {{jenis_hak}} atas sebidang tanah Milik Adat : Persil nomor {{persil_nomor}} Blok {{persil_blok}} seluas {{objek_luas}} ({{objek_luas_terbilang}}) M2 (meter persegi), dengan batas-batas : Utara {{batas_utara}}; Timur {{batas_timur}}; Selatan {{batas_selatan}}; Barat {{batas_barat}}, yang terletak di:`},
+  {g:'URAIAN OBJEK', j:'Satuan Rumah Susun', y:'bila jenis hak SHMSRS', d:'Satuan Rumah Susun', pakai:false, t:
+`- Sertipikat Hak Milik Atas Satuan Rumah Susun (SHMSRS) Nomor {{sertipikat_nomor}}/{{sertipikat_kelurahan}}, atas unit hunian dalam Gambar Denah tertanggal {{gambar_denah_tanggal}} Nomor : {{gambar_denah_nomor}}, seluas {{objek_luas}} ({{objek_luas_terbilang}}) m2, terdaftar atas nama {{objek_atas_nama}}, dengan NIB {{objek_nib}} dan SPPT PBB NOP: {{objek_nop}}, yang terletak di:`},
+  {g:'URAIAN OBJEK', j:'Sertipikat Elektronik', y:'bila sertipikat elektronik', d:'Sertipikat Elektronik', pakai:false, t:
+`- {{jenis_hak}} Sertipikat Elektronik dengan Nomor Identifikasi Bidang Tanah (NIB) : {{objek_nib}}, Nomor Kode Sertipikat : {{objek_kode_sertipikat}}, atas sebidang {{objek_bentuk}} seluas {{objek_luas}} ({{objek_luas_terbilang}}) M2, terdaftar atas nama {{objek_atas_nama}} dan SPPT PBB NOP: {{objek_nop}}, yang terletak di:`},
+  {g:'', j:'Letak objek', y:'selalu', d:'Bekas Milik Adat, Satuan Rumah Susun, Sertipikat Elektronik', pakai:true, t:
+`- Provinsi : {{objek_provinsi}};
+- {{objek_label_kota}} : {{objek_kota}};
+- Kecamatan : {{objek_kecamatan}};
+- {{objek_label_kelurahan}} : {{objek_kelurahan}};
+- Jalan : {{objek_jalan}}.`},
+  {g:'MELIPUTI PULA', j:'Bagian bersama (sarusun)', y:'bila satuan rumah susun', d:'Satuan Rumah Susun', pakai:false, t:
+`Jual beli ini meliputi pula hak atas bagian bersama, benda bersama, tanah bersama, dan fasilitas bersama dengan nilai perbandingan proporsional {{objek_npp}} ({{objek_npp_terbilang}})%;`},
+  {g:'MELIPUTI PULA', j:'Benda tidak bergerak', y:'bila tanah / bangunan', d:'Bekas Milik Adat, Sertipikat Elektronik', pakai:true, t:
+`Jual beli ini meliputi pula segala sesuatu yang berada, berdiri, tertanam atau terpasang di atas dan/atau di dalam tanah tersebut yang dapat dianggap sebagai barang tidak bergerak;`},
+  {g:'', j:'Sebutan objek', y:'selalu', d:'Bekas Milik Adat, Satuan Rumah Susun, Sertipikat Elektronik', pakai:true, t:
+`Selanjutnya semua yang diuraikan di atas dalam akta ini disebut \u201cObjek {{akta_jenis}}\u201d.`}
+ ],
+
+ saksi: [
+  {g:'', j:'Pembuka penutup', y:'selalu', d:'2 saksi, tanpa domisili', pakai:true, t:
+`- Akhirnya hadir juga di hadapan saya, dengan dihadiri oleh saksi-saksi yang sama dan disebutkan pada bagian akhir akta ini :
+- Demikianlah akta ini dibuat di hadapan PARA PIHAK dan Saksi:`},
+  {g:'', j:'Identitas saksi (berulang)', y:'selalu, tiap saksi', d:'2 saksi, tanpa domisili', pakai:true, t:
+`{{saksi_gelar}} {{saksi_nama}}, lahir di {{saksi_tempat_lahir}}, pada tanggal {{saksi_tanggal_lahir}} ({{saksi_tanggal_lahir_terbilang}}), {{saksi_pekerjaan}}, Warga Negara Indonesia, bertempat tinggal di {{saksi_jalan}}, Rukun Tetangga {{saksi_rt}}, Rukun Warga {{saksi_rw}}, Kelurahan {{saksi_kelurahan}}, Kecamatan {{saksi_kecamatan}}, {{saksi_kota}}, Provinsi {{saksi_provinsi}}, pemegang Kartu Tanda Penduduk dengan Nomor Induk Kependudukan (NIK): {{saksi_nik}}.`},
+  {g:'', j:'Keterangan domisili saksi', y:'bila diisi', d:'2 saksi', pakai:true, t:
+`- {{saksi_domisili}}`},
+  {g:'', j:'Penutup akhir', y:'selalu', d:'2 saksi, tanpa domisili', pakai:true, t:
+`- Sebagai saksi-saksi, dan setelah dibacakan serta dijelaskan, maka sebagai bukti kebenaran pernyataan yang dikemukakan oleh PIHAK PERTAMA dan PIHAK KEDUA tersebut di atas, akta ini ditandatangani oleh PIHAK PERTAMA, PIHAK KEDUA, para saksi dan saya, PPAT, sebanyak 2 (dua) rangkap asli, yaitu 1 (satu) rangkap lembar pertama disimpan di kantor saya, PPAT dan 1 (satu) rangkap lembar kedua disampaikan kepada {{kantor_pertanahan}}.`}
+ ],
+
+ ttd: [
+  {g:'', j:'Kolom para pihak', y:'selalu', d:'Perorangan, + persetujuan, Perseroan', pakai:true, t:
+`{{sebutan_pihak_pertama}}     /     {{sebutan_pihak_kedua}}
+({{pihak_pertama.nama}})     /     ({{pihak_kedua.nama}})`},
+  {g:'', j:'Baris qq. perseroan', y:'bila berbentuk PT', d:'Perseroan', pakai:false, t:
+`qq. {{pt.nama}}
+berkedudukan di {{pt.kedudukan}}`},
+  {g:'', j:'Kolom persetujuan', y:'bila ada pemberi persetujuan', d:'+ persetujuan', pakai:false, t:
+`{{label_persetujuan}}
+({{pasangan.nama}})`},
+  {g:'', j:'Kolom saksi', y:'selalu', d:'Perorangan, + persetujuan, Perseroan', pakai:true, t:
+`SAKSI     /     SAKSI
+({{saksi1_nama}})     /     ({{saksi2_nama}})`},
+  {g:'', j:'Kolom PPAT', y:'selalu', d:'Perorangan, + persetujuan, Perseroan', pakai:true, t:
+`PEJABAT PEMBUAT AKTA TANAH
+({{ppat_nama}})`}
+ ]
+};
+
+/* ============ Variabel jenis akta AJB (80) ============ */
+const GRUP = [
+ ['Penjual','penjual',[['Gelar/Status Penjual','gelar'],['Nama Lengkap Penjual','nama'],['Tempat Lahir Penjual','tempat_lahir'],['Tanggal Lahir Penjual','tanggal_lahir'],['Pekerjaan Penjual','pekerjaan'],['Alamat Jalan Penjual','jalan'],['RT Penjual','rt'],['RW Penjual','rw'],['Kelurahan Penjual','kelurahan'],['Kecamatan Penjual','kecamatan'],['Kota/Kabupaten Penjual','kota'],['NIK Penjual','nik'],['Kewarganegaraan Penjual','kewarganegaraan'],['NPWP Penjual','npwp']]],
+ ['Pembeli','pembeli',[['Gelar/Status Pembeli','gelar'],['Nama Lengkap Pembeli','nama'],['Tempat Lahir Pembeli','tempat_lahir'],['Tanggal Lahir Pembeli','tanggal_lahir'],['Pekerjaan Pembeli','pekerjaan'],['Alamat Jalan Pembeli','jalan'],['RT Pembeli','rt'],['RW Pembeli','rw'],['Kelurahan Pembeli','kelurahan'],['Kecamatan Pembeli','kecamatan'],['Kota/Kabupaten Pembeli','kota'],['NIK Pembeli','nik'],['Kewarganegaraan Pembeli','kewarganegaraan'],['NPWP Pembeli','npwp']]],
+ ['Objek Tanah','',[['Jenis Hak','jenis_hak'],['Nomor Surat Ukur','surat_ukur_nomor'],['Tanggal Surat Ukur','surat_ukur_tanggal'],['Provinsi Objek','provinsi'],['Kota/Kabupaten Objek','kabupaten_kota'],['Kecamatan Objek','kecamatan'],['Kelurahan Objek','desa_kelurahan'],['Letak/Lokasi Tanah','lokasi_tanah'],['Luas Tanah (m2)','luas_tanah'],['NPP (%)','npp'],['Harga Jual Beli','harga_jual']]],
+ ['Saksi I','saksi1',[['Gelar Saksi I','gelar'],['Nama Saksi I','nama'],['Tempat Lahir Saksi I','tempat_lahir'],['Tanggal Lahir Saksi I','tanggal_lahir'],['Pekerjaan Saksi I','pekerjaan'],['Alamat Jalan Saksi I','jalan'],['RT Saksi I','rt'],['RW Saksi I','rw'],['Kelurahan Saksi I','kelurahan'],['Kecamatan Saksi I','kecamatan'],['Kota Saksi I','kota'],['Provinsi Saksi I','provinsi'],['NIK Saksi I','nik'],['Keterangan Domisili Saksi I','domisili']]],
+ ['Saksi II','saksi2',[['Gelar Saksi II','gelar'],['Nama Saksi II','nama'],['Tempat Lahir Saksi II','tempat_lahir'],['Tanggal Lahir Saksi II','tanggal_lahir'],['Pekerjaan Saksi II','pekerjaan'],['Alamat Jalan Saksi II','jalan'],['RT Saksi II','rt'],['RW Saksi II','rw'],['Kelurahan Saksi II','kelurahan'],['Kecamatan Saksi II','kecamatan'],['Kota Saksi II','kota'],['Provinsi Saksi II','provinsi'],['NIK Saksi II','nik'],['Keterangan Domisili Saksi II','domisili']]],
+ ['PPAT','',[['Nama PPAT','ppat_nama'],['Gelar (singkatan)','ppat_gelar'],['Gelar (tidak disingkat)','ppat_gelar_lengkap'],['Nomor SK Pengangkatan','ppat_sk'],['Wilayah Kerja','ppat_wilayah'],['Alamat Kantor','ppat_alamat'],['Telepon','ppat_telepon'],['Email','ppat_email']]],
+ ['Metadata Akta','',[['Nomor Akta','deed_number'],['Hari','var_hari'],['Tanggal Akta','var_tanggal'],['Pukul','var_pukul'],['Lembar (Pertama/Kedua/Salinan)','lembar']]]
+];
+const VARIABEL = [];
+GRUP.forEach(function(g){ g[2].forEach(function(v){ VARIABEL.push({label:v[0], key:(g[1] ? g[1]+'_'+v[1] : v[1]), grup:g[0]}); }); });
+
+/* ============ Util ============ */
+const el = id => document.getElementById(id);
+const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const tandai = s => esc(s).replace(/\{\{[a-z0-9_.:]+\}\}/gi, m => '<span class="v">'+m+'</span>');
+
+let bagianAktif = 0;
+let potAktif = null;
+let tabAktif = 'bagian';
+let modeKode = false;
+
+const IKON_DOK = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>';
+const IKON_OTO = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.2 14.8a1.6 1.6 0 0 0 .32 1.77l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.6 1.6 0 0 0-1.77-.32 1.6 1.6 0 0 0-.97 1.47V21a2 2 0 1 1-4 0v-.1a1.6 1.6 0 0 0-1.05-1.47 1.6 1.6 0 0 0-1.77.32l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.6 1.6 0 0 0 .32-1.77 1.6 1.6 0 0 0-1.47-.97H3a2 2 0 1 1 0-4h.1a1.6 1.6 0 0 0 1.47-1.05 1.6 1.6 0 0 0-.32-1.77l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.6 1.6 0 0 0 1.77.32H9a1.6 1.6 0 0 0 .97-1.47V3a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 .97 1.47 1.6 1.6 0 0 0 1.77-.32l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.6 1.6 0 0 0-.32 1.77V9a1.6 1.6 0 0 0 1.47.97H21a2 2 0 1 1 0 4h-.1a1.6 1.6 0 0 0-1.47.97z"/></svg>';
+const IKON_UNDUH = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M4 20h16"/></svg>';
+const IKON_PENA = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20h4L20 8a2 2 0 0 0-3-3L5 17z"/></svg>';
+const IKON_SAMPAH = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"/></svg>';
+const IKON_GESER =
+    '<span class="ar"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg></span>'
+  + '<span class="gr"><svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" stroke="none"><circle cx="9" cy="5" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="9" cy="19" r="1.6"/><circle cx="15" cy="5" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="15" cy="19" r="1.6"/></svg></span>'
+  + '<span class="ar"><svg viewBox="0 0 24 24" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg></span>';
+const IKON_MATA_BESAR = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>';
+const IKON_PENSIL = '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>';
+
+const KET_BEBAS = 'Naskah bebas \u2014 diketik seperti dokumen biasa, tanpa kondisi.';
+const KET_OTO = 'Bagian Otomatis \u2014 struktur, syarat tampil, dan urutannya terkunci. Klik potongan untuk menyunting tulisannya.';
+
+
+/* kode potongan (urutan sama dengan daftar POTONGAN di atas) */
+const KODE = {
+ para_pihak:['identitas_orang','domisili','kuasa_bawah_tangan','kuasa_notariil','pasangan_hadir','pasangan_diwakili',
+   'kuasa_pasangan','pt_kedudukan','pt_komisaris','pt_pendirian','pt_uu40','pt_perubahan','waris_bersama',
+   'harta_bertindak','harta_diri','harta_ahli_waris_lain','harta_spaw_penutup','spaw_register_draf4','spaw_register_draf1','peran'],
+ objek:['objek_adat','objek_shmsrs','objek_elektronik','letak_objek','meliputi_srs','meliputi_tanah','sebutan_objek'],
+ saksi:['penutup_pembuka','identitas_saksi','domisili_saksi','penutup_akhir'],
+ ttd:['ttd_para_pihak','ttd_qq_pt','ttd_persetujuan','ttd_saksi','ttd_ppat']
+};
+Object.keys(KODE).forEach(function(k){ KODE[k].forEach(function(kode, i){ POTONGAN[k][i].kode = kode; }); });
+
+/* kasus pratinjau: urutan potongan yang muncul untuk tiap kondisi order */
+const KASUS = {
+ para_pihak: [
+  {id:'perorangan', nama:'Perorangan', urut:[['identitas_orang'],['peran']]},
+  {id:'pasangan', nama:'+ pasangan', urut:[['identitas_orang'],['pasangan_hadir'],['peran']]},
+  {id:'pasangan_wakil', nama:'+ pasangan diwakili', urut:[['identitas_orang'],['pasangan_diwakili'],['identitas_orang','penerima kuasa pasangan'],['kuasa_pasangan'],['peran']]},
+  {id:'kuasa', nama:'Dikuasakan', urut:[['identitas_orang','penerima kuasa'],['domisili'],['kuasa_bawah_tangan'],['identitas_orang','pemberi kuasa'],['peran']]},
+  {id:'pt', nama:'Perseroan', urut:[['identitas_orang','wakil perseroan'],['pt_kedudukan'],['pt_komisaris'],['pt_pendirian'],['pt_uu40'],['pt_perubahan'],['peran']]},
+  {id:'pt_kuasa', nama:'Perseroan + kuasa', urut:[['identitas_orang','penerima kuasa'],['kuasa_notariil'],['identitas_orang','wakil perseroan'],['pt_kedudukan'],['pt_pendirian'],['peran']]},
+  {id:'waris', nama:'Ahli waris bersama', urut:[['identitas_orang','ahli waris 1'],['identitas_orang','ahli waris 2, dst.'],['waris_bersama'],['spaw_register_draf4'],['peran']]},
+  {id:'harta_waris', nama:'Harta bersama + waris', urut:[['identitas_orang','penghadap'],['harta_bertindak'],['harta_diri'],['harta_ahli_waris_lain'],['identitas_orang','ahli waris lain'],['harta_spaw_penutup'],['spaw_register_draf1'],['peran']]}
+ ],
+ objek: [
+  {id:'adat', nama:'Bekas Milik Adat', urut:[['objek_adat'],['letak_objek'],['meliputi_tanah'],['sebutan_objek']]},
+  {id:'srs', nama:'Satuan Rumah Susun', urut:[['objek_shmsrs'],['letak_objek'],['meliputi_srs'],['sebutan_objek']]},
+  {id:'elektronik', nama:'Sertipikat Elektronik', urut:[['objek_elektronik'],['letak_objek'],['meliputi_tanah'],['sebutan_objek']]}
+ ],
+ saksi: [
+  {id:'dua', nama:'2 saksi', urut:[['penutup_pembuka'],['identitas_saksi','saksi 1'],['domisili_saksi'],['identitas_saksi','saksi 2'],['domisili_saksi'],['penutup_akhir']]},
+  {id:'tanpa_domisili', nama:'tanpa domisili', urut:[['penutup_pembuka'],['identitas_saksi','saksi 1'],['identitas_saksi','saksi 2'],['penutup_akhir']]}
+ ],
+ ttd: [
+  {id:'biasa', nama:'Perorangan', urut:[['ttd_para_pihak'],['ttd_saksi'],['ttd_ppat']]},
+  {id:'pasangan', nama:'+ persetujuan', urut:[['ttd_para_pihak'],['ttd_persetujuan'],['ttd_saksi'],['ttd_ppat']]},
+  {id:'pt', nama:'Perseroan', urut:[['ttd_para_pihak'],['ttd_qq_pt'],['ttd_saksi'],['ttd_ppat']]}
+ ]
+};
+
+let kasusAktif = {};
+let dataContoh = false;
+
+function kasusSekarang(kode){
+  const daftar = KASUS[kode] || [];
+  const id = kasusAktif[kode] || (daftar[0] && daftar[0].id);
+  return daftar.filter(k => k.id === id)[0];
+}
+function potDenganKode(sec, kode){ return pot(sec).filter(p => p.kode === kode)[0]; }
+
+
+/* ---- lampiran template ---- */
+const LAMPIRAN = [
+ {id:'lamp1', judul:'Daftar Objek yang Dialihkan', asal:'bawaan', teks:
+`DAFTAR OBJEK YANG DIALIHKAN
+
+Lampiran Akta {{akta_jenis}} Nomor {{deed_number}} tertanggal {{var_tanggal}}.
+
+1. {{jenis_hak}} Nomor {{sertipikat_nomor}}/{{sertipikat_kelurahan}}, NIB {{objek_nib}}, seluas {{objek_luas}} ({{objek_luas_terbilang}}) M2, terdaftar atas nama {{objek_atas_nama}}, SPPT PBB NOP {{objek_nop}}, terletak di {{objek_jalan}}, {{objek_label_kelurahan}} {{objek_kelurahan}}, Kecamatan {{objek_kecamatan}}, {{objek_label_kota}} {{objek_kota}}, Provinsi {{objek_provinsi}}.
+
+{{ppat_wilayah}}, {{var_tanggal}}
+
+PIHAK PERTAMA                    PIHAK KEDUA
+
+({{pihak_pertama.nama}})            ({{pihak_kedua.nama}})`},
+ {id:'lamp2', judul:'Pernyataan Kesesuaian Data Objek', asal:'bawaan', teks:
+`PERNYATAAN KESESUAIAN DATA OBJEK
+
+Yang bertanda tangan di bawah ini {{pihak.sapaan}} {{pihak.nama}}, pemegang Kartu Tanda Penduduk Nomor {{orang.nik}}, menyatakan bahwa data objek yang diuraikan dalam Akta {{akta_jenis}} Nomor {{deed_number}} \u2014 {{jenis_hak}} seluas {{objek_luas}} M2 yang terletak di {{objek_jalan}}, {{objek_label_kelurahan}} {{objek_kelurahan}} \u2014 adalah benar dan sesuai dengan dokumen aslinya.
+
+Apabila di kemudian hari terdapat ketidaksesuaian, segala akibat hukumnya menjadi tanggung jawab saya dan membebaskan {{ppat_nama}}, PPAT di {{ppat_wilayah}}, beserta saksi-saksi.
+
+{{ppat_wilayah}}, {{var_tanggal}}
+
+({{pihak.nama}})`}
+];
+LAMPIRAN.forEach(function(l){ l.asli = l.teks; });
+
+let modeKiri = 'bagian';       /* daftar kiri: bagian | lampiran */
+let lampiranAktif = null;
+
+/* simpan naskah bawaan tiap potongan, dipakai tombol Reset */
+Object.keys(POTONGAN).forEach(function(k){ POTONGAN[k].forEach(function(p){ p.asli = p.t; }); });
+
+function pot(sec){ return (sec.kode && POTONGAN[sec.kode]) ? POTONGAN[sec.kode] : []; }
+function nomorPasal(i){ let n = 0; for(let k = 0; k <= i; k++) if(SECTIONS[k].jenis === 'pasal') n++; return n; }
+
+function toast(pesan){
+  const t = document.createElement('div');
+  t.className = 'tpl-toast'; t.textContent = pesan;
+  document.body.appendChild(t);
+  setTimeout(function(){ t.remove(); }, 2600);
+}
+
+/* ============ Panel kiri ============ */
+function gambarDaftar(){
+  const q = (el('cariBagian').value || '').toLowerCase();
+  const hasil = SECTIONS.map((b,i) => ({b:b, i:i})).filter(x => x.b.judul.toLowerCase().indexOf(q) >= 0);
+  el('daftarBagian').innerHTML = hasil.map(function(x){
+    const b = x.b;
+    const ikon = b.jenis === 'pasal'
+      ? '<span class="ic num">'+nomorPasal(x.i)+'</span>'
+      : '<span class="ic">'+(b.jenis === 'otomatis' ? IKON_OTO : IKON_DOK)+'</span>';
+    return '<div class="tpl-item" data-i="'+x.i+'" aria-current="'+(bagianAktif === x.i)+'">'
+      + '<span class="tpl-drag">'+IKON_GESER+'</span>'
+      + ikon
+      + '<button class="nm" data-pilih="'+x.i+'">'+esc(b.judul)+'</button>'
+      + '<button class="aksi" data-ubah="'+x.i+'" title="Ubah judul">'+IKON_PENA+'</button>'
+      + (b.jenis === 'otomatis' ? ''   /* bagian otomatis terkunci: tidak bisa dihapus */
+          : '<button class="aksi hapus" data-hapus="'+x.i+'" title="Hapus bagian">'+IKON_SAMPAH+'</button>')
+      + '</div>';
+  }).join('');
+  el('jmlBagian').textContent = '('+hasil.length+')';
+
+  [].forEach.call(el('daftarBagian').querySelectorAll('[data-pilih]'), function(btn){
+    btn.onclick = function(){
+      bagianAktif = parseInt(btn.dataset.pilih, 10);
+      potAktif = null; modeKode = false; tabAktif = 'bagian';
+      segarkanTab(); gambarDaftar(); gambarKanan();
+    };
+  });
+  [].forEach.call(el('daftarBagian').querySelectorAll('[data-ubah]'), function(btn){
+    btn.onclick = function(){
+      const i = parseInt(btn.dataset.ubah, 10);
+      const nama = prompt('Judul bagian:', SECTIONS[i].judul);
+      if(nama && nama.trim()){ SECTIONS[i].judul = nama.trim(); gambarDaftar(); if(bagianAktif === i) gambarKanan(); }
+    };
+  });
+  [].forEach.call(el('daftarBagian').querySelectorAll('[data-hapus]'), function(btn){
+    btn.onclick = function(){
+      const i = parseInt(btn.dataset.hapus, 10);
+      if(!confirm('Hapus bagian \u201c'+SECTIONS[i].judul+'\u201d dari template ini?')) return;
+      SECTIONS.splice(i, 1);
+      if(bagianAktif >= SECTIONS.length) bagianAktif = SECTIONS.length - 1;
+      potAktif = null; gambarDaftar(); gambarKanan();
+    };
+  });
+}
+
+
+
+/* ============ Daftar lampiran ============ */
+function gambarLampiran(){
+  const kotak = el('daftarLampiran');
+  kotak.innerHTML =
+      '<div class="lamp-info">'
+      + '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" style="flex:none;margin-top:2px"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M8 4v16"/></svg>'
+      + '<span><b>Satu baris di daftar ini adalah satu lampiran utuh</b> \u2014 satu berkas atau satu naskah lampiran yang berdiri sendiri, bukan potongan atau bagian dari lampiran lain. Urutannya di daftar menentukan urutan lampiran pada akta.</span></div>'
+    + '<p class="lamp-ket">Lampiran bawaan template. Isinya ditulis sekarang memakai variabel, lalu terisi data sebenarnya ketika akta didraf. Tidak ada unggah berkas di layar ini.</p>'
+    + LAMPIRAN.map(function(l, i){
+        return '<div class="lamp-kartu" data-lamp="'+i+'" aria-current="'+(lampiranAktif === i)+'">'
+          + '<span class="tpl-drag">'+IKON_GESER+'</span>'
+          + '<span class="isi"><span class="jd">'+esc(l.judul)+'</span>'
+            + '<span class="lencana">Lampiran '+esc(l.asal)+'</span>'
+            + '<span class="sub">Disiapkan saat membuat template</span></span>'
+          + '<span class="aksi-kanan">'
+            + '<button class="aksi" data-unduh="'+i+'" title="Unduh lampiran">'+IKON_UNDUH+'</button>'
+            + '<button class="aksi hapus" data-hapuslamp="'+i+'" title="Hapus lampiran">'+IKON_SAMPAH+'</button>'
+          + '</span></div>';
+      }).join('');
+  el('jmlLampiran').textContent = '('+LAMPIRAN.length+')';
+
+  [].forEach.call(kotak.querySelectorAll('.lamp-kartu'), function(k){
+    k.onclick = function(e){
+      if(e.target.closest('button')) return;
+      lampiranAktif = parseInt(k.dataset.lamp, 10);
+      tabAktif = 'bagian'; segarkanTab(); gambarLampiran(); gambarKanan();
+    };
+  });
+  [].forEach.call(kotak.querySelectorAll('[data-unduh]'), function(b){
+    b.onclick = function(){ toast('Unduh lampiran belum aktif di prototipe.'); };
+  });
+  [].forEach.call(kotak.querySelectorAll('[data-hapuslamp]'), function(b){
+    b.onclick = function(){
+      const i = parseInt(b.dataset.hapuslamp, 10);
+      if(!confirm('Hapus lampiran \u201c'+LAMPIRAN[i].judul+'\u201d dari template ini?')) return;
+      LAMPIRAN.splice(i, 1);
+      if(lampiranAktif !== null && lampiranAktif >= LAMPIRAN.length) lampiranAktif = LAMPIRAN.length ? LAMPIRAN.length - 1 : null;
+      gambarLampiran(); gambarKanan();
+    };
+  });
+}
+
+function gantiModeKiri(mode){
+  modeKiri = mode;
+  [].forEach.call(document.querySelectorAll('.tabkiri'), function(b){
+    b.classList.toggle('on', b.dataset.kiri === mode);
+  });
+  el('daftarBagian').hidden = mode !== 'bagian';
+  el('kotakCari').hidden = mode !== 'bagian';
+  el('tombolBagian').hidden = mode !== 'bagian';
+  el('daftarLampiran').hidden = mode !== 'lampiran';
+  el('tombolLampiran').hidden = mode !== 'lampiran';
+  if(mode === 'lampiran'){
+    if(lampiranAktif === null && LAMPIRAN.length) lampiranAktif = 0;
+    gambarLampiran();
+  } else {
+    lampiranAktif = null;
+    gambarDaftar();
+  }
+  gambarKanan();
+}
+
+/* ============ Penyunting naskah ============ */
+const ALAT = [
+ [['bold','B','Tebal (Ctrl+B)','<b>B</b>'],['italic','I','Miring (Ctrl+I)','<i>I</i>'],['underline','U','Garis bawah (Ctrl+U)','<u>U</u>'],['strikeThrough','S','Coret','<s>S</s>'],
+  ['kapital','Aa','Ubah kapitalisasi','Aa'],['removeFormat','Tx','Hapus format','T\u2093']],
+ [['insertUnorderedList','\u2022','Daftar','\u2261'],['insertOrderedList','1.','Daftar bernomor','1\u2261'],
+  ['h1','H1','Heading 1','H\u2081'],['h2','H2','Heading 2','H\u2082'],['h3','H3','Heading 3','H\u2083'],['kutipan','\u201d','Kutipan','\u201d']],
+ [['warna','A','Warna teks','<span style="border-bottom:2px solid #B91C1C">A</span>'],['sorot','\u270e','Warna sorot','\u270e']],
+ [['tautan','\u{1F517}','Tautan','\u26ad'],['gambar','\u25a3','Gambar','\u25a3']],
+ [['justifyLeft','\u2261','Rata kiri','\u2261'],['justifyCenter','\u2261','Rata tengah','\u2261'],['justifyRight','\u2261','Rata kanan','\u2261'],['justifyFull','\u2261','Rata kanan-kiri','\u2261'],
+  ['outdent','\u2190','Kurangi jorokan','\u21e4'],['indent','\u2192','Tambah jorokan','\u21e5']]
+];
+
+function alatNaskah(idEditor){
+  let h = '<div class="tpl-bar2" data-untuk="'+idEditor+'">';
+  ALAT.forEach(function(grup, gi){
+    grup.forEach(function(a){
+      h += '<button type="button" data-cmd="'+a[0]+'" title="'+a[2]+'">'+a[3]+'</button>';
+    });
+    h += '<span class="pisah"></span>';
+  });
+  h += '<input class="ukuran" type="text" placeholder="Ukuran" title="Ukuran huruf">';
+  h += '<span class="pisah"></span>';
+  h += '<select class="spasi" title="Spasi baris"><option>Spasi: bawaan</option><option>Spasi: 1</option><option>Spasi: 1.15</option><option>Spasi: 1.5</option><option>Spasi: 2</option><option>Spasi: 2.5</option><option>Spasi: 3</option></select>';
+  h += '<button type="button" data-cmd="tabel" title="Sisip tabel">\u25a6</button>';
+  h += '<button type="button" data-cmd="pemisah" title="Pemisah halaman">\u2702</button>';
+  h += '<button type="button" data-cmd="lanskap" title="Halaman baru lanskap (kembali potret pada pemisah halaman berikutnya)">\u25ad</button>';
+  h += '<span class="pisah"></span>';
+  h += '<button type="button" data-cmd="undo" title="Undo">\u21b6</button>';
+  h += '<button type="button" data-cmd="redo" title="Redo">\u21b7</button>';
+  h += '<span class="pisah"></span>';
+  h += '<button type="button" data-cmd="kode" title="Lihat kode HTML">&lt;/&gt;</button>';
+  h += '<button type="button" class="var" data-cmd="variabel" title="Sisipkan variabel">{ } Variabel</button>';
+  h += '<button type="button" class="layar" data-cmd="penuh" title="Layar penuh">\u2921</button>';
+  h += '</div>';
+  return h;
+}
+
+function kotakNaskah(idEditor, teks){
+  return '<div class="tpl-rte">' + alatNaskah(idEditor)
+    + (modeKode
+        ? '<textarea class="tpl-kode" id="'+idEditor+'-kode" spellcheck="false">'+esc(teks)+'</textarea>'
+        : '<div class="tpl-kanvas"><div class="tpl-lembar" id="'+idEditor+'" contenteditable="true" spellcheck="false">'+tandai(teks)+'</div></div>')
+    + '</div>';
+}
+
+function bacaNaskah(idEditor){
+  const k = el(idEditor + '-kode');
+  if(k) return k.value;
+  const d = el(idEditor);
+  return d ? d.innerText : '';
+}
+
+function pasangAlat(idEditor, simpan){
+  const bar = document.querySelector('.tpl-bar2[data-untuk="'+idEditor+'"]');
+  if(!bar) return;
+  const target = function(){ return el(idEditor) || el(idEditor + '-kode'); };
+  [].forEach.call(bar.querySelectorAll('button[data-cmd]'), function(btn){
+    btn.onclick = function(e){
+      e.preventDefault();
+      const cmd = btn.dataset.cmd;
+      if(cmd === 'kode'){ simpan(bacaNaskah(idEditor)); modeKode = !modeKode; gambarKanan(); return; }
+      if(cmd === 'variabel'){ bukaVariabel(bar, idEditor, simpan); return; }
+      if(cmd === 'penuh'){ const r = document.querySelector('.tpl-rte'); if(r && r.requestFullscreen) r.requestFullscreen(); return; }
+      const t = target();
+      if(!t || t.tagName === 'TEXTAREA'){ toast('Beralih ke tampilan naskah dulu untuk memakai tombol ini.'); return; }
+      t.focus();
+      const peta = {h1:['formatBlock','<h1>'], h2:['formatBlock','<h2>'], h3:['formatBlock','<h3>'], kutipan:['formatBlock','<blockquote>']};
+      if(peta[cmd]){ document.execCommand(peta[cmd][0], false, peta[cmd][1]); }
+      else if(cmd === 'kapital'){
+        const s = window.getSelection().toString();
+        if(s) document.execCommand('insertText', false, s === s.toUpperCase() ? s.toLowerCase() : s.toUpperCase());
+      }
+      else if(cmd === 'warna'){ document.execCommand('foreColor', false, '#B91C1C'); }
+      else if(cmd === 'sorot'){ document.execCommand('hiliteColor', false, '#FEF3C7'); }
+      else if(cmd === 'tautan'){ const u = prompt('Alamat tautan:', 'https://'); if(u) document.execCommand('createLink', false, u); }
+      else if(cmd === 'pemisah'){ document.execCommand('insertText', false, '\n\u2014\u2014 pemisah halaman \u2014\u2014\n'); }
+      else if(['tabel','gambar','lanskap'].indexOf(cmd) >= 0){ toast('Tombol \u201c'+btn.title+'\u201d belum aktif di prototipe.'); }
+      else { document.execCommand(cmd, false, null); }
+      simpan(bacaNaskah(idEditor));
+    };
+  });
+  const ed = el(idEditor);
+  if(ed) ed.oninput = function(){ simpan(ed.innerText); };
+  const kd = el(idEditor + '-kode');
+  if(kd) kd.oninput = function(){ simpan(kd.value); };
+}
+
+function bukaVariabel(bar, idEditor, simpan){
+  const lama = bar.querySelector('.tpl-varpop');
+  if(lama){ lama.remove(); return; }
+  const grup = [];
+  VARIABEL.forEach(function(v){ if(grup.indexOf(v.grup) < 0) grup.push(v.grup); });
+  const pop = document.createElement('div');
+  pop.className = 'tpl-varpop';
+  pop.innerHTML = '<div class="cari"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#94A3B8" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.7" y2="16.7"/></svg>'
+    + '<input type="text" placeholder="Cari variabel..."></div><div class="isi"></div>';
+  bar.appendChild(pop);
+  const isi = pop.querySelector('.isi');
+  const gambar = function(q){
+    q = (q || '').toLowerCase();
+    let h = '';
+    grup.forEach(function(g){
+      const anak = VARIABEL.filter(v => v.grup === g && (v.label + ' ' + v.key).toLowerCase().indexOf(q) >= 0);
+      if(!anak.length) return;
+      h += '<div class="gp">'+esc(g)+'</div>';
+      anak.forEach(function(v){
+        h += '<button type="button" data-k="'+esc(v.key)+'"><span class="lb">'+esc(v.label)+'</span><span class="ky">{{'+esc(v.key)+'}}</span></button>';
+      });
+    });
+    isi.innerHTML = h || '<div class="gp">Tidak ada yang cocok</div>';
+    [].forEach.call(isi.querySelectorAll('button[data-k]'), function(b){
+      b.onclick = function(){
+        const teks = '{{' + b.dataset.k + '}}';
+        const kd = el(idEditor + '-kode');
+        if(kd){
+          const p = kd.selectionStart || 0;
+          kd.value = kd.value.slice(0, p) + teks + kd.value.slice(kd.selectionEnd || p);
+          simpan(kd.value);
+        } else {
+          const ed = el(idEditor);
+          ed.focus();
+          document.execCommand('insertText', false, teks);
+          simpan(ed.innerText);
+        }
+        pop.remove();
+      };
+    });
+  };
+  pop.querySelector('input').oninput = function(e){ gambar(e.target.value); };
+  gambar('');
+  pop.querySelector('input').focus();
+}
+
+/* ============ Panel kanan ============ */
+function segarkanTab(){
+  [].forEach.call(el('tabKanan').querySelectorAll('button'), function(b){
+    b.setAttribute('aria-selected', String(b.dataset.tab === tabAktif));
+  });
+}
+
+function barisIsian(b, i){
+  const tipe = b.jenis === 'pasal' ? 'Pasal' : b.jenis === 'otomatis' ? 'Otomatis' : 'Catatan';
+  const nomor = b.jenis === 'pasal' ? String(nomorPasal(i)) : '';
+  return '<div class="tpl-f">'
+      + '<div class="fld"><label>Tipe</label><select id="fTipe">'
+        + ['Catatan','Pasal','Otomatis'].map(t => '<option'+(t===tipe?' selected':'')+'>'+t+'</option>').join('')
+        + '</select></div>'
+      + '<div class="fld"><label>Nomor</label><input type="text" id="fNomor" value="'+esc(nomor)+'" placeholder="mis. 1"><span class="tpl-help">Opsional</span></div>'
+      + '<div class="fld"><label>Judul <span class="wajib">*</span></label><input type="text" id="fJudul" value="'+esc(b.judul)+'"></div>'
+    + '</div>'
+    + '<div class="tpl-checks">'
+      + '<label><input type="checkbox" checked> Tampilkan judul di dokumen</label>'
+      + '<label><input type="checkbox" checked> Wajib</label>'
+    + '</div>';
+}
+
+function viewBagian(){
+  const b = SECTIONS[bagianAktif];
+  if(!b){
+    return '<div class="tpl-pad"><div class="tpl-empty">'
+      + '<svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#CBD5E1" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>'
+      + '<span>Klik bagian di panel kiri untuk mengedit.</span></div></div>';
+  }
+  const judulBar = b.jenis === 'pasal' ? ('Pasal '+nomorPasal(bagianAktif)+': '+b.judul)
+    : b.jenis === 'otomatis' ? ('Bagian Otomatis: '+b.judul)
+    : ('Catatan: '+b.judul);
+  let isi;
+  if(b.jenis === 'otomatis'){
+    isi = '<p class="tpl-ketsec">'+KET_OTO+'</p>' + daftarPotongan(b);
+  } else {
+    isi = '<p class="tpl-ketsec">'+KET_BEBAS+'</p>'
+      + (b.nota ? '<div class="tpl-nota">'+tandai(b.nota)+'</div>' : '')
+      + '<div class="tpl-cap">Isi</div>'
+      + kotakNaskah('edBebas', b.teks || '');
+  }
+  return '<div class="tpl-bar">'+IKON_PENSIL+esc(judulBar)+'</div>'
+    + '<div class="tpl-pad">' + barisIsian(b, bagianAktif) + isi + '</div>';
+}
+
+function kartuPot(sec, p, idx){
+  let h = '<div class="tpl-pot">'
+    + '<button class="baris" data-pot="'+idx+'">'
+      + '<span class="nmpot">'+esc(p.j)+'</span>'
+      + '<span class="syarat">'+esc(p.y)+'</span>'
+    + '</button>'
+    + '<button class="tpl-reset'+(p.ubah ? ' aktif' : '')+'" data-reset="'+idx+'"'+(p.ubah ? '' : ' disabled')+
+        ' title="'+(p.ubah ? 'Kembalikan ke redaksi bawaan' : 'Belum diubah \u2014 masih redaksi bawaan')+'">'
+      + '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.5 15a9 9 0 1 0 2.1-9.4L1 10"/></svg>Reset</button>';
+  if(potAktif === idx){
+    h += '<div class="editor">'
+      + kotakNaskah('edPot', p.t)
+      + '<div class="tpl-dipakai">Dipakai pada: '+esc(p.d)+'</div>'
+      + '<button class="tpl-simpan" data-simpan="'+idx+'">Simpan</button>'
+      + '</div>';
+  }
+  return h + '</div>';
+}
+
+function daftarPotongan(sec){
+  const daftar = pot(sec);
+  let h = '', grupSekarang = null, isiGrup = '';
+  const tutupGrup = function(){
+    if(grupSekarang !== null){
+      const n = (isiGrup.match(/class="tpl-pot/g) || []).length;
+      h += '<div class="tpl-grup"><button class="kep" type="button">\u25be '+esc(grupSekarang)+' <span class="jml">('+n+')</span></button>'+isiGrup+'</div>';
+      grupSekarang = null; isiGrup = '';
+    }
+  };
+  daftar.forEach(function(p, i){
+    if(p.g){
+      if(grupSekarang !== p.g){ tutupGrup(); grupSekarang = p.g; isiGrup = ''; }
+      isiGrup += kartuPot(sec, p, i);
+    } else { tutupGrup(); h += kartuPot(sec, p, i); }
+  });
+  tutupGrup();
+  return h;
+}
+
+function pasangBagian(){
+  const b = SECTIONS[bagianAktif];
+  if(!b) return;
+  const fj = el('fJudul'), fn = el('fNomor'), ft = el('fTipe');
+  if(fj) fj.oninput = function(){ b.judul = fj.value; gambarDaftar(); };
+  if(ft) ft.onchange = function(){ toast('Tipe bagian pada template ini dikunci oleh struktur akta.'); ft.value = b.jenis === 'pasal' ? 'Pasal' : b.jenis === 'otomatis' ? 'Otomatis' : 'Catatan'; };
+  if(b.jenis === 'otomatis'){
+    [].forEach.call(document.querySelectorAll('.tpl-pot .baris'), function(btn){
+      btn.onclick = function(){
+        const i = parseInt(btn.dataset.pot, 10);
+        potAktif = (potAktif === i) ? null : i;
+        modeKode = false;
+        gambarKanan();
+      };
+    });
+    if(potAktif !== null){
+      const p = pot(b)[potAktif];
+      pasangAlat('edPot', function(teks){ p.t = teks; p.ubah = true; });
+      const sv = document.querySelector('[data-simpan]');
+      if(sv) sv.onclick = function(){
+        p.t = bacaNaskah('edPot'); p.ubah = true;
+        sv.textContent = 'Tersimpan'; sv.classList.add('ok');
+        setTimeout(function(){ gambarKanan(); }, 900);
+      };
+    }
+    [].forEach.call(document.querySelectorAll('[data-reset]'), function(btn){
+      if(btn.disabled) return;
+      btn.onclick = function(ev){
+        ev.stopPropagation();
+        const i = parseInt(btn.dataset.reset, 10);
+        const q = pot(b)[i];
+        if(!confirm('Kembalikan redaksi \u201c'+q.j+'\u201d ke bawaan platform?')) return;
+        q.t = q.asli; q.ubah = false;
+        gambarKanan();
+        toast('Redaksi \u201c'+q.j+'\u201d dikembalikan ke bawaan.');
+      };
+    });
+    [].forEach.call(document.querySelectorAll('.tpl-grup .kep'), function(k){
+      k.onclick = function(){
+        const box = k.parentElement;
+        const tutup = box.classList.toggle('tutup');
+        [].forEach.call(box.querySelectorAll('.tpl-pot'), function(p){ p.style.display = tutup ? 'none' : ''; });
+        k.innerHTML = k.innerHTML.replace(tutup ? '\u25be' : '\u25b8', tutup ? '\u25b8' : '\u25be');
+      };
+    });
+  } else {
+    pasangAlat('edBebas', function(teks){ b.teks = teks; });
+  }
+}
+
+
+/* ---- pratinjau per bagian otomatis (pilihan kasus + data contoh) ---- */
+function naskahKasus(sec, pakaiContoh, mulaiOrang){
+  const k = kasusSekarang(sec.kode);
+  if(!k) return [];
+  let nOrang = mulaiOrang || 0, nSaksi = 0;
+  return k.urut.map(function(u){
+    const p = potDenganKode(sec, u[0]);
+    if(!p) return null;
+    let tambahan = {};
+    if(u[0] === 'identitas_orang' || u[0] === 'domisili'){
+      tambahan = nilaiPihak(PIHAK[Math.min(nOrang, PIHAK.length - 1)]);
+      if(u[0] === 'identitas_orang') nOrang++;
+    } else if(u[0] === 'identitas_saksi' || u[0] === 'domisili_saksi'){
+      tambahan = nilaiSaksi(SAKSI[Math.min(nSaksi, SAKSI.length - 1)]);
+      if(u[0] === 'identitas_saksi') nSaksi++;
+    } else {
+      tambahan = nilaiPihak(PIHAK[0]);
+    }
+    return { judul: p.j, peran: u[1] || '', teks: pakaiContoh ? isiVariabel(p.t, tambahan) : p.t };
+  }).filter(Boolean);
+}
+
+function kotakPratinjauBagian(sec){
+  const daftar = KASUS[sec.kode] || [];
+  const k = kasusSekarang(sec.kode);
+  const chip = daftar.map(function(x){
+    return '<button type="button" class="tpl-chip-kasus'+(k && k.id === x.id ? ' on' : '')+'" data-kasus="'+x.id+'">'+esc(x.nama)+'</button>';
+  }).join('');
+  const isi = naskahKasus(sec, dataContoh).map(function(r){
+    return '<div class="pot-prev"><div class="jd">'+esc(r.judul)+(r.peran ? ' <span class="pr">\u2014 '+esc(r.peran)+'</span>' : '')+'</div>'
+      + '<div class="tk">'+(dataContoh ? esc(r.teks) : tandai(r.teks))+'</div></div>';
+  }).join('');
+  return '<div class="tpl-prevbag">'
+    + '<div class="kepala"><span class="cap">Pratinjau bagian</span>'
+      + '<label class="contoh"><input type="checkbox" id="cbContoh"'+(dataContoh ? ' checked' : '')+'> data contoh</label></div>'
+    + '<div class="chips">'+chip+'</div>'
+    + '<div class="hasil">'+isi+'</div></div>';
+}
+
+function viewPratinjauBagian(){
+  const b = SECTIONS[bagianAktif];
+  if(!b){
+    return '<div class="tpl-pad"><div class="tpl-empty"><span>Klik bagian di panel kiri untuk melihat pratinjaunya.</span></div></div>';
+  }
+  const judulBar = b.jenis === 'pasal' ? ('Pasal '+nomorPasal(bagianAktif)+': '+b.judul)
+    : b.jenis === 'otomatis' ? ('Bagian Otomatis: '+b.judul)
+    : ('Catatan: '+b.judul);
+  let isi;
+  if(b.jenis === 'otomatis'){
+    isi = kotakPratinjauBagian(b);
+  } else {
+    const teks = dataContoh ? isiVariabel(b.teks || '') : (b.teks || '');
+    isi = '<div class="tpl-prevbag">'
+      + '<div class="kepala"><span class="cap">Pratinjau bagian</span>'
+        + '<label class="contoh"><input type="checkbox" id="cbContoh"'+(dataContoh ? ' checked' : '')+'> data contoh</label></div>'
+      + '<p class="tpl-ketsec" style="margin:0 0 10px">Naskah bebas \u2014 tidak berkondisi.</p>'
+      + '<div class="hasil"><div class="pot-prev"><div class="jd">'+esc(b.judul)+'</div>'
+      + '<div class="tk pra">'+(dataContoh ? esc(teks) : tandai(teks))+'</div></div></div></div>';
+  }
+  return '<div class="tpl-bar">'+IKON_MATA_BESAR+esc(judulBar)+'</div>'
+    + '<div class="tpl-pad">' + isi + '</div>';
+}
+
+/* ---- layar Preview Akta (mengikuti layar Minuta \u2192 Preview) ---- */
+let previewZoom = 110, previewHal = 1, previewHalaman = [];
+
+function blokNaskah(){
+  const blok = [];
+  LAMPIRAN.forEach(function(){});
+  SECTIONS.forEach(function(b, i){
+    blok.push({ jenis:'judul', teks: b.jenis === 'pasal' ? ('Pasal ' + nomorPasal(i)) : b.judul });
+    const teks = naskahBagian(b);
+    const tengah = (b.id === 'pembukaan');
+    const potong = teks.indexOf('Pada hari ini');
+    teks.split('\n').forEach(function(baris, n){
+      const sebelumIsi = tengah && potong > 0 && teks.indexOf(baris) < potong;
+      blok.push({ jenis:'baris', teks: baris, tengah: sebelumIsi && baris.trim() !== '' });
+    });
+  });
+  LAMPIRAN.forEach(function(l){
+    blok.push({ jenis:'judul', teks: 'Lampiran: ' + l.judul });
+    isiVariabel(l.teks || '').split('\n').forEach(function(baris){
+      blok.push({ jenis:'baris', teks: baris });
+    });
+  });
+  return blok;
+}
+
+function susunHalaman(){
+  const blok = blokNaskah();
+  const ukur = document.createElement('div');
+  ukur.className = 'akta-lembar ukur';
+  document.body.appendChild(ukur);
+  const halaman = [];
+  let isi = [];
+  const batas = 1247 - 56.7 * 2;       /* tinggi F4 dikurangi margin atas-bawah */
+  blok.forEach(function(x){
+    const el = document.createElement('div');
+    el.className = x.jenis === 'judul' ? 'akta-judul' : ('akta-baris' + (x.tengah ? ' tengah' : ''));
+    el.textContent = x.teks === '' ? '\u00a0' : x.teks;
+    ukur.appendChild(el);
+    if(ukur.scrollHeight > batas && isi.length){
+      ukur.removeChild(el);
+      halaman.push(isi);
+      isi = [];
+      ukur.innerHTML = '';
+      ukur.appendChild(el);
+    }
+    isi.push(x);
+  });
+  if(isi.length) halaman.push(isi);
+  ukur.remove();
+  return halaman;
+}
+
+function gambarHalaman(){
+  const kotak = document.querySelector('.akta-panggung');
+  if(!kotak) return;
+  const isi = previewHalaman[previewHal - 1] || [];
+  const skala = previewZoom / 100;
+  kotak.innerHTML = '<div class="akta-lembar" style="transform:scale('+skala+')">'
+    + '<div class="akta-air"><span>DRAFT</span></div>'
+    + isi.map(function(x){
+        if(x.jenis === 'judul') return '<div class="akta-judul">'+esc(x.teks)+'</div>';
+        return '<div class="akta-baris'+(x.tengah ? ' tengah' : '')+'">'+(x.teks === '' ? '&nbsp;' : esc(x.teks))+'</div>';
+      }).join('')
+    + '</div>';
+  const lembar = kotak.querySelector('.akta-lembar');
+  kotak.style.height = (lembar.offsetHeight * skala + 48) + 'px';
+  const inp = document.querySelector('.akta-alat .hal');
+  if(inp) inp.value = previewHal;
+  const total = document.querySelector('.akta-alat .dari');
+  if(total) total.textContent = 'dari ' + previewHalaman.length;
+  const prev = document.querySelector('.akta-alat .prev'), next = document.querySelector('.akta-alat .next');
+  if(prev) prev.disabled = previewHal <= 1;
+  if(next) next.disabled = previewHal >= previewHalaman.length;
+  const z = document.querySelector('.akta-alat .zoom');
+  if(z) z.textContent = previewZoom + '%';
+}
+
+function bukaPreviewAkta(){
+  const lama = document.querySelector('.akta-layar');
+  if(lama) lama.remove();
+  previewHal = 1;
+  const ov = document.createElement('div');
+  ov.className = 'akta-layar';
+  ov.innerHTML =
+      '<div class="akta-remah">Template Akta <span>/</span> AJB Persetujuan Pasangan <span>/</span> <b>Preview Akta</b></div>'
+    + '<div class="akta-alat">'
+      + '<div class="jd">AJB02 \u2014 Akta Jual Beli</div>'
+      + '<div class="kanan">'
+        + '<button class="prev">\u2039 Prev</button>'
+        + '<span class="nav">Hal. <input class="hal" type="text" value="1"> <span class="dari">dari 1</span></span>'
+        + '<button class="next">Next \u203a</button>'
+        + '<span class="pisah"></span>'
+        + '<button class="zmin">\u2212</button><span class="zoom">110%</span><button class="zplus">+</button>'
+        + '<span class="pisah"></span>'
+        + '<button class="unduh"><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 3v12"/><polyline points="7 10 12 15 17 10"/><path d="M4 20h16"/></svg> Download PDF</button>'
+        + '<button class="kembali">\u2039 Kembali</button>'
+      + '</div>'
+    + '</div>'
+    + '<div class="akta-panggung"></div>';
+  document.body.appendChild(ov);
+  previewHalaman = susunHalaman();
+  gambarHalaman();
+
+  const tutup = function(){ ov.remove(); document.removeEventListener('keydown', tombol); };
+  const tombol = function(e){
+    if(e.key === 'Escape') tutup();
+    if(e.key === 'ArrowRight' && previewHal < previewHalaman.length){ previewHal++; gambarHalaman(); }
+    if(e.key === 'ArrowLeft' && previewHal > 1){ previewHal--; gambarHalaman(); }
+  };
+  ov.querySelector('.kembali').onclick = tutup;
+  ov.querySelector('.prev').onclick = function(){ if(previewHal > 1){ previewHal--; gambarHalaman(); } };
+  ov.querySelector('.next').onclick = function(){ if(previewHal < previewHalaman.length){ previewHal++; gambarHalaman(); } };
+  ov.querySelector('.zmin').onclick = function(){ previewZoom = Math.max(50, previewZoom - 10); gambarHalaman(); };
+  ov.querySelector('.zplus').onclick = function(){ previewZoom = Math.min(200, previewZoom + 10); gambarHalaman(); };
+  ov.querySelector('.unduh').onclick = function(){ toast('Unduh PDF belum aktif di prototipe.'); };
+  ov.querySelector('.hal').onchange = function(e){
+    const n = parseInt(e.target.value, 10);
+    previewHal = (n >= 1 && n <= previewHalaman.length) ? n : previewHal;
+    gambarHalaman();
+  };
+  document.addEventListener('keydown', tombol);
+}
+
+/* ---- pratinjau ---- */
+/* ---- data contoh untuk pratinjau: tiap bagian memakai variabel yang berbeda ---- */
+const PIHAK = [
+ { peran:'Penjual', sebutan:'PIHAK PERTAMA',
+   sapaan:'Tuan', nama:'Bagus Hermawan', tempat_lahir:'Bandung', tanggal_lahir:'12 Maret 1979',
+   tanggal_lahir_terbilang:'dua belas Maret seribu sembilan ratus tujuh puluh sembilan',
+   kewarganegaraan:'Indonesia', pekerjaan:'Karyawan Swasta', alamat:'Jalan Cikutra Nomor 45',
+   rt:'003', rw:'004', label_kelurahan:'Kelurahan', kelurahan:'Cikutra', kecamatan:'Cibeunying Kidul',
+   label_kota:'Kota', kota:'Bandung', provinsi:'Jawa Barat', nik:'3273010000000001',
+   domisili_sementara:'Kota Bandung' },
+ { peran:'Pembeli', sebutan:'PIHAK KEDUA',
+   sapaan:'Nyonya', nama:'Sri Widanti', tempat_lahir:'Semarang', tanggal_lahir:'5 Juli 1985',
+   tanggal_lahir_terbilang:'lima Juli seribu sembilan ratus delapan puluh lima',
+   kewarganegaraan:'Indonesia', pekerjaan:'Wiraswasta', alamat:'Jalan Sukajadi Nomor 12',
+   rt:'001', rw:'002', label_kelurahan:'Kelurahan', kelurahan:'Pasteur', kecamatan:'Sukajadi',
+   label_kota:'Kota', kota:'Bandung', provinsi:'Jawa Barat', nik:'3273010000000002',
+   domisili_sementara:'Kota Bandung' }
+];
+
+const SAKSI = [
+ { gelar:'Tuan', nama:'Rudi Santoso', tempat_lahir:'Bandung', tanggal_lahir:'2 Februari 1990',
+   tanggal_lahir_terbilang:'dua Februari seribu sembilan ratus sembilan puluh', pekerjaan:'Pegawai Kantor',
+   jalan:'Jalan Ir. H. Juanda Nomor 128', rt:'005', rw:'006', kelurahan:'Lebakgede', kecamatan:'Coblong',
+   kota:'Kota Bandung', provinsi:'Jawa Barat', nik:'3273010000000004',
+   domisili:'Untuk sementara berada di Kota Bandung;' },
+ { gelar:'Nona', nama:'Dewi Anggraini', tempat_lahir:'Cimahi', tanggal_lahir:'17 Juni 1993',
+   tanggal_lahir_terbilang:'tujuh belas Juni seribu sembilan ratus sembilan puluh tiga', pekerjaan:'Pegawai Kantor',
+   jalan:'Jalan Sangkuriang Nomor 7', rt:'002', rw:'003', kelurahan:'Dago', kecamatan:'Coblong',
+   kota:'Kota Bandung', provinsi:'Jawa Barat', nik:'3273010000000005',
+   domisili:'Untuk sementara berada di Kota Cimahi;' }
+];
+
+const NILAI_TETAP = {
+  /* kantor & akta */
+  'ppat_nama':'Dr. Andi Prasetyo, S.H., M.Kn.', 'ppat_gelar':'S.H., M.Kn.',
+  'ppat_sk':'112/KEP-17.3/PPAT/XI/2021', 'ppat_wilayah':'Kota Bandung',
+  'ppat_alamat':'Jl. Ir. H. Juanda No. 128', 'ppat_telepon':'(022) 86012345', 'ppat_email':'kantor@contoh.id',
+  'akta_jenis':'Jual Beli', 'lembar':'Kedua', 'kantor_pertanahan':'Kantor Pertanahan Kota Bandung',
+  'sebutan_pihak_pertama':'PIHAK PERTAMA', 'sebutan_pihak_kedua':'PIHAK KEDUA',
+  'pihak_pertama.nama':'Bagus Hermawan', 'pihak_kedua.nama':'Sri Widanti',
+  'label_persetujuan':'PEMBERI PERSETUJUAN',
+  'saksi1_nama':'Rudi Santoso', 'saksi2_nama':'Dewi Anggraini',
+
+  /* pasangan & dokumen nikah */
+  'pasangan.nama':'Ratna Kusuma', 'pasangan.tempat_lahir':'Bandung', 'pasangan.tanggal_lahir':'20 Agustus 1981',
+  'pasangan.tanggal_lahir_terbilang':'dua puluh Agustus seribu sembilan ratus delapan puluh satu',
+  'pasangan.kewarganegaraan':'Indonesia', 'pasangan.pekerjaan':'Ibu Rumah Tangga', 'pasangan.nik':'3273010000000003',
+  'pasangan_hubungan':'Istri', 'pasangan_hubungan_balik':'suaminya',
+  'nikah_dokumen_jenis':'Kutipan Akta Nikah', 'nikah_dokumen_tanggal':'14 Februari 2005',
+  'nikah_dokumen_tanggal_terbilang':'empat belas Februari dua ribu lima',
+  'nikah_dokumen_nomor':'123/45/II/2005', 'nikah_dokumen_penerbit':'Kantor Urusan Agama Kecamatan Coblong',
+
+  /* kuasa */
+  'kuasa_tanggal':'3 September 2026', 'kuasa_tanggal_terbilang':'tiga September dua ribu dua puluh enam',
+  'kuasa_nomor':'12', 'kuasa_notaris':'Rina Wijaya, S.H., M.Kn.', 'kuasa_notaris_kota':'Bandung',
+  'kuasa_pasangan_jenis':'Surat Kuasa di bawah tangan', 'kuasa_pasangan_tanggal':'5 September 2026',
+  'kuasa_pasangan_tanggal_terbilang':'lima September dua ribu dua puluh enam',
+
+  /* perseroan */
+  'pt.nama':'PT Sinar Bumi Sejahtera', 'pt.kedudukan':'Kota Bandung', 'pt.jabatan_wakil':'Direktur Utama',
+  'pt.komisaris_tanggal':'1 Agustus 2026', 'pt.komisaris_tanggal_terbilang':'satu Agustus dua ribu dua puluh enam',
+  'pt.komisaris_nomor':'07/DK/VIII/2026',
+  'pt.pendirian_tanggal':'9 Januari 2015', 'pt.pendirian_tanggal_terbilang':'sembilan Januari dua ribu lima belas',
+  'pt.pendirian_nomor':'21', 'pt.pendirian_notaris':'Rina Wijaya, S.H., M.Kn.', 'pt.pendirian_notaris_kota':'Bandung',
+  'pt.pendirian_pengesah':'Menteri Hukum dan Hak Asasi Manusia',
+  'pt.pendirian_sk_tanggal':'2 Februari 2015', 'pt.pendirian_sk_tanggal_terbilang':'dua Februari dua ribu lima belas',
+  'pt.pendirian_sk_nomor':'AHU-0001234.AH.01.01.Tahun 2015',
+  'pt.uu40_tanggal':'11 Maret 2016', 'pt.uu40_tanggal_terbilang':'sebelas Maret dua ribu enam belas',
+  'pt.uu40_nomor':'34', 'pt.uu40_notaris':'Rina Wijaya, S.H., M.Kn.', 'pt.uu40_notaris_kota':'Bandung',
+  'jenis_perubahan':'Perubahan Anggaran Dasar',
+  'pt.perubahan_tanggal':'18 April 2024', 'pt.perubahan_tanggal_terbilang':'delapan belas April dua ribu dua puluh empat',
+  'pt.perubahan_nomor':'58', 'pt.perubahan_notaris':'Rina Wijaya, S.H., M.Kn.', 'pt.perubahan_notaris_kota':'Bandung',
+
+  /* waris */
+  'jumlah_ahli_waris_sebutan':'para ahli waris', 'objek_sebutan_singkat':'tanah',
+  'pewaris_sebutan':'Almarhum Tuan', 'pewaris_nama':'Hadi Suwarno',
+  'pewaris_meninggal_kota':'Bandung', 'pewaris_meninggal_tanggal':'8 Mei 2024',
+  'pewaris_meninggal_tanggal_terbilang':'delapan Mei dua ribu dua puluh empat',
+  'akta_kematian_tanggal':'15 Mei 2024', 'akta_kematian_tanggal_terbilang':'lima belas Mei dua ribu dua puluh empat',
+  'akta_kematian_nomor':'3273-KM-15052024-0007', 'akta_kematian_penerbit':'Dinas Kependudukan dan Pencatatan Sipil Kota Bandung',
+  'spaw_tanggal':'20 Juni 2024', 'spaw_tanggal_terbilang':'dua puluh Juni dua ribu dua puluh empat',
+  'spaw_rt':'003', 'spaw_rw':'004', 'spaw_kelurahan':'Cikutra', 'spaw_kecamatan':'Cibeunying Kidul',
+  'spaw_rt_rw_tanggal':'24 Juni 2024', 'spaw_rt_rw_tanggal_terbilang':'dua puluh empat Juni dua ribu dua puluh empat',
+  'spaw_rt_rw_nomor':'12/RT003/RW004/VI/2024',
+  'spaw_rt_tanggal':'24 Juni 2024', 'spaw_rt_tanggal_terbilang':'dua puluh empat Juni dua ribu dua puluh empat',
+  'spaw_rw_tanggal':'25 Juni 2024', 'spaw_rw_tanggal_terbilang':'dua puluh lima Juni dua ribu dua puluh empat',
+  'spaw_kelurahan_tanggal':'27 Juni 2024', 'spaw_kelurahan_tanggal_terbilang':'dua puluh tujuh Juni dua ribu dua puluh empat',
+  'spaw_kelurahan_nomor':'470/128/KEL/VI/2024',
+  'spaw_kecamatan_tanggal':'1 Juli 2024', 'spaw_kecamatan_tanggal_terbilang':'satu Juli dua ribu dua puluh empat',
+  'spaw_kecamatan_nomor':'470/305/KEC/VII/2024',
+
+  /* objek */
+  'jenis_hak':'Hak Milik', 'persil_nomor':'27', 'persil_blok':'D.III',
+  'objek_luas':'150', 'objek_luas_terbilang':'seratus lima puluh', 'objek_bentuk':'tanah',
+  'batas_utara':'tanah milik Tuan Surya', 'batas_timur':'Jalan Cikutra',
+  'batas_selatan':'tanah milik Nyonya Lestari', 'batas_barat':'saluran air',
+  'objek_provinsi':'Jawa Barat', 'objek_label_kota':'Kota', 'objek_kota':'Bandung',
+  'objek_kecamatan':'Cibeunying Kidul', 'objek_label_kelurahan':'Kelurahan', 'objek_kelurahan':'Cikutra',
+  'objek_jalan':'Jalan Cikutra Nomor 45',
+  'objek_atas_nama':'Bagus Hermawan', 'objek_nib':'12.34.05.06.00123', 'objek_nop':'32.73.010.006.001-0045.0',
+  'objek_kode_sertipikat':'SE-2026-000123', 'objek_npp':'1,25', 'objek_npp_terbilang':'satu koma dua lima',
+  'sertipikat_nomor':'1234', 'sertipikat_kelurahan':'Cikutra',
+  'gambar_denah_tanggal':'10 Januari 2020', 'gambar_denah_nomor':'45/2020'
+};
+
+function nilaiPihak(p){
+  return {
+    'orang.sapaan':p.sapaan, 'orang.nama':p.nama, 'orang.tempat_lahir':p.tempat_lahir,
+    'orang.tanggal_lahir':p.tanggal_lahir, 'orang.tanggal_lahir_terbilang':p.tanggal_lahir_terbilang,
+    'orang.kewarganegaraan':p.kewarganegaraan, 'orang.pekerjaan':p.pekerjaan, 'orang.alamat':p.alamat,
+    'orang.rt':p.rt, 'orang.rw':p.rw, 'orang.label_kelurahan':p.label_kelurahan, 'orang.kelurahan':p.kelurahan,
+    'orang.kecamatan':p.kecamatan, 'orang.label_kota':p.label_kota, 'orang.kota':p.kota,
+    'orang.provinsi':p.provinsi, 'orang.nik':p.nik, 'orang.domisili_sementara':p.domisili_sementara,
+    'pihak.sapaan':p.sapaan, 'pihak.nama':p.nama,
+    'peran':p.peran, 'sebutan_pihak':p.sebutan
+  };
+}
+function nilaiSaksi(k){
+  return {
+    'saksi_gelar':k.gelar, 'saksi_nama':k.nama, 'saksi_tempat_lahir':k.tempat_lahir,
+    'saksi_tanggal_lahir':k.tanggal_lahir, 'saksi_tanggal_lahir_terbilang':k.tanggal_lahir_terbilang,
+    'saksi_pekerjaan':k.pekerjaan, 'saksi_jalan':k.jalan, 'saksi_rt':k.rt, 'saksi_rw':k.rw,
+    'saksi_kelurahan':k.kelurahan, 'saksi_kecamatan':k.kecamatan, 'saksi_kota':k.kota,
+    'saksi_provinsi':k.provinsi, 'saksi_nik':k.nik, 'saksi_domisili':k.domisili
+  };
+}
+
+
+const SATUAN = ['','satu','dua','tiga','empat','lima','enam','tujuh','delapan','sembilan','sepuluh','sebelas'];
+function terbilang(n){
+  n = Math.floor(n);
+  if(n < 12) return SATUAN[n] || 'nol';
+  if(n < 20) return terbilang(n - 10) + ' belas';
+  if(n < 100) return terbilang(Math.floor(n/10)) + ' puluh' + (n % 10 ? ' ' + terbilang(n % 10) : '');
+  if(n < 200) return 'seratus' + (n % 100 ? ' ' + terbilang(n % 100) : '');
+  if(n < 1000) return terbilang(Math.floor(n/100)) + ' ratus' + (n % 100 ? ' ' + terbilang(n % 100) : '');
+  if(n < 2000) return 'seribu' + (n % 1000 ? ' ' + terbilang(n % 1000) : '');
+  return terbilang(Math.floor(n/1000)) + ' ribu' + (n % 1000 ? ' ' + terbilang(n % 1000) : '');
+}
+const HARI = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
+const BULAN = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+function nilaiWaktu(){
+  const d = new Date();
+  const jam = d.getHours(), menit = d.getMinutes();
+  return {
+    'var_hari':HARI[d.getDay()],
+    'var_tanggal':d.getDate()+' '+BULAN[d.getMonth()]+' '+d.getFullYear(),
+    'var_tanggal:terbilang':terbilang(d.getDate())+' '+BULAN[d.getMonth()]+' '+terbilang(d.getFullYear()),
+    'var_pukul':jam+'.'+(menit<10?'0':'')+menit,
+    'var_pukul:terbilang':terbilang(jam)+' lewat '+terbilang(menit)+' menit Waktu Indonesia Bagian Barat'
+  };
+}
+
+function isiVariabel(teks, tambahan){
+  const nilai = Object.assign({}, NILAI_TETAP, nilaiWaktu(), tambahan || {});
+  return String(teks).replace(/\{\{([a-z0-9_.:]+)\}\}/gi, function(m, k){
+    if(k === 'deed_number') return m;                 /* baru terisi saat finalisasi PPAT */
+    return Object.prototype.hasOwnProperty.call(nilai, k) ? nilai[k] : m;
+  });
+}
+
+/* susun naskah satu bagian untuk pratinjau */
+function naskahBagian(b){
+  if(b.jenis !== 'otomatis') return isiVariabel(b.teks || '');
+  if(b.kode === 'para_pihak'){
+    /* satu akta memuat dua pihak: susunan kasus dipakai untuk masing-masing pihak */
+    return PIHAK.map(function(p, i){
+      const kepala = (i === 0 ? 'I. ' : 'II. ');
+      return kepala + naskahKasus(b, true, i).map(r => r.teks).join('\n');
+    }).join('\n\n');
+  }
+  return naskahKasus(b, true).map(r => r.teks).join('\n');
+}
+
+function viewPratinjau(){
+  const isiDok = SECTIONS.map(function(b, i){
+    const teks = naskahBagian(b);
+    let badan;
+    const potong = teks.indexOf('Pada hari ini');
+    if(b.id === 'pembukaan' && potong > 0){
+      badan = '<div class="rata-tengah">' + esc(teks.slice(0, potong).replace(/\s+$/, '')) + '</div>' + esc(teks.slice(potong));
+    } else { badan = esc(teks); }
+    return '<section class="akta-section"><div class="akta-title">'
+      + esc(b.jenis === 'pasal' ? ('Pasal ' + nomorPasal(i)) : b.judul) + '</div>' + badan + '</section>';
+  }).join('');
+  return '<div class="tpl-prev"><div class="tpl-halaman">'
+    + '<div class="tpl-wm"><span>DRAFT</span></div>' + isiDok + '</div></div>';
+}
+
+
+function viewLampiran(){
+  const l = LAMPIRAN[lampiranAktif];
+  if(!l){
+    return '<div class="tpl-pad"><div class="tpl-empty"><span>Klik lampiran di panel kiri untuk mengedit.</span></div></div>';
+  }
+  return '<div class="tpl-bar">'+IKON_PENSIL+'Lampiran: '+esc(l.judul)+'</div>'
+    + '<div class="tpl-pad">'
+    + '<div class="tpl-f" style="grid-template-columns:minmax(0,1fr) 200px">'
+      + '<div class="fld"><label>Judul lampiran <span class="wajib">*</span></label><input type="text" id="lJudul" value="'+esc(l.judul)+'"></div>'
+      + '<div class="fld"><label>Asal</label><input type="text" value="Lampiran '+esc(l.asal)+'" disabled><span class="tpl-help">Disiapkan saat membuat template</span></div>'
+    + '</div>'
+    + '<p class="tpl-ketsec">Naskah lampiran \u2014 ditulis memakai variabel, lalu terisi data sebenarnya ketika akta didraf. Tidak ada unggah berkas di layar ini.</p>'
+    + '<div class="tpl-cap">Isi</div>'
+    + kotakNaskah('edLamp', l.teks || '')
+    + '</div>';
+}
+
+function viewPratinjauLampiran(){
+  const l = LAMPIRAN[lampiranAktif];
+  if(!l) return '<div class="tpl-pad"><div class="tpl-empty"><span>Klik lampiran di panel kiri untuk melihat pratinjaunya.</span></div></div>';
+  const teks = dataContoh ? isiVariabel(l.teks || '') : (l.teks || '');
+  return '<div class="tpl-bar">'+IKON_MATA_BESAR+'Lampiran: '+esc(l.judul)+'</div>'
+    + '<div class="tpl-pad"><div class="tpl-prevbag">'
+      + '<div class="kepala"><span class="cap">Pratinjau lampiran</span>'
+        + '<label class="contoh"><input type="checkbox" id="cbContoh"'+(dataContoh ? ' checked' : '')+'> data contoh</label></div>'
+      + '<p class="tpl-ketsec" style="margin:0 0 10px">Naskah lampiran \u2014 tidak berkondisi.</p>'
+      + '<div class="hasil"><div class="pot-prev"><div class="jd">'+esc(l.judul)+'</div>'
+      + '<div class="tk pra">'+(dataContoh ? esc(teks) : tandai(teks))+'</div></div></div>'
+    + '</div></div>';
+}
+
+function viewVariabel(){
+  const grupNama = [];
+  VARIABEL.forEach(function(v){ if(grupNama.indexOf(v.grup) < 0) grupNama.push(v.grup); });
+  return '<div class="tpl-pad">'
+    + '<div class="tpl-note">Variabel jenis akta <b>AJB</b>. Sisipkan di pasal sebagai <code>{{var_key}}</code>; nilainya diisi dari data order saat dirender.</div>'
+    + '<div class="tpl-vsearch">'
+      + '<input type="text" id="cariVar" placeholder="Cari variabel / kunci...">'
+      + '<select id="filterGrup"><option value="">Semua grup</option>'+grupNama.map(function(g){return '<option>'+esc(g)+'</option>';}).join('')+'</select>'
+      + '<span class="tpl-help" id="jmlVar"></span>'
+    + '</div>'
+    + '<div class="tpl-vgrid" id="gridVar"></div></div>';
+}
+
+function gambarVariabel(){
+  const q = (el('cariVar').value || '').toLowerCase();
+  const g = el('filterGrup').value;
+  const hasil = VARIABEL.filter(function(v){
+    return (v.label+' '+v.key).toLowerCase().indexOf(q) >= 0 && (!g || v.grup === g);
+  });
+  el('gridVar').innerHTML = hasil.map(function(v){
+    return '<div class="tpl-vcard"><div class="lb">'+esc(v.label)+'</div>'
+      + '<div class="ky">{{'+esc(v.key)+'}}</div><div class="gp">'+esc(v.grup)+'</div></div>';
+  }).join('');
+  el('jmlVar').textContent = hasil.length + ' dari ' + VARIABEL.length + ' variabel';
+}
+
+function viewHalaman(){
+  return '<div class="tpl-pad">'
+    + '<h3 class="tpl-sec-title">Pengaturan Dokumen</h3>'
+    + '<div class="tpl-note">Ukuran kertas, margin, dan font untuk minuta &amp; salinan akta ini. Default akta PPAT: F4, margin kiri 6 cm (untuk jilid/cap).</div>'
+    + '<div class="tpl-set">'
+      + '<div class="fld"><label>Ukuran Kertas</label><select><option>F4 / Folio (21,5 &times; 33 cm)</option></select></div>'
+      + '<div class="fld"><label>Orientasi</label><select><option>Tegak (Portrait)</option></select></div>'
+      + '<div class="fld"></div><div class="fld"></div>'
+      + '<div class="tpl-sub">MARGIN (CM)</div>'
+      + '<div class="fld"><label>Atas</label><input type="text" value="1,5"></div>'
+      + '<div class="fld"><label>Bawah</label><input type="text" value="1,5"></div>'
+      + '<div class="fld"><label>Kiri</label><input type="text" value="6"><span class="tpl-help">Lebar untuk jilid/cap</span></div>'
+      + '<div class="fld"><label>Kanan</label><input type="text" value="1"></div>'
+      + '<div class="tpl-sub">HURUF</div>'
+      + '<div class="fld"><label>Font</label><select><option>Courier New (monospace, khas akta)</option></select></div>'
+      + '<div class="fld"><label>Ukuran Font (pt)</label><input type="text" value="12"></div>'
+      + '<div class="fld"><label>Spasi Baris</label><input type="text" value="2"><span class="tpl-help">2 = dobel</span></div>'
+      + '<div class="fld"></div>'
+    + '</div>'
+    + '<hr class="tpl-hr">'
+    + '<h3 class="tpl-sec-title">Footer</h3>'
+    + '<div class="tpl-note">Penanda halaman: <code>{page}</code>, <code>{total}</code>, <code>{date}</code>, <code>{{ppat_nama}}</code>, <code>{{ppat_wilayah}}</code>, <code>{{deed_number}}</code>, <code>{{jenis_akta}}</code>.</div>'
+    + '<div class="tpl-checks"><label><input type="checkbox" checked> Aktifkan Footer (bawah)</label></div>'
+    + '<div class="tpl-set" style="margin-top:12px">'
+      + '<div class="fld"><label>Ukuran Font Footer (pt)</label><input type="text" value="9"></div>'
+      + '<div class="fld cek"><label><input type="checkbox" checked> Tampilkan garis pemisah</label><span class="tpl-help">Garis di atas footer</span></div>'
+      + '<div class="fld"></div><div class="fld"></div>'
+    + '</div>'
+    + '<div class="tpl-checks"><label><input type="checkbox" checked> Tampilkan kotak paraf</label></div>'
+    + '<div class="tpl-note" style="margin-top:10px">Kotak kosong ber-label di kaki tiap halaman PDF, tempat para pihak dan PPAT membubuhkan paraf. Margin bawah otomatis minimal 2,6 cm.</div>'
+    + '</div>';
+}
+
+function gambarKanan(){
+  const k = el('isiKanan');
+  if(modeKiri === 'lampiran'){
+    if(tabAktif === 'bagian'){ k.innerHTML = viewLampiran(); pasangLampiran(); }
+    else if(tabAktif === 'variabel'){
+      k.innerHTML = viewVariabel();
+      el('cariVar').oninput = gambarVariabel;
+      el('filterGrup').onchange = gambarVariabel;
+      gambarVariabel();
+    }
+    else if(tabAktif === 'halaman'){ k.innerHTML = viewHalaman(); }
+    else { k.innerHTML = viewPratinjauLampiran(); pasangPratinjau(); }
+    return;
+  }
+  if(tabAktif === 'bagian'){ k.innerHTML = viewBagian(); pasangBagian(); }
+  else if(tabAktif === 'variabel'){
+    k.innerHTML = viewVariabel();
+    el('cariVar').oninput = gambarVariabel;
+    el('filterGrup').onchange = gambarVariabel;
+    gambarVariabel();
+  }
+  else if(tabAktif === 'halaman'){ k.innerHTML = viewHalaman(); }
+  else { k.innerHTML = viewPratinjauBagian(); pasangPratinjau(); }
+}
+
+function pasangLampiran(){
+  const l = LAMPIRAN[lampiranAktif];
+  if(!l) return;
+  const j = el('lJudul');
+  if(j) j.oninput = function(){ l.judul = j.value; gambarLampiran(); };
+  pasangAlat('edLamp', function(teks){ l.teks = teks; });
+}
+
+function pasangPratinjau(){
+  const cbL = el('cbContoh');
+  if(modeKiri === 'lampiran'){
+    if(cbL) cbL.onchange = function(){ dataContoh = cbL.checked; gambarKanan(); };
+    return;
+  }
+  const b = SECTIONS[bagianAktif];
+  if(!b) return;
+  [].forEach.call(document.querySelectorAll('[data-kasus]'), function(btn){
+    btn.onclick = function(){ kasusAktif[b.kode] = btn.dataset.kasus; gambarKanan(); };
+  });
+  const cb = el('cbContoh');
+  if(cb) cb.onchange = function(){ dataContoh = cb.checked; gambarKanan(); };
+}
+
+[].forEach.call(document.querySelectorAll('#tabKanan button'), function(b){
+  b.onclick = function(){ tabAktif = b.dataset.tab; segarkanTab(); gambarKanan(); };
+});
+el('cariBagian').oninput = gambarDaftar;
+
+/* tombol tambah bagian */
+el('tambahPasal').onclick = function(){
+  const n = SECTIONS.filter(s => s.jenis === 'pasal').length + 1;
+  SECTIONS.push({ id:'p'+Date.now(), jenis:'pasal', judul:'Pasal '+n, teks:'' });
+  bagianAktif = SECTIONS.length - 1; potAktif = null; modeKode = false;
+  tabAktif = 'bagian'; segarkanTab(); gambarDaftar(); gambarKanan();
+};
+el('tambahCatatan').onclick = function(){
+  SECTIONS.push({ id:'c'+Date.now(), jenis:'catatan', judul:'Catatan baru', teks:'' });
+  bagianAktif = SECTIONS.length - 1; potAktif = null; modeKode = false;
+  tabAktif = 'bagian'; segarkanTab(); gambarDaftar(); gambarKanan();
+};
+
+/* impor dari Word */
+[].forEach.call(document.querySelectorAll('.tabkiri'), function(b){
+  b.onclick = function(){ gantiModeKiri(b.dataset.kiri); };
+});
+el('tambahLampiran').onclick = function(){
+  LAMPIRAN.push({ id:'lamp'+Date.now(), judul:'Lampiran baru', asal:'bawaan', teks:'', asli:'' });
+  lampiranAktif = LAMPIRAN.length - 1;
+  tabAktif = 'bagian'; segarkanTab(); gambarLampiran(); gambarKanan();
+};
+gambarLampiran();
+
+el('btnPreview').onclick = bukaPreviewAkta;
+el('btnImpor').onclick = function(){ el('fileWord').click(); };
+el('fileWord').onchange = function(e){
+  const f = e.target.files && e.target.files[0];
+  if(!f) return;
+  toast('\u201c'+f.name+'\u201d diterima \u2014 naskah akan dipecah menjadi pasal & catatan.');
+  e.target.value = '';
+};
+
+gambarDaftar();
+gambarKanan();
+
+/* sidebar responsif */
+(function(){
+  const burger = el('burger'), sb = el('sidebar'), sc = el('scrim');
+  if(burger){ burger.onclick = function(){ sb.classList.toggle('open'); sc.classList.toggle('on'); }; }
+  if(sc){ sc.onclick = function(){ sb.classList.remove('open'); sc.classList.remove('on'); }; }
+  [].forEach.call(document.querySelectorAll('.sidebar nav .grp'), function(g){
+    g.onclick = function(){
+      const buka = g.getAttribute('aria-expanded') === 'true';
+      g.setAttribute('aria-expanded', String(!buka));
+      const items = g.nextElementSibling;
+      if(items && items.classList.contains('items')) items.style.display = buka ? 'none' : 'block';
+    };
+  });
+  document.addEventListener('click', function(e){
+    const pop = document.querySelector('.tpl-varpop');
+    if(pop && !pop.contains(e.target) && !e.target.closest('[data-cmd="variabel"]')) pop.remove();
+  });
+})();
+</script>
+</body>
+</html>

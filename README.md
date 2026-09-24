@@ -13,6 +13,7 @@ cukup dibuka di peramban, tidak perlu server atau pemasangan apa pun.
 | `Backlog-EPPATPN-17-Profil-Kantor-Prototype.html` | EPPATPN-17 | Halaman Profil Kantor PPAT dengan tambahan Gelar Disingkat dan Gelar Tidak Disingkat |
 | `Backlog-EPPATPN-19-Pemilihan-Para-Pihak-Prototype.html` | EPPATPN-19 | Order AJB tab Para Pihak: tabel pihak beserta baris turunan, dan modal Tambah Pihak dengan kondisi per tipe (perorangan, badan hukum PT, pasangan, saksi, kuasa, ahli waris) |
 | `Backlog-EPPATPN-20-Registrasi-CA-Melalui-AsistenPPAT-Prototype.html` | EPPATPN-20 | Halaman Daftar User, modal Tambah User Baru, dan alur pendaftaran user ke Registrasi CA |
+| `Backlog-EPPATPN-21-Editor-Template-Prototype.html` | EPPATPN-21 | Template Akta Kantor: 8 bagian (catatan, pasal, dan bagian otomatis), penyunting naskah beserta penyisip variabel, potongan redaksi bersyarat yang bisa disunting dan di-reset, tab Lampiran, Impor dari Word, serta Preview Akta per halaman. |
 | `Spesifikasi-Redaksi-Bersyarat-Akta-PPAT.html` | Dokumen | Pemetaan pilihan field pada layar Order ke redaksi yang terbentuk pada naskah akta |
 
 Tiap prototipe punya baris navigasi di atas layar untuk berpindah antar prototipe dan kembali ke daftar;
