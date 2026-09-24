@@ -12,8 +12,11 @@ cukup dibuka di peramban, tidak perlu server atau pemasangan apa pun.
 | `Backlog-EPPATPN-3-Minuta-01-Prototype.html` | EPPATPN-3 | E-Akta Wizard: tab Minuta Pertama / Minuta Kedua / Salinan, simulasi Digital Stamp, E-Signature, E-Materai, dan konfirmasi Mulai Ulang |
 | `Backlog-EPPATPN-17-Profil-Kantor-Prototype.html` | EPPATPN-17 | Halaman Profil Kantor PPAT dengan tambahan Gelar Disingkat dan Gelar Tidak Disingkat |
 | `Backlog-EPPATPN-19-Pemilihan-Para-Pihak-Prototype.html` | EPPATPN-19 | Order AJB tab Para Pihak: tabel pihak beserta baris turunan, dan modal Tambah Pihak dengan kondisi per tipe (perorangan, badan hukum PT, pasangan, saksi, kuasa, ahli waris) |
+| `Backlog-EPPATPN-20-Registrasi-CA-Melalui-AsistenPPAT-Prototype.html` | EPPATPN-20 | Halaman Daftar User, modal Tambah User Baru, dan alur pendaftaran user ke Registrasi CA |
+| `Spesifikasi-Redaksi-Bersyarat-Akta-PPAT.html` | Dokumen | Pemetaan pilihan field pada layar Order ke redaksi yang terbentuk pada naskah akta |
 
-Tiap prototipe punya baris navigasi di atas layar untuk berpindah antar prototipe dan kembali ke daftar.
+Tiap prototipe punya baris navigasi di atas layar untuk berpindah antar prototipe dan kembali ke daftar;
+dokumen spesifikasi punya tautan kembali di kaki sidebarnya.
 
 ## Menayangkan lewat GitHub Pages
 
