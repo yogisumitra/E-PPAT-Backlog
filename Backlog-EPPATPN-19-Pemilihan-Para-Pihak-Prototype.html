@@ -468,7 +468,7 @@ const S = {
   user:null, userKuasa:null, userSaksi:null,
   tipe:'', bentuk:'perorangan', harta:'Harta Sendiri', kedudukan:'Tidak ada',
   kuasa:false, komisaris:false, uu40:false, peran:'Memberi persetujuan (tanpa tanda tangan)',
-  waris:[null,null], perubahan:0, spaw:'lengkap', ktpTerbuka:{}
+  waris:[null,null], perubahan:0, spaw:'lengkap', bentukKuasa:'bawah', ktpTerbuka:{}
 };
 
 /* ---------- data dummy tabel ---------- */
@@ -593,15 +593,32 @@ function userKlien(label){
   </div>`;
 }
 
+function blokIsiKuasa(){
+  const notariil = S.bentukKuasa === 'notariil';
+  return `<div class="two">
+      <div class="field"><label>Bentuk Kuasa</label>
+        <select id="bentukKuasa">
+          <option value="bawah" ${notariil?'':'selected'}>Surat Kuasa di bawah tangan</option>
+          <option value="notariil" ${notariil?'selected':''}>Akta Kuasa notariil</option>
+        </select>
+        <div class="derived">${notariil
+          ? 'Akta menyebut nomor akta kuasa beserta notaris pembuatnya.'
+          : 'Akta menyebut surat kuasa di bawah tangan beserta tanggalnya, tanpa notaris.'}</div>
+      </div>
+      <div class="field"><label>Tanggal Kuasa</label><input type="date"></div>
+      ${notariil ? `
+      <div class="field"><label>Nomor Akta Kuasa</label><input type="text"></div>
+      <div class="field"><label>Notaris</label><input type="text"></div>
+      <div class="field"><label>Notaris di</label><input type="text"></div>` : ''}
+    </div>`;
+}
+
 function blokKuasa(labelCheck, judulPemberi){
   return `<div class="field">
       <span class="lbl">Perwakilan / Kuasa <span class="usulan">· redaksi usulan</span></span>
       <label class="check"><input type="checkbox" id="cbKuasa" ${S.kuasa?'checked':''}> ${labelCheck}</label>
     </div>
-    ${S.kuasa ? `<div class="two">
-        <div class="field"><label>Bentuk Kuasa</label><select><option>Surat Kuasa di bawah tangan</option><option>Akta Kuasa notariil</option></select></div>
-        <div class="field"><label>Tanggal Kuasa</label><input type="date"></div>
-      </div>
+    ${S.kuasa ? `${blokIsiKuasa()}
       ${pilihUser('userKuasa', S.userKuasa, 'User Penerima Kuasa', 'Penerima kuasa harus terdaftar sebagai user. Data diri terisi otomatis dari profilnya.')}
       ${kartuIdentitas('Identitas penerima kuasa — yang hadir', cariUser(S.userKuasa), 'kuasa')}
       ${kartuIdentitas(judulPemberi, cariUser(S.user), 'pemberi')}` : ''}`;
@@ -814,10 +831,7 @@ function blokPasangan(){
       <span class="lbl">Perwakilan pasangan <span class="usulan">· redaksi usulan</span></span>
       <label class="check"><input type="checkbox" id="cbKuasa" ${S.kuasa?'checked':''}> Pasangan tidak bisa hadir — diwakili penerima kuasa</label>
     </div>
-    ${S.kuasa ? `<div class="two">
-        <div class="field"><label>Bentuk Kuasa</label><select><option>Surat Kuasa di bawah tangan</option><option>Akta Kuasa notariil</option></select></div>
-        <div class="field"><label>Tanggal Kuasa</label><input type="date"></div>
-      </div>
+    ${S.kuasa ? `${blokIsiKuasa()}
       ${pilihUser('userKuasa', S.userKuasa, 'User Penerima Kuasa', 'Penerima kuasa harus terdaftar sebagai user. Data diri terisi otomatis dari profilnya.')}
       ${kartuIdentitas('Identitas penerima kuasa — yang hadir', cariUser(S.userKuasa), 'kuasa')}` : ''}`;
 }
@@ -825,10 +839,7 @@ function blokPasangan(){
 function blokSaksi(){
   return `${pilihUser('userSaksi', S.userSaksi, 'User Saksi', 'Saksi harus terdaftar sebagai user. Data diri terisi otomatis dari profilnya.')}
     ${kartuIdentitas('Identitas saksi (KTP)', cariUser(S.userSaksi), 'saksi')}
-    <div class="grup">
-      <div class="grup-title">Diisi saat order</div>
-      <div class="field" style="margin-bottom:0"><label>NIP (opsional, bila saksi pejabat/ASN)</label><input type="text"></div>
-    </div>`;
+`;
 }
 
 function judul(){
@@ -881,6 +892,7 @@ el('isi').addEventListener('change', e => {
   if(t.id === 'userKuasa'){ S.userKuasa = t.value || null; render(); }
   if(t.id === 'userSaksi'){ S.userSaksi = t.value || null; render(); }
   if(t.id === 'redaksiSpaw'){ S.spaw = t.value; render(); }
+  if(t.id === 'bentukKuasa'){ S.bentukKuasa = t.value; render(); }
   if(t.hasAttribute && t.hasAttribute('data-ktpjk')){
     const k = t.dataset.ktpjk; const u = k==='saksi' ? cariUser(S.userSaksi) : k==='kuasa' ? cariUser(S.userKuasa) : cariUser(S.user); if(u){ u.jk = t.value; render(); }
   }
@@ -894,7 +906,7 @@ el('isi').addEventListener('change', e => {
 
 function bukaModal(tipe){
   S.tipe = tipe || ''; S.kuasa = false; S.komisaris = false; S.uu40 = false;
-  S.bentuk = 'perorangan'; S.kedudukan = 'Tidak ada'; S.perubahan = 0; S.waris = [null, null]; S.ktpTerbuka = {}; S.user = null; S.userKuasa = null; S.userSaksi = null; S.harta = 'Harta Sendiri';
+  S.bentuk = 'perorangan'; S.kedudukan = 'Tidak ada'; S.perubahan = 0; S.waris = [null, null]; S.ktpTerbuka = {}; S.user = null; S.userKuasa = null; S.userSaksi = null; S.harta = 'Harta Sendiri'; S.bentukKuasa = 'bawah';
   render();
   el('overlay').hidden = false;
 }
