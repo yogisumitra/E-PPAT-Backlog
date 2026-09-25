@@ -12,105 +12,147 @@
   *{box-sizing:border-box}
   body{margin:0;font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;color:#0f172a;
     background:linear-gradient(160deg,#E9EFEE 0%,#F4F7F6 45%,#EDF2F1 100%);min-height:100vh}
-  .wrap{max-width:900px;margin:0 auto;padding:calc(48px + env(safe-area-inset-top,0px)) 24px calc(56px + env(safe-area-inset-bottom,0px))}
+  .wrap{max-width:1000px;margin:0 auto;padding:calc(48px + env(safe-area-inset-top,0px)) 24px calc(56px + env(safe-area-inset-bottom,0px))}
   .eyebrow{font-size:11px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted)}
   h1{margin:8px 0 0;font-size:30px;line-height:40px;font-weight:400;letter-spacing:-.6px;color:var(--green)}
   .sub{margin:6px 0 0;font-size:14px;color:var(--muted)}
-  .list{display:grid;gap:16px;margin-top:28px}
-  .card{display:block;text-decoration:none;color:inherit;background:#fff;border:1px solid var(--line);border-radius:14px;
-    padding:20px;transition:.15s;box-shadow:0 1px 2px rgba(15,26,23,.04)}
-  .card:hover{border-color:var(--green);box-shadow:0 8px 22px rgba(15,26,23,.10);transform:translateY(-1px)}
-  .kode{font:600 11px Inter,sans-serif;letter-spacing:1.4px;text-transform:uppercase;color:var(--green)}
-  .card h2{margin:6px 0 6px;font-size:19px;font-weight:600;color:#0f172a}
-  .card p{margin:0;font-size:13.5px;line-height:20px;color:var(--muted)}
-  .go{display:inline-flex;align-items:center;gap:6px;margin-top:14px;font:600 13px Inter,sans-serif;color:var(--green)}
-  footer{margin-top:32px;font-size:12px;line-height:18px;color:var(--muted)}
-  @media (max-width:640px){ .wrap{padding:32px 16px 40px} h1{font-size:24px;line-height:32px} }
+
+  .cari{position:relative;display:flex;align-items:center;margin:24px 0 12px}
+  .cari svg{position:absolute;left:12px;width:15px;height:15px;color:#94A3B8}
+  .cari input{width:100%;height:38px;border:1px solid var(--line);border-radius:8px;background:var(--field-bg);
+    padding:0 12px 0 36px;font:400 14px Inter,sans-serif;color:#0f172a}
+  .cari input::placeholder{color:#94A3B8}
+  .cari input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(61,107,94,.14)}
+  .jml{margin:0 0 14px;font-size:12px;color:var(--muted)}
+
+  .kotak{background:var(--field-bg);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+  table{width:100%;border-collapse:collapse}
+  th{text-align:left;font-size:11px;font-weight:600;letter-spacing:1.32px;text-transform:uppercase;color:#4C5D58;
+    padding:12px 16px;border-bottom:1px solid rgba(210,221,217,.6);white-space:nowrap}
+  td{padding:12px 16px;border-bottom:1px solid rgba(210,221,217,.6);font-size:14px;color:#4C5D58;vertical-align:top}
+  tbody tr:last-child td{border-bottom:0}
+  tbody tr.baris{cursor:pointer}
+  tbody tr.baris:hover td{background:#F4F8F6}
+  td.kode{color:var(--green);font-weight:600;white-space:nowrap;width:150px}
+  td .nm{font-size:14px;font-weight:600;color:#0f172a;margin-bottom:3px}
+  td .isi{font-size:13px;line-height:19px;color:var(--muted)}
+  td.tgl{white-space:nowrap;width:130px;color:var(--muted)}
+  td.chev{width:44px;text-align:right;color:var(--muted)}
+  .kosong{text-align:center;padding:26px;color:#94A3B8}
+  footer{margin-top:28px;font-size:12px;line-height:18px;color:var(--muted)}
+  @media (max-width:760px){
+    .wrap{padding:32px 16px 40px} h1{font-size:24px;line-height:32px}
+    th:nth-child(3),td.tgl{display:none}
+    td.kode{width:auto}
+  }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="eyebrow">E-PPAT · Perdana Niaga</div>
+    <div class="eyebrow">E-PPAT &middot; Perdana Niaga</div>
     <h1>Prototipe Backlog</h1>
-    <p class="sub">Pilih backlog untuk membuka prototipe layarnya.</p>
-    <div class="list">
-    <a class="card" href="Backlog-EPPATPN-2-Object%20Jual%20Beli-Prototype.html">
-      <div class="kode">EPPATPN-2</div>
-      <h2>Object Jual Beli</h2>
-      <p>Modal Tambah Objek (AJB): Status Sertipikat, Jenis Hak, Format, dan Status Objek menentukan isian butir 14/15/16/17, ditambah letak butir 18 dan meliputi pula butir 19.</p>
-      <span class="go">Buka prototipe
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </span>
-    </a>
-    <a class="card" href="Backlog-EPPATPN-3-Minuta-01-Prototype.html">
-      <div class="kode">EPPATPN-3</div>
-      <h2>Minuta — 01</h2>
-      <p>E-Akta Wizard: tab Minuta Pertama / Minuta Kedua / Salinan yang terbuka bertahap (Salinan baru terbuka setelah Minuta Kedua selesai sampai E-Materai), simulasi Digital Stamp, E-Signature, E-Materai, dan konfirmasi Mulai Ulang.</p>
-      <span class="go">Buka prototipe
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </span>
-    </a>
-    <a class="card" href="Backlog-EPPATPN-17-Profil-Kantor-Prototype.html">
-      <div class="kode">EPPATPN-17</div>
-      <h2>Profil Kantor</h2>
-      <p>Halaman Profil Kantor PPAT dengan tambahan isian Gelar Disingkat dan Gelar Tidak Disingkat.</p>
-      <span class="go">Buka prototipe
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </span>
-    </a>
-    <a class="card" href="Backlog-EPPATPN-19-Pemilihan-Para-Pihak-Prototype.html">
-      <div class="kode">EPPATPN-19</div>
-      <h2>Pemilihan Para Pihak</h2>
-      <p>Layar Order AJB tab Para Pihak: tabel pihak beserta baris turunan, pencarian user klien berlencana CA aktif / NIK kosong (Data KTP terkunci bila CA aktif), dan modal Tambah Pihak dengan kondisi per tipe — perorangan, badan hukum (PT), pasangan, saksi, kuasa, dan ahli waris.</p>
-      <span class="go">Buka prototipe
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </span>
-    </a>
-    <a class="card" href="Backlog-EPPATPN-20-Registrasi-CA-Melalui-AsistenPPAT-Prototype.html">
-      <div class="kode">EPPATPN-20</div>
-      <h2>Registrasi CA Melalui Asisten PPAT</h2>
-      <p>Halaman Daftar User berkolom Sertifikat CA, modal Tambah/Ubah User, alur pendaftaran ke Registrasi CA beserta masa berlaku tautan dan Buat Ulang Link, serta Cek Status CA untuk user yang sertifikatnya sudah aktif.</p>
-      <span class="go">Buka prototipe
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </span>
-    </a>
-    <a class="card" href="Backlog-EPPATPN-21-Editor-Template-Prototype.html">
-      <div class="kode">EPPATPN-21</div>
-      <h2>Editor Template Akta</h2>
-      <p>Template Akta Kantor: 8 bagian (catatan, pasal, dan bagian otomatis), penyunting naskah beserta penyisip variabel, potongan redaksi bersyarat yang bisa disunting dan di-reset, tab Lampiran, Impor dari Word, serta Preview Akta per halaman.</p>
-      <span class="go">Buka prototipe
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </span>
-    </a>
-    <a class="card" href="Backlog-EPPATPN-Drafting-Minuta-Prototype.html">
-      <div class="kode">Drafting Minuta</div>
-      <h2>Minuta Akta — Drafting</h2>
-      <p>Drafting minuta order: bagian yang disusun sistem dari kondisi order, lampiran naskah &amp; berkas unggahan, penyunting naskah beserta variabel, tab Renvoi, dan alat Preview Akta / Cek Ejaan / Beritahu PPAT / Finalisasi Akta.</p>
-      <span class="go">Buka prototipe
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </span>
-    </a>
-    <a class="card" href="Backlog-EPPATPN-25-Menu-Repository-Prototype.html">
-      <div class="kode">EPPATPN-25</div>
-      <h2>Menu Akta Repository</h2>
-      <p>Menu Akta Repository: daftar entri akta dengan pencarian dan saringan status, lalu layar detail berisi kartu Dokumen (diawali baris Drafting Dokumen berstatus Draft / Final) dan Riwayat pengiriman, tombol Unduh Semua Dokumen, serta modal Kirim Akta Salinan dengan kartu penerima berpilihan Email / WhatsApp.</p>
-      <span class="go">Buka prototipe
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </span>
-    </a>
-    <a class="card" href="Spesifikasi-Redaksi-Bersyarat-Akta-PPAT.html">
-      <div class="kode">Spesifikasi</div>
-      <h2>Redaksi Bersyarat — Akta PPAT</h2>
-      <p>Pemetaan pilihan field pada layar Order ke redaksi yang terbentuk di naskah akta: field pemicu, aturan penentuan, katalog potongan, dan daftar variabel.</p>
-      <span class="go">Buka dokumen
-        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </span>
-    </a>
+    <p class="sub">Cari atau pilih backlog untuk membuka prototipe layarnya.</p>
+
+    <label class="cari">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.7" y2="16.7"/></svg>
+      <input type="text" id="cari" placeholder="Cari kode backlog, nama layar, atau isi prototipe" autocomplete="off">
+    </label>
+    <p class="jml" id="jml"></p>
+
+    <div class="kotak">
+      <table>
+        <thead><tr><th>Backlog</th><th>Prototipe</th><th>Diperbarui</th><th></th></tr></thead>
+        <tbody id="baris">
+      <tr class="baris" data-href="Backlog-EPPATPN-2-Object%20Jual%20Beli-Prototype.html" data-cari="eppatpn-2 object jual beli modal tambah objek (ajb): status sertipikat, jenis hak, format, dan status objek menentukan isian butir 14/15/16/17, ditambah letak butir 18 dan meliputi pula butir 19.">
+        <td class="kode">EPPATPN-2</td>
+        <td><div class="nm">Object Jual Beli</div><div class="isi">Modal Tambah Objek (AJB): Status Sertipikat, Jenis Hak, Format, dan Status Objek menentukan isian butir 14/15/16/17, ditambah letak butir 18 dan meliputi pula butir 19.</div></td>
+        <td class="tgl"><time datetime="2026-09-25">25 Sep 2026</time></td>
+        <td class="chev"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></td>
+      </tr>
+      <tr class="baris" data-href="Backlog-EPPATPN-3-Minuta-01-Prototype.html" data-cari="eppatpn-3 minuta — 01 e-akta wizard: tab minuta pertama / minuta kedua / salinan yang terbuka bertahap (salinan baru terbuka setelah minuta kedua selesai sampai e-materai), simulasi digital stamp, e-signature, e-materai, dan konfirmasi mulai ulang.">
+        <td class="kode">EPPATPN-3</td>
+        <td><div class="nm">Minuta — 01</div><div class="isi">E-Akta Wizard: tab Minuta Pertama / Minuta Kedua / Salinan yang terbuka bertahap (Salinan baru terbuka setelah Minuta Kedua selesai sampai E-Materai), simulasi Digital Stamp, E-Signature, E-Materai, dan konfirmasi Mulai Ulang.</div></td>
+        <td class="tgl"><time datetime="2026-09-25">25 Sep 2026</time></td>
+        <td class="chev"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></td>
+      </tr>
+      <tr class="baris" data-href="Backlog-EPPATPN-17-Profil-Kantor-Prototype.html" data-cari="eppatpn-17 profil kantor halaman profil kantor ppat dengan tambahan isian gelar disingkat dan gelar tidak disingkat.">
+        <td class="kode">EPPATPN-17</td>
+        <td><div class="nm">Profil Kantor</div><div class="isi">Halaman Profil Kantor PPAT dengan tambahan isian Gelar Disingkat dan Gelar Tidak Disingkat.</div></td>
+        <td class="tgl"><time datetime="2026-09-25">25 Sep 2026</time></td>
+        <td class="chev"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></td>
+      </tr>
+      <tr class="baris" data-href="Backlog-EPPATPN-19-Pemilihan-Para-Pihak-Prototype.html" data-cari="eppatpn-19 pemilihan para pihak layar order ajb tab para pihak: tabel pihak beserta baris turunan, pencarian user klien berlencana ca aktif / nik kosong (data ktp terkunci bila ca aktif), dan modal tambah pihak dengan kondisi per tipe — perorangan, badan hukum (pt), pasangan, saksi, kuasa, dan ahli waris.">
+        <td class="kode">EPPATPN-19</td>
+        <td><div class="nm">Pemilihan Para Pihak</div><div class="isi">Layar Order AJB tab Para Pihak: tabel pihak beserta baris turunan, pencarian user klien berlencana CA aktif / NIK kosong (Data KTP terkunci bila CA aktif), dan modal Tambah Pihak dengan kondisi per tipe — perorangan, badan hukum (PT), pasangan, saksi, kuasa, dan ahli waris.</div></td>
+        <td class="tgl"><time datetime="2026-09-25">25 Sep 2026</time></td>
+        <td class="chev"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></td>
+      </tr>
+      <tr class="baris" data-href="Backlog-EPPATPN-20-Registrasi-CA-Melalui-AsistenPPAT-Prototype.html" data-cari="eppatpn-20 registrasi ca melalui asisten ppat halaman daftar user berkolom sertifikat ca, modal tambah/ubah user, alur pendaftaran ke registrasi ca beserta masa berlaku tautan dan buat ulang link, serta cek status ca untuk user yang sertifikatnya sudah aktif.">
+        <td class="kode">EPPATPN-20</td>
+        <td><div class="nm">Registrasi CA Melalui Asisten PPAT</div><div class="isi">Halaman Daftar User berkolom Sertifikat CA, modal Tambah/Ubah User, alur pendaftaran ke Registrasi CA beserta masa berlaku tautan dan Buat Ulang Link, serta Cek Status CA untuk user yang sertifikatnya sudah aktif.</div></td>
+        <td class="tgl"><time datetime="2026-09-25">25 Sep 2026</time></td>
+        <td class="chev"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></td>
+      </tr>
+      <tr class="baris" data-href="Backlog-EPPATPN-21-Editor-Template-Prototype.html" data-cari="eppatpn-21 editor template akta template akta kantor: 8 bagian (catatan, pasal, dan bagian otomatis), penyunting naskah beserta penyisip variabel, potongan redaksi bersyarat yang bisa disunting dan di-reset, tab lampiran, impor dari word, serta preview akta per halaman.">
+        <td class="kode">EPPATPN-21</td>
+        <td><div class="nm">Editor Template Akta</div><div class="isi">Template Akta Kantor: 8 bagian (catatan, pasal, dan bagian otomatis), penyunting naskah beserta penyisip variabel, potongan redaksi bersyarat yang bisa disunting dan di-reset, tab Lampiran, Impor dari Word, serta Preview Akta per halaman.</div></td>
+        <td class="tgl"><time datetime="2026-09-25">25 Sep 2026</time></td>
+        <td class="chev"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></td>
+      </tr>
+      <tr class="baris" data-href="Backlog-EPPATPN-Drafting-Minuta-Prototype.html" data-cari="drafting minuta minuta akta — drafting drafting minuta order: bagian yang disusun sistem dari kondisi order, lampiran naskah &amp; berkas unggahan, penyunting naskah beserta variabel, tab renvoi, dan alat preview akta / cek ejaan / beritahu ppat / finalisasi akta.">
+        <td class="kode">Drafting Minuta</td>
+        <td><div class="nm">Minuta Akta — Drafting</div><div class="isi">Drafting minuta order: bagian yang disusun sistem dari kondisi order, lampiran naskah &amp; berkas unggahan, penyunting naskah beserta variabel, tab Renvoi, dan alat Preview Akta / Cek Ejaan / Beritahu PPAT / Finalisasi Akta.</div></td>
+        <td class="tgl"><time datetime="2026-09-25">25 Sep 2026</time></td>
+        <td class="chev"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></td>
+      </tr>
+      <tr class="baris" data-href="Backlog-EPPATPN-25-Menu-Repository-Prototype.html" data-cari="eppatpn-25 menu akta repository menu akta repository: daftar entri akta dengan pencarian dan saringan status, lalu layar detail berisi kartu dokumen (diawali baris drafting dokumen berstatus draft / final) dan riwayat pengiriman, tombol unduh semua dokumen, serta modal kirim akta salinan dengan kartu penerima berpilihan email / whatsapp.">
+        <td class="kode">EPPATPN-25</td>
+        <td><div class="nm">Menu Akta Repository</div><div class="isi">Menu Akta Repository: daftar entri akta dengan pencarian dan saringan status, lalu layar detail berisi kartu Dokumen (diawali baris Drafting Dokumen berstatus Draft / Final) dan Riwayat pengiriman, tombol Unduh Semua Dokumen, serta modal Kirim Akta Salinan dengan kartu penerima berpilihan Email / WhatsApp.</div></td>
+        <td class="tgl"><time datetime="2026-09-25">25 Sep 2026</time></td>
+        <td class="chev"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></td>
+      </tr>
+      <tr class="baris" data-href="Spesifikasi-Redaksi-Bersyarat-Akta-PPAT.html" data-cari="spesifikasi redaksi bersyarat — akta ppat pemetaan pilihan field pada layar order ke redaksi yang terbentuk di naskah akta: field pemicu, aturan penentuan, katalog potongan, dan daftar variabel.">
+        <td class="kode">Spesifikasi</td>
+        <td><div class="nm">Redaksi Bersyarat — Akta PPAT</div><div class="isi">Pemetaan pilihan field pada layar Order ke redaksi yang terbentuk di naskah akta: field pemicu, aturan penentuan, katalog potongan, dan daftar variabel.</div></td>
+        <td class="tgl"><time datetime="2026-09-24">24 Sep 2026</time></td>
+        <td class="chev"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></td>
+      </tr>
+        </tbody>
+      </table>
     </div>
+
     <footer>
-      Prototipe tampilan, bukan aplikasi live — tombolnya hanya simulasi dan tidak mengubah data.<br>
-      Nama, e-mail, nomor seri meterai, dan QR yang tampil memakai contoh netral.
+      Prototipe tampilan, bukan aplikasi live &mdash; tombolnya hanya simulasi dan tidak mengubah data.<br>
+      Nama, e-mail, nomor seri meterai, dan QR yang tampil memakai contoh netral.<br>
+      Kolom <b>Diperbarui</b> menunjukkan tanggal berkas prototipe terakhir diubah.
     </footer>
   </div>
+
+<script>
+  var semua = [].slice.call(document.querySelectorAll('#baris .baris'));
+  var tbody = document.getElementById('baris');
+  var kosong = document.createElement('tr');
+  kosong.innerHTML = '<td colspan="4" class="kosong">Tidak ada prototipe yang cocok.</td>';
+  kosong.hidden = true;
+  tbody.appendChild(kosong);
+
+  semua.forEach(function(tr){
+    tr.addEventListener('click', function(){ window.location.href = tr.dataset.href; });
+  });
+
+  function saring(){
+    var q = document.getElementById('cari').value.trim().toLowerCase();
+    var ada = 0;
+    semua.forEach(function(tr){
+      var cocok = !q || tr.dataset.cari.indexOf(q) > -1;
+      tr.hidden = !cocok;
+      if(cocok) ada++;
+    });
+    kosong.hidden = ada > 0;
+    document.getElementById('jml').textContent = ada + ' dari ' + semua.length + ' prototipe';
+  }
+  document.getElementById('cari').addEventListener('input', saring);
+  saring();
+</script>
 </body>
 </html>
