@@ -466,6 +466,16 @@
   .rp-tabel td.utama{color:var(--green);font-weight:600}
   .rp-tabel td .sub{display:block;font-size:12.5px;color:#94A3B8;margin-top:2px}
   .rp-chev{color:var(--muted);display:inline-flex}
+  .rp-unduh{position:relative;display:inline-block}
+  .rp-unduh .rp-btn{display:inline-flex;align-items:center}
+  .rp-menu{position:fixed;z-index:60;width:272px;padding:4px;text-align:left;
+    background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 24px rgba(15,26,23,.14)}
+  .rp-menu button{display:block;width:100%;text-align:left;border:0;background:transparent;border-radius:7px;
+    padding:8px 10px;cursor:pointer;font:inherit}
+  .rp-menu button:hover:not(:disabled){background:#F1F5F4}
+  .rp-menu button:disabled{opacity:.5;cursor:not-allowed}
+  .rp-menu b{display:block;font-size:13px;font-weight:600;color:#0F172A}
+  .rp-menu small{display:block;font-size:11.5px;line-height:16px;color:var(--muted);margin-top:2px;white-space:normal}
   .rp-tabel td.kanan{text-align:right;white-space:nowrap}
   .rp-mono{font-size:14px}
   .rp-kosong{text-align:center;padding:26px;color:#94A3B8}
@@ -738,7 +748,7 @@
 const AKTA = [
  { kode:'ORD-260916-003', nomor:'12/2026', jenis:'Akta Jual Beli', pihak:'Bagus Hermawan \u00b7 Sri Widanti',
    status:'Menunggu tanda tangan',
-   dokumen:[ ['Drafting Dokumen','Final'], ['Minuta Lembar Pertama','Belum ditandatangani'], ['Minuta Lembar Kedua','Belum ditandatangani'],
+   dokumen:[ ['Minuta Lembar Pertama','Belum ditandatangani'], ['Minuta Lembar Kedua','Belum ditandatangani'],
              ['Akta Salinan','Belum ditandatangani'] ],
    pengiriman:[],
    penerima:[ ['Penjual','Bagus Hermawan','bagus@contoh.id','0812-0000-1101'],
@@ -746,7 +756,7 @@ const AKTA = [
 
  { kode:'ORD-260914-001', nomor:'09/2026', jenis:'Akta Jual Beli', pihak:'Rina Kartika \u00b7 Dewi Lestari',
    status:'Proses tanda tangan',
-   dokumen:[ ['Drafting Dokumen','Final'], ['Minuta Lembar Pertama','Ditandatangani'], ['Minuta Lembar Kedua','Belum ditandatangani'],
+   dokumen:[ ['Minuta Lembar Pertama','Ditandatangani'], ['Minuta Lembar Kedua','Belum ditandatangani'],
              ['Akta Salinan','Belum ditandatangani'] ],
    pengiriman:[],
    penerima:[ ['Penjual','Rina Kartika','rina@contoh.id','0813-0000-2202'],
@@ -754,7 +764,7 @@ const AKTA = [
 
  { kode:'ORD-260912-002', nomor:'08/2026', jenis:'Akta Jual Beli', pihak:'Ahmad Fauzi \u00b7 Maya Putri',
    status:'Berlaku',
-   dokumen:[ ['Drafting Dokumen','Final'], ['Minuta Lembar Pertama','Ditandatangani'], ['Minuta Lembar Kedua','Ditandatangani'],
+   dokumen:[ ['Minuta Lembar Pertama','Ditandatangani'], ['Minuta Lembar Kedua','Ditandatangani'],
              ['Akta Salinan','Ditandatangani'], ['Lampiran \u2014 KTP para pihak.pdf','Diunggah'] ],
    pengiriman:[ ['21 Sep 2026','Akta Salinan','Ahmad Fauzi, Maya Putri','Email, WhatsApp'] ],
    penerima:[ ['Penjual','Ahmad Fauzi','ahmad@contoh.id','0812-0000-3303'],
@@ -763,7 +773,7 @@ const AKTA = [
 
  { kode:'ORD-260915-004', nomor:'11/2026', jenis:'Akta Jual Beli', pihak:'PT Sinar Bumi Sejahtera \u00b7 Andi Wijaya',
    status:'Sedang direvisi',
-   dokumen:[ ['Drafting Dokumen','Draft'], ['Minuta Lembar Pertama','Belum ditandatangani'], ['Minuta Lembar Kedua','Belum ditandatangani'],
+   dokumen:[ ['Minuta Lembar Pertama','Belum ditandatangani'], ['Minuta Lembar Kedua','Belum ditandatangani'],
              ['Akta Salinan','Belum ditandatangani'] ],
    pengiriman:[],
    penerima:[ ['Penjual','PT Sinar Bumi Sejahtera','legal@contoh.id','0811-0000-4404'],
@@ -780,6 +790,15 @@ function toast(pesan){
   document.body.appendChild(t);
   setTimeout(function(){ t.remove(); }, 2800);
 }
+function tutupMenuUnduh(){
+  $$('#dDokumen .rp-menu').forEach(function(m){ m.hidden = true; });
+  $$('#dDokumen [data-menu]').forEach(function(b){ b.setAttribute('aria-expanded', 'false'); });
+}
+document.addEventListener('click', function(e){ if(!e.target.closest('.rp-unduh')) tutupMenuUnduh(); });
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape') tutupMenuUnduh(); });
+window.addEventListener('scroll', tutupMenuUnduh, true);
+window.addEventListener('resize', tutupMenuUnduh);
+
 function kelasStatus(s){
   if(s === 'Berlaku') return 'berlaku';
   if(s === 'Sedang direvisi') return 'revisi';
@@ -834,14 +853,56 @@ function bukaDetail(kode){
     if(st === 'Draft') return 'draft';
     return '';
   }
-  el('dDokumen').innerHTML = aktif.dokumen.map(function(d){
+  el('dDokumen').innerHTML = aktif.dokumen.map(function(d, i){
+    const berkas = d[1] === 'Diunggah';
+    const tandaTangan = d[1] === 'Ditandatangani';
+    const unduh = berkas
+      ? '<button class="rp-btn kecil" data-unduhdok="' + esc(d[0]) + '">Unduh</button>'
+      : '<span class="rp-unduh">'
+          + '<button class="rp-btn kecil" data-menu="' + i + '" aria-expanded="false">Unduh'
+            + '<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:4px"><polyline points="6 9 12 15 18 9"/></svg>'
+          + '</button>'
+          + '<span class="rp-menu" data-isi="' + i + '" hidden>'
+            + '<button type="button" data-ambil="draft" data-dok="' + esc(d[0]) + '">'
+              + '<b>Draft</b><small>PDF bersih tanpa stempel, tanda tangan, dan meterai</small></button>'
+            + '<button type="button" data-ambil="ttd" data-dok="' + esc(d[0]) + '"' + (tandaTangan ? '' : ' disabled') + '>'
+              + '<b>Ditandatangani</b><small>' + (tandaTangan
+                  ? 'PDF lengkap dengan stempel, tanda tangan, dan meterai'
+                  : 'Belum tersedia \u2014 dokumen ini belum ditandatangani') + '</small></button>'
+          + '</span>'
+        + '</span>';
     return '<tr><td class="utama">' + esc(d[0]) + '</td>'
       + '<td><span class="rp-lencana ' + kelasDok(d[1]) + '">' + esc(d[1]) + '</span></td>'
       + '<td class="kanan"><button class="rp-btn kecil" data-lihat="' + esc(d[0]) + '">Lihat</button> '
-      + '<button class="rp-btn kecil" data-unduhdok="' + esc(d[0]) + '">Unduh</button></td></tr>';
+      + unduh + '</td></tr>';
   }).join('');
   $$('[data-lihat]').forEach(function(b){ b.onclick = function(){ toast('Simulasi: \u201c' + b.dataset.lihat + '\u201d dibuka di penampil dokumen.'); }; });
   $$('[data-unduhdok]').forEach(function(b){ b.onclick = function(){ toast('Simulasi: \u201c' + b.dataset.unduhdok + '\u201d diunduh.'); }; });
+  $$('#dDokumen [data-menu]').forEach(function(b){
+    b.onclick = function(e){
+      e.stopPropagation();
+      const isi = document.querySelector('#dDokumen [data-isi="' + b.dataset.menu + '"]');
+      const buka = isi.hidden;
+      tutupMenuUnduh();
+      if(buka){
+        const r = b.getBoundingClientRect();
+        isi.hidden = false;
+        const tinggi = isi.offsetHeight;
+        const keAtas = r.bottom + tinggi + 8 > window.innerHeight && r.top - tinggi - 8 > 0;
+        isi.style.top = (keAtas ? r.top - tinggi - 4 : r.bottom + 4) + 'px';
+        isi.style.left = Math.max(8, Math.min(r.right - isi.offsetWidth, window.innerWidth - isi.offsetWidth - 8)) + 'px';
+      }
+      b.setAttribute('aria-expanded', String(buka));
+    };
+  });
+  $$('#dDokumen [data-ambil]').forEach(function(b){
+    b.onclick = function(e){
+      e.stopPropagation();
+      tutupMenuUnduh();
+      toast('Simulasi: \u201c' + b.dataset.dok + '\u201d diunduh \u2014 versi '
+        + (b.dataset.ambil === 'draft' ? 'draft.' : 'ditandatangani.'));
+    };
+  });
 
   el('dKirim').innerHTML = aktif.pengiriman.length
     ? aktif.pengiriman.map(function(r){

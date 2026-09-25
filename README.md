@@ -7,7 +7,7 @@ cukup dibuka di peramban, tidak perlu server atau pemasangan apa pun.
 
 | Berkas | Backlog | Isi |
 |---|---|---|
-| `index.html` | — | Halaman depan: daftar seluruh prototipe |
+| `index.html` | — | Halaman depan: tabel seluruh prototipe dengan pencarian dan kolom tanggal beserta jam pembaruan |
 | `Backlog-EPPATPN-2-Object Jual Beli-Prototype.html` | EPPATPN-2 | Modal Tambah Objek (AJB): Status Sertipikat · Jenis Hak · Format Sertipikat · Status Objek menentukan isian butir 14/15/16/17, letak objek butir 18, dan meliputi pula butir 19 |
 | `Backlog-EPPATPN-3-Minuta-01-Prototype.html` | EPPATPN-3 | E-Akta Wizard: tab Minuta Pertama / Minuta Kedua / Salinan yang terbuka bertahap — Minuta Kedua terbuka setelah Minuta Pertama selesai sampai E-Materai, Salinan terbuka setelah Minuta Kedua selesai sampai E-Materai — simulasi Digital Stamp, E-Signature, E-Materai, dan konfirmasi Mulai Ulang |
 | `Backlog-EPPATPN-17-Profil-Kantor-Prototype.html` | EPPATPN-17 | Halaman Profil Kantor PPAT dengan tambahan Gelar Disingkat dan Gelar Tidak Disingkat |
@@ -15,7 +15,7 @@ cukup dibuka di peramban, tidak perlu server atau pemasangan apa pun.
 | `Backlog-EPPATPN-20-Registrasi-CA-Melalui-AsistenPPAT-Prototype.html` | EPPATPN-20 | Halaman Daftar User berkolom Sertifikat CA (aktif / tidak aktif), modal Tambah dan Ubah User, alur pendaftaran ke Registrasi CA beserta masa berlaku tautan dan Buat Ulang Link, serta Cek Status CA dengan Data KTP terkunci untuk user yang sertifikatnya sudah aktif |
 | `Backlog-EPPATPN-21-Editor-Template-Prototype.html` | EPPATPN-21 | Template Akta Kantor: 8 bagian (catatan, pasal, dan bagian otomatis), penyunting naskah beserta penyisip variabel, potongan redaksi bersyarat yang bisa disunting dan di-reset, tab Lampiran, Impor dari Word, serta Preview Akta per halaman. |
 | `Backlog-EPPATPN-Drafting-Minuta-Prototype.html` | Drafting Minuta | Drafting minuta order: bagian yang disusun sistem dari kondisi order, lampiran naskah & berkas unggahan, penyunting naskah beserta variabel, tab Renvoi, dan alat Preview Akta / Cek Ejaan / Beritahu PPAT / Finalisasi Akta. |
-| `Backlog-EPPATPN-25-Menu-Repository-Prototype.html` | EPPATPN-25 | Menu Akta Repository: daftar entri akta dengan pencarian dan saringan status, layar detail berisi kartu Dokumen (diawali baris Drafting Dokumen berstatus Draft / Final) dan Riwayat pengiriman berdampingan, tombol Unduh Semua Dokumen, serta modal Kirim Akta Salinan berisi kartu penerima dengan pilihan kanal Email / WhatsApp yang datanya diambil dari para pihak pada order. |
+| `Backlog-EPPATPN-25-Menu-Repository-Prototype.html` | EPPATPN-25 | Menu Akta Repository: daftar entri akta dengan pencarian dan saringan status, layar detail berisi kartu Dokumen (diawali baris Drafting Dokumen berstatus Draft / Final) dan Riwayat pengiriman berdampingan, unduhan per dokumen dengan pilihan Draft / Ditandatangani (pilihan ditandatangani mati bila dokumen belum ditandatangani), tombol Unduh Semua Dokumen, serta modal Kirim Akta Salinan berisi kartu penerima dengan pilihan kanal Email / WhatsApp yang datanya diambil dari para pihak pada order. |
 | `Spesifikasi-Redaksi-Bersyarat-Akta-PPAT.html` | Dokumen | Pemetaan pilihan field pada layar Order ke redaksi yang terbentuk pada naskah akta |
 
 Tiap prototipe punya baris navigasi di atas layar untuk berpindah antar prototipe dan kembali ke daftar;
