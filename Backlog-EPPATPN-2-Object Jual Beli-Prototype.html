@@ -223,7 +223,7 @@
 <body>
 
 <div class="protobar">
-  <span class="protonav"><a class="home" href="index.html">☰ Daftar prototipe</a><a href="Backlog-EPPATPN-2-Object%20Jual%20Beli-Prototype.html" aria-current="page">EPPATPN-2 · Object Jual Beli</a><a href="Backlog-EPPATPN-3-Minuta-01-Prototype.html">EPPATPN-3 · Minuta — 01</a><a href="Backlog-EPPATPN-17-Profil-Kantor-Prototype.html">EPPATPN-17 · Profil Kantor</a><a href="Backlog-EPPATPN-19-Pemilihan-Para-Pihak-Prototype.html">EPPATPN-19 · Pemilihan Para Pihak</a></span>
+  <span class="protonav"><a class="home" href="index.html">☰ Daftar prototipe</a><a href="Backlog-EPPATPN-2-Object%20Jual%20Beli-Prototype.html" aria-current="page">EPPATPN-2 · Object Jual Beli</a><a href="Backlog-EPPATPN-3-Minuta-01-Prototype.html">EPPATPN-3 · Minuta — 01</a><a href="Backlog-EPPATPN-17-Profil-Kantor-Prototype.html">EPPATPN-17 · Profil Kantor</a><a href="Backlog-EPPATPN-19-Pemilihan-Para-Pihak-Prototype.html">EPPATPN-19 · Pemilihan Para Pihak</a><a href="Backlog-EPPATPN-20-Registrasi-CA-Melalui-AsistenPPAT-Prototype.html">EPPATPN-20 · Registrasi CA</a><a href="Backlog-EPPATPN-21-Editor-Template-Prototype.html">EPPATPN-21 · Editor Template</a><a href="Backlog-EPPATPN-Drafting-Minuta-Prototype.html">Drafting Minuta</a><a href="Backlog-EPPATPN-25-Menu-Repository-Prototype.html">EPPATPN-25 &middot; Akta Repository</a></span>
   <span class="sep">•</span>
   <b>Prototipe UI</b><span class="sep">•</span><span>Tambah Objek (AJB) — E-PPAT</span>
   <span class="sep">•</span><span class="hint">Isian objek menyesuaikan Status Sertipikat, Jenis Hak, Format Sertipikat, dan Status Objek.</span>
@@ -381,7 +381,10 @@
    Status Sertipikat · Format Sertipikat · Jenis Hak · Status Objek
    =========================================================== */
 const el = id => document.getElementById(id);
-const state = { sertipikat:'terdaftar', format:'analog', jenis:'HM', objek:'utuh', redaksi17:'ringkas' };
+const state = { sertipikat:'terdaftar', format:'analog', jenis:'HM', objek:'utuh', redaksi17:'ringkas', dokUkur:'Surat Ukur' };
+
+/* dokumen ukur yang disebut di akta — mengisi variabel {{surat_ukur_jenis}} */
+const DOKUMEN_UKUR = ['Surat Ukur','Gambar Situasi','Gambar Denah','Peta Bidang'];
 
 const JENIS_HAK = [
   ['HM','Hak Milik'],
@@ -395,8 +398,9 @@ const F = {
   /* sertipikat analog, objek utuh */
   b14: [
     {label:'Nomor Hak', ph:'Nomor hak', req:true},
-    {label:'Tanggal Surat Ukur / Gambar Situasi', type:'date', req:true},
-    {label:'Nomor Surat Ukur / Gambar Situasi', ph:'Nomor Surat Ukur / Gambar Situasi', req:true},
+    {label:'Dokumen Ukur', kunci:'dokUkur', select:DOKUMEN_UKUR, req:true},
+    {label:'Tanggal Surat Ukur', ukur:'tanggal', type:'date', req:true},
+    {label:'Nomor Surat Ukur', ukur:'nomor', req:true},
     {label:'Luas (m²)', ph:'0', req:true},
     {label:'NIB', ph:'Nomor Identifikasi Bidang', req:true},
     {label:'SPPT PBB — Nomor Objek Pajak', ph:'00.00.000.000.000-0000.0', req:true}
@@ -411,8 +415,9 @@ const F = {
     {label:'Batas Timur', ph:'Batas sebelah timur', req:true},
     {label:'Batas Selatan', ph:'Batas sebelah selatan', req:true},
     {label:'Batas Barat', ph:'Batas sebelah barat', req:true},
-    {label:'Tanggal Surat Ukur / Peta Bidang', type:'date', req:true},
-    {label:'Nomor Surat Ukur / Peta Bidang', ph:'Nomor Surat Ukur / Peta Bidang', req:true},
+    {label:'Dokumen Ukur', kunci:'dokUkur', select:DOKUMEN_UKUR, req:true},
+    {label:'Tanggal Surat Ukur', ukur:'tanggal', type:'date', req:true},
+    {label:'Nomor Surat Ukur', ukur:'nomor', req:true},
     {label:'NIB Bidang yang Dijual', span2:true, ph:'NIB bidang yang dijual', req:true}
   ],
   /* sertipikat elektronik */
@@ -481,9 +486,13 @@ function kondisi(){
 /* label nomor hak mengikuti Jenis Hak yang dipilih */
 function sesuaikanNamaHak(k, daftar){
   const nama = NAMA_HAK[state.jenis] || 'Hak';
+  const du = state.dokUkur;
   return daftar.map(f => {
     if(k === 'b14' && f.label === 'Nomor Hak')     return {...f, label:`Nomor ${nama}`, ph:`Nomor ${nama}`};
     if(k === 'b15' && f.label === 'Nomor Hak Asal') return {...f, label:`Nomor ${nama} Asal`, ph:`Nomor ${nama} asal`};
+    /* dua isian berikutnya ikut dokumen ukur yang dipilih */
+    if(f.ukur === 'tanggal') return {...f, label:`Tanggal ${du}`};
+    if(f.ukur === 'nomor')   return {...f, label:`Nomor ${du}`, ph:`Nomor ${du}`};
     return f;
   });
 }
@@ -491,8 +500,9 @@ function sesuaikanNamaHak(k, daftar){
 function fieldHTML(f){
   const req = f.req ? '<span class="req">*</span>' : '';
   const help = f.help ? `<div class="help">${f.help}</div>` : '';
+  const nilai = f.kunci ? state[f.kunci] : null;
   const ctl = f.select
-    ? `<select>${f.select.map(o=>`<option>${o}</option>`).join('')}</select>`
+    ? `<select${f.kunci ? ` data-kunci="${f.kunci}"` : ''}>${f.select.map(o=>`<option${o===nilai?' selected':''}>${o}</option>`).join('')}</select>`
     : f.textarea
       ? `<textarea placeholder="${f.ph||''}"></textarea>`
       : `<input type="${f.type||'text'}" placeholder="${f.ph||''}">`;
@@ -553,6 +563,9 @@ function render(){
   el('scenDesc').textContent = KONDISI[k][1];
   el('uraianTitle').textContent = `Uraian Objek — ${KONDISI[k][0]}`;
   el('certFields').innerHTML = `<div class="grid">${sesuaikanNamaHak(k, F[k]).map(fieldHTML).join('')}</div>`;
+  el('certFields').querySelectorAll('[data-kunci]').forEach(sel => {
+    sel.addEventListener('change', e => { state[e.target.dataset.kunci] = e.target.value; render(); });
+  });
 
   /* alat bukti hanya untuk bidang belum terdaftar */
   el('wrapBukti').hidden = (k !== 'b16');
