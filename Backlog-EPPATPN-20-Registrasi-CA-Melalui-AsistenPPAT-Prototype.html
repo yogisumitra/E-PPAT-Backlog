@@ -298,6 +298,25 @@
   .mini-head h2{margin:0;font-size:17px;line-height:24px;font-weight:600;color:#111827}
   .mini-body{padding:4px 24px 8px}
   .mini-foot{display:flex;justify-content:flex-end;gap:10px;padding:16px 24px}
+  .ca-badge{display:inline-flex;font:500 11.5px Inter,sans-serif;border-radius:999px;padding:3px 11px;
+    background:#EEF2FF;border:1px solid #C7D2FE;color:#4338CA;white-space:nowrap}
+  .ca-badge.aktif{background:#ECFDF5;border-color:#A7F3D0;color:#047857}
+  .akordeon.terkunci{opacity:.65}
+  .akordeon.terkunci .akordeon-head{cursor:not-allowed}
+  .ca-kunci{display:flex;align-items:flex-start;gap:8px;border:1px solid #CFE0D9;background:#EEF5F2;border-radius:8px;
+    padding:10px 13px;font-size:12.5px;line-height:1.65;color:var(--green-dark);margin:0 0 12px}
+  .ca-link{margin-top:12px;border:1px solid var(--line);border-radius:10px;background:#FBFDFC;padding:12px 14px}
+  .ca-link .cap{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .ca-link .tautan{display:flex;align-items:center;gap:8px;margin-top:6px}
+  .ca-link .tautan code{flex:1;min-width:0;font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--green-dark);
+    background:#EEF3F1;border-radius:6px;padding:7px 10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .ca-masa{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:12.5px;color:var(--muted);line-height:20px}
+  .ca-masa .sisa{display:inline-flex;align-items:center;height:22px;padding:0 10px;border-radius:999px;white-space:nowrap;flex:none;
+    background:#EEF3F1;border:1px solid #CFE0D9;color:var(--green-dark);font-size:11.5px;font-weight:600}
+  .ca-masa.habis .sisa{background:#FEF3C7;border-color:#FDE68A;color:#92400E}
+  .ca-uji{margin-left:auto;background:none;border:0;padding:0;font:inherit;font-size:11.5px;color:#94A3B8;white-space:nowrap;
+    text-decoration:underline;cursor:pointer}
+  .ca-uji:hover{color:var(--muted)}
   .ok-box{border:1px solid #A7F3D0;background:#ECFDF5;border-radius:10px;padding:14px 16px;color:#065F46;font-size:13px;line-height:20px}
 
   .pp-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(8px);background:#0f1a17;color:#E6EDEA;
@@ -453,7 +472,7 @@
     <a href="Backlog-EPPATPN-2-Object%20Jual%20Beli-Prototype.html">EPPATPN-2 · Object Jual Beli</a>
     <a href="Backlog-EPPATPN-3-Minuta-01-Prototype.html">EPPATPN-3 · Minuta — 01</a>
     <a href="Backlog-EPPATPN-17-Profil-Kantor-Prototype.html">EPPATPN-17 · Profil Kantor</a>
-    <a href="Backlog-EPPATPN-19-Pemilihan-Para-Pihak-Prototype.html">EPPATPN-19 · Pemilihan Para Pihak</a><a href="Backlog-EPPATPN-20-Registrasi-CA-Melalui-AsistenPPAT-Prototype.html" aria-current="page">EPPATPN-20 · Registrasi CA</a>
+    <a href="Backlog-EPPATPN-19-Pemilihan-Para-Pihak-Prototype.html">EPPATPN-19 · Pemilihan Para Pihak</a><a href="Backlog-EPPATPN-20-Registrasi-CA-Melalui-AsistenPPAT-Prototype.html" aria-current="page">EPPATPN-20 · Registrasi CA</a><a href="Backlog-EPPATPN-21-Editor-Template-Prototype.html">EPPATPN-21 · Editor Template</a><a href="Backlog-EPPATPN-Drafting-Minuta-Prototype.html">Drafting Minuta</a><a href="Backlog-EPPATPN-25-Menu-Repository-Prototype.html">EPPATPN-25 &middot; Akta Repository</a>
   </span>
   <span class="sep">•</span>
   <b>Prototipe UI</b><span class="sep">•</span><span>Daftar User — Tambah User Baru</span>
@@ -529,7 +548,7 @@
           </div>
 
           <table>
-            <thead><tr><th>Nama</th><th>Email</th><th>Peran</th><th>Login Terakhir</th><th>Status</th><th></th></tr></thead>
+            <thead><tr><th>Nama</th><th>Email</th><th>Peran</th><th>Login Terakhir</th><th>Status</th><th>Sertifikat CA</th><th></th></tr></thead>
             <tbody>
         <tr>
           <td><div class="u-nama">PT Contoh Lentera Negeri</div><div class="u-kode">USR_S5XCECQY</div></td>
@@ -537,7 +556,8 @@
           <td><span class="peran ">Pihak Pertama</span></td>
           <td>23 Sep 2026</td>
           <td><span class="status">Aktif</span></td>
-          <td style="text-align:right"><button class="kebab" aria-label="Menu"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></td>
+          <td><span class="ca-badge">CA tidak aktif</span></td>
+          <td style="text-align:right"><button class="kebab" data-nama="PT Contoh Lentera Negeri" data-ca="tidak" aria-label="Menu"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></td>
         </tr>
         <tr>
           <td><div class="u-nama">Contoh User Tengah</div><div class="u-kode">USR_Y89NMYGP</div></td>
@@ -545,7 +565,8 @@
           <td><span class="peran ">Pihak Pertama</span></td>
           <td>22 Sep 2026</td>
           <td><span class="status">Aktif</span></td>
-          <td style="text-align:right"><button class="kebab" aria-label="Menu"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></td>
+          <td><span class="ca-badge aktif">CA aktif</span></td>
+          <td style="text-align:right"><button class="kebab" data-nama="Contoh User Tengah" data-ca="aktif" aria-label="Menu"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></td>
         </tr>
         <tr>
           <td><div class="u-nama">Contoh Asisten</div><div class="u-kode">USR_MOBXWO3Y</div></td>
@@ -553,7 +574,8 @@
           <td><span class="peran asisten">Asisten</span></td>
           <td>11 Sep 2026</td>
           <td><span class="status">Aktif</span></td>
-          <td style="text-align:right"><button class="kebab" aria-label="Menu"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></td>
+          <td><span class="ca-badge aktif">CA aktif</span></td>
+          <td style="text-align:right"><button class="kebab" data-nama="Contoh Asisten" data-ca="aktif" aria-label="Menu"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></td>
         </tr>
         <tr>
           <td><div class="u-nama">Contoh Klien Uji</div><div class="u-kode">USR_J8MR-5PO</div></td>
@@ -561,7 +583,8 @@
           <td><span class="peran ">Pihak Pertama</span></td>
           <td>—</td>
           <td><span class="status">Aktif</span></td>
-          <td style="text-align:right"><button class="kebab" aria-label="Menu"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></td>
+          <td><span class="ca-badge">CA tidak aktif</span></td>
+          <td style="text-align:right"><button class="kebab" data-nama="Contoh Klien Uji" data-ca="tidak" aria-label="Menu"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></td>
         </tr>
         <tr>
           <td><div class="u-nama">Contoh PPAT</div><div class="u-kode">USR_TI-DKTC1</div></td>
@@ -569,7 +592,8 @@
           <td><span class="peran ppat">PPAT</span></td>
           <td>23 Sep 2026</td>
           <td><span class="status">Aktif</span></td>
-          <td style="text-align:right"><button class="kebab" aria-label="Menu"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></td>
+          <td><span class="ca-badge aktif">CA aktif</span></td>
+          <td style="text-align:right"><button class="kebab" data-nama="Contoh PPAT" data-ca="aktif" aria-label="Menu"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></td>
         </tr>
         <tr>
           <td><div class="u-nama">Contoh Nama Dua</div><div class="u-kode">USR_BYE1N9MM</div></td>
@@ -577,7 +601,8 @@
           <td><span class="peran ">Pihak Kedua</span></td>
           <td>24 Sep 2026</td>
           <td><span class="status">Aktif</span></td>
-          <td style="text-align:right"><button class="kebab" aria-label="Menu"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></td>
+          <td><span class="ca-badge">CA tidak aktif</span></td>
+          <td style="text-align:right"><button class="kebab" data-nama="Contoh Nama Dua" data-ca="tidak" aria-label="Menu"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></td>
         </tr>
         <tr>
           <td><div class="u-nama">Contoh Nama Satu</div><div class="u-kode">USR_PD7C4PFF</div></td>
@@ -585,7 +610,8 @@
           <td><span class="peran ">Pihak Pertama</span></td>
           <td>23 Sep 2026</td>
           <td><span class="status">Aktif</span></td>
-          <td style="text-align:right"><button class="kebab" aria-label="Menu"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></td>
+          <td><span class="ca-badge">CA tidak aktif</span></td>
+          <td style="text-align:right"><button class="kebab" data-nama="Contoh Nama Satu" data-ca="tidak" aria-label="Menu"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></td>
         </tr>
             </tbody>
           </table>
@@ -685,6 +711,10 @@
         </div>
       </div>
       <div class="ca-aksi">
+        <div class="ca-kunci" id="caKunci" hidden>
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" style="flex:none;margin-top:2px"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+          <span>Sertifikat elektronik (CA) user ini <b>sudah aktif</b>. Data KTP terkunci karena datanya sudah dipakai pada sertifikat &mdash; perubahan hanya bisa lewat pencabutan dan pendaftaran ulang di Peruri.</span>
+        </div>
         <button type="button" class="pp-btn pp-btn-ghost" id="btnCA" style="width:100%;justify-content:center">
           <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
           Daftarkan ke Registrasi CA
@@ -765,7 +795,58 @@ function kurangnya(){
   return kurang;
 }
 
+/* tautan pendaftaran CA punya masa berlaku \u2014 bisa dibuat ulang */
+let linkCA = null;               /* {url, kirimPada, berlakuMenit} */
+let jamCA = null;
+
+const MASA_LINK_MENIT = 24 * 60;  /* tautan berlaku 24 jam */
+
+function buatLinkCA(){
+  const acak = Math.random().toString(36).slice(2, 10);
+  linkCA = { url: 'https://ca.peruri.co.id/daftar/' + acak, kirimPada: Date.now(), berlakuMenit: MASA_LINK_MENIT };
+}
+function sisaLinkCA(){
+  if(!linkCA) return 0;
+  const lewat = (Date.now() - linkCA.kirimPada) / 60000;
+  return Math.max(0, Math.round(linkCA.berlakuMenit - lewat));
+}
+function teksSisa(){
+  const m = sisaLinkCA();
+  if(m <= 0) return 'Tautan sudah kedaluwarsa';
+  const j = Math.floor(m / 60), sisaM = m % 60;
+  return 'Sisa ' + (j ? j + ' jam ' : '') + sisaM + ' menit';
+}
+function tanggalHabis(){
+  const d = new Date(linkCA.kirimPada + linkCA.berlakuMenit * 60000);
+  const bln = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'][d.getMonth()];
+  const jj = String(d.getHours()).padStart(2,'0'), mm = String(d.getMinutes()).padStart(2,'0');
+  return d.getDate() + ' ' + bln + ' ' + d.getFullYear() + ' pukul ' + jj + '.' + mm;
+}
+
+function gambarLinkCA(){
+  const habis = sisaLinkCA() <= 0;
+  el('caIsi').innerHTML = `<div class="ok-box">
+      Tautan pendaftaran CA sudah dikirim ke email dan WhatsApp user. User tinggal membuka tautan itu,
+      lalu melakukan OTP &amp; liveness di portal Peruri.
+    </div>
+    <div class="ca-link">
+      <div class="cap">Tautan pendaftaran</div>
+      <div class="tautan"><code>${linkCA.url}</code>
+        <button class="pp-btn pp-btn-ghost" id="btnSalinCA" style="height:32px">Salin</button></div>
+      <div class="ca-masa${habis ? ' habis' : ''}">
+        <span class="sisa">${teksSisa()}</span>
+        <span>Berlaku sampai ${tanggalHabis()}</span>
+        <button class="ca-uji" id="ujiKadaluarsa">uji: buat kedaluwarsa</button>
+      </div>
+    </div>`;
+  el('caFoot').innerHTML = '<button class="pp-btn pp-btn-ghost" data-tutupca>Tutup</button>'
+    + '<button class="pp-btn' + (habis ? ' pp-btn-primary' : '') + '" id="btnUlangLink">'
+    + '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" style="margin-right:6px"><path d="M12 3l7 3v6c0 4.3-2.9 7.6-7 9-4.1-1.4-7-4.7-7-9V6z"/></svg>'
+    + 'Buat Ulang Link</button>';
+}
+
 function bukaCA(){
+  if(linkCA){ gambarLinkCA(); el('overlayCA').hidden = false; return; }
   const kurang = kurangnya();
   if(kurang.length){
     el('caIsi').innerHTML = `<div class="ca-box">
@@ -785,7 +866,60 @@ function bukaCA(){
   el('overlayCA').hidden = false;
 }
 
-el('btnCA').addEventListener('click', bukaCA);
+/* ---- keadaan user: CA aktif / tidak aktif ---- */
+let caAktif = false, namaUser = '';
+
+function pasangModeCA(){
+  el('caKunci').hidden = !caAktif;
+  el('akKtp').classList.toggle('terkunci', caAktif);
+  el('btnKtp').disabled = caAktif;
+  if(caAktif){
+    el('akKtp').setAttribute('aria-expanded', 'false');
+    el('isiKtp').hidden = true;
+  }
+  el('isiKtp').querySelectorAll('input,select,textarea,button').forEach(function(x){ x.disabled = caAktif; });
+  el('btnCA').lastChild.textContent = caAktif ? ' Cek Status CA' : ' Daftarkan ke Registrasi CA';
+  el('btnCA').nextElementSibling.textContent = caAktif
+    ? 'Sertifikat sudah terbit \u2014 tombol ini hanya menampilkan status terakhir dari Peruri.'
+    : 'Data diri dikirim ke Peruri, sehingga di portal user cukup melakukan OTP & liveness.';
+}
+
+function bukaStatusCA(){
+  el('caIsi').innerHTML = `<div class="ok-box">
+      Sertifikat elektronik (CA) atas nama <b>${namaUser || 'user ini'}</b> berstatus <b>aktif</b>.
+    </div>
+    <div class="ca-link">
+      <div class="cap">Status terakhir</div>
+      <div class="ca-masa" style="margin-top:8px">
+        <span class="sisa">Aktif</span><span>Penerbit: Peruri \u00b7 berlaku sampai 12 Agu 2027</span>
+      </div>
+      <div class="ca-masa" style="margin-top:6px"><span>Diperiksa baru saja \u00b7 sumber: portal Peruri</span></div>
+    </div>`;
+  el('caFoot').innerHTML = '<button class="pp-btn pp-btn-ghost" data-tutupca>Tutup</button>'
+    + '<button class="pp-btn" id="btnPeriksaLagi">Periksa lagi</button>';
+  el('overlayCA').hidden = false;
+}
+
+el('btnCA').addEventListener('click', function(){ caAktif ? bukaStatusCA() : bukaCA(); });
+
+/* buka modal dari baris user */
+document.querySelectorAll('.kebab[data-nama]').forEach(function(b){
+  b.addEventListener('click', function(){
+    namaUser = b.dataset.nama;
+    caAktif = b.dataset.ca === 'aktif';
+    linkCA = null;
+    el('mtitle').textContent = 'Ubah User \u2014 ' + namaUser;
+    pasangModeCA();
+    el('overlay').hidden = false;
+  });
+});
+
+/* tombol Tambah User selalu memulai user baru */
+el('btnTambahUser').addEventListener('click', function(){
+  namaUser = ''; caAktif = false; linkCA = null;
+  el('mtitle').textContent = 'Tambah User Baru';
+  pasangModeCA();
+});
 document.addEventListener('click', e => {
   if(e.target.closest('[data-tutupca]') || e.target === el('overlayCA')) el('overlayCA').hidden = true;
   if(e.target.closest('#lnkKtp')){
@@ -794,8 +928,26 @@ document.addEventListener('click', e => {
     el('isiKtp').scrollIntoView({block:'start', behavior:'smooth'});
   }
   if(e.target.closest('#btnKirimCA')){
-    el('overlayCA').hidden = true;
-    toast('Prototipe — registrasi CA tidak benar-benar dikirim.');
+    buatLinkCA();
+    gambarLinkCA();
+    toast('Prototipe — tautan pendaftaran CA disimulasikan terkirim.');
+  }
+  if(e.target.closest('#btnUlangLink')){
+    buatLinkCA();
+    gambarLinkCA();
+    toast('Tautan pendaftaran CA dibuat ulang — masa berlaku 24 jam lagi.');
+  }
+  if(e.target.closest('#btnPeriksaLagi')){
+    toast('Status CA diperiksa ulang \u2014 masih aktif.');
+  }
+  if(e.target.closest('#btnSalinCA')){
+    if(navigator.clipboard) navigator.clipboard.writeText(linkCA.url).catch(function(){});
+    toast('Tautan disalin.');
+  }
+  if(e.target.closest('#ujiKadaluarsa')){
+    linkCA.kirimPada = Date.now() - (linkCA.berlakuMenit + 1) * 60000;
+    gambarLinkCA();
+    toast('Simulasi: tautan dibuat kedaluwarsa.');
   }
 });
 el('btnFotoKtp').addEventListener('click', () => {
