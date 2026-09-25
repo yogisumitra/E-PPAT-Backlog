@@ -125,11 +125,13 @@
     <footer>
       Prototipe tampilan, bukan aplikasi live &mdash; tombolnya hanya simulasi dan tidak mengubah data.<br>
       Nama, e-mail, nomor seri meterai, dan QR yang tampil memakai contoh netral.<br>
-      Kolom <b>Diperbarui</b> menunjukkan tanggal dan jam berkas prototipe terakhir diubah.
+      Kolom <b>Diperbarui</b> berisi tanggal dan jam unggahan terakhir ke GitHub; yang terbaru berada di atas.<br>
+      <span id="sumberTgl"></span>
     </footer>
   </div>
 
 <script>
+  var BULAN = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
   var semua = [].slice.call(document.querySelectorAll('#baris .baris'));
   var tbody = document.getElementById('baris');
   var kosong = document.createElement('tr');
@@ -141,6 +143,15 @@
     tr.addEventListener('click', function(){ window.location.href = tr.dataset.href; });
   });
 
+  /* ---------- urut: terbaru di atas ---------- */
+  function urutkan(){
+    semua.slice().sort(function(a, b){
+      return (b.querySelector('time').getAttribute('datetime') || '')
+        .localeCompare(a.querySelector('time').getAttribute('datetime') || '');
+    }).forEach(function(tr){ tbody.insertBefore(tr, kosong); });
+  }
+
+  /* ---------- saring ---------- */
   function saring(){
     var q = document.getElementById('cari').value.trim().toLowerCase();
     var ada = 0;
@@ -153,7 +164,78 @@
     document.getElementById('jml').textContent = ada + ' dari ' + semua.length + ' prototipe';
   }
   document.getElementById('cari').addEventListener('input', saring);
+
+  /* ---------- tanggal unggahan dari GitHub ---------- */
+  function tulisTanggal(tr, iso){
+    var d = new Date(iso);
+    if(isNaN(d)) return;
+    var t = tr.querySelector('time');
+    var dua = function(n){ return (n < 10 ? '0' : '') + n; };
+    t.setAttribute('datetime', iso);
+    t.innerHTML = d.getDate() + ' ' + BULAN[d.getMonth()] + ' ' + d.getFullYear()
+      + '<span class="jam">' + dua(d.getHours()) + ':' + dua(d.getMinutes()) + ':' + dua(d.getSeconds()) + '</span>';
+  }
+
+  function simpanCache(peta){
+    try{ localStorage.setItem('tgl-github', JSON.stringify({ pada: Date.now(), peta: peta })); }catch(e){}
+  }
+  function ambilCache(){
+    try{
+      var c = JSON.parse(localStorage.getItem('tgl-github') || 'null');
+      if(c && Date.now() - c.pada < 6 * 60 * 60 * 1000) return c.peta;
+    }catch(e){}
+    return null;
+  }
+
+  function sumber(teks){ document.getElementById('sumberTgl').textContent = teks; }
+
+  function muatTanggalGitHub(){
+    var host = location.hostname;
+    if(host.indexOf('.github.io') < 0){
+      sumber('Tanggal diambil dari berkas prototipe (di GitHub Pages diganti tanggal unggahan).');
+      return;
+    }
+    var pemilik = host.split('.')[0];
+    var bagian = location.pathname.split('/').filter(Boolean);
+    var repo = bagian.length ? bagian[0] : host;
+
+    var cache = ambilCache();
+    if(cache){
+      semua.forEach(function(tr){ if(cache[tr.dataset.href]) tulisTanggal(tr, cache[tr.dataset.href]); });
+      urutkan();
+      sumber('Tanggal unggahan terakhir di GitHub.');
+      return;
+    }
+
+    var peta = {}, sisa = semua.length, adaIsi = false;
+    sumber('Mengambil tanggal unggahan dari GitHub\u2026');
+    semua.forEach(function(tr){
+      var url = 'https://api.github.com/repos/' + pemilik + '/' + repo + '/commits'
+        + '?per_page=1&path=' + encodeURIComponent(decodeURIComponent(tr.dataset.href));
+      fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } })
+        .then(function(r){ return r.ok ? r.json() : null; })
+        .then(function(j){
+          if(j && j[0] && j[0].commit){
+            var iso = (j[0].commit.committer || j[0].commit.author).date;
+            peta[tr.dataset.href] = iso;
+            tulisTanggal(tr, iso);
+            adaIsi = true;
+          }
+        })
+        .catch(function(){})
+        .then(function(){
+          if(--sisa === 0){
+            urutkan();
+            if(adaIsi){ simpanCache(peta); sumber('Tanggal unggahan terakhir di GitHub.'); }
+            else sumber('Tanggal diambil dari berkas prototipe \u2014 data GitHub tidak dapat dimuat.');
+          }
+        });
+    });
+  }
+
+  urutkan();
   saring();
+  muatTanggalGitHub();
 </script>
 </body>
 </html>
