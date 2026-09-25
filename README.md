@@ -15,7 +15,7 @@ cukup dibuka di peramban, tidak perlu server atau pemasangan apa pun.
 | `Backlog-EPPATPN-20-Registrasi-CA-Melalui-AsistenPPAT-Prototype.html` | EPPATPN-20 | Halaman Daftar User berkolom Sertifikat CA (aktif / tidak aktif), modal Tambah dan Ubah User, alur pendaftaran ke Registrasi CA beserta masa berlaku tautan dan Buat Ulang Link, serta Cek Status CA dengan Data KTP terkunci untuk user yang sertifikatnya sudah aktif |
 | `Backlog-EPPATPN-21-Editor-Template-Prototype.html` | EPPATPN-21 | Template Akta Kantor: 8 bagian (catatan, pasal, dan bagian otomatis), penyunting naskah beserta penyisip variabel, potongan redaksi bersyarat yang bisa disunting dan di-reset, tab Lampiran, Impor dari Word, serta Preview Akta per halaman. |
 | `Backlog-EPPATPN-Drafting-Minuta-Prototype.html` | Drafting Minuta | Drafting minuta order: bagian yang disusun sistem dari kondisi order, lampiran naskah & berkas unggahan, penyunting naskah beserta variabel, tab Renvoi, dan alat Preview Akta / Cek Ejaan / Beritahu PPAT / Finalisasi Akta. |
-| `Backlog-EPPATPN-25-Menu-Repository-Prototype.html` | EPPATPN-25 | Menu Akta Repository: daftar entri akta beserta status dan versi terbaru, detail riwayat versi, dokumen per versi, riwayat pengiriman, Unduh Draft Akta, dan modal Kirim Akta (pilih dokumen & penerima). |
+| `Backlog-EPPATPN-25-Menu-Repository-Prototype.html` | EPPATPN-25 | Menu Akta Repository: daftar entri akta dengan pencarian dan saringan status, layar detail berisi kartu Dokumen (diawali baris Drafting Dokumen berstatus Draft / Final) dan Riwayat pengiriman berdampingan, tombol Unduh Semua Dokumen, serta modal Kirim Akta Salinan berisi kartu penerima dengan pilihan kanal Email / WhatsApp yang datanya diambil dari para pihak pada order. |
 | `Spesifikasi-Redaksi-Bersyarat-Akta-PPAT.html` | Dokumen | Pemetaan pilihan field pada layar Order ke redaksi yang terbentuk pada naskah akta |
 
 Tiap prototipe punya baris navigasi di atas layar untuk berpindah antar prototipe dan kembali ke daftar;
@@ -44,3 +44,5 @@ Bila berkas ditaruh di dalam folder, alamatnya menjadi
 - Semua tombol bersifat simulasi — tidak ada data yang benar-benar tersimpan atau terkirim.
 - Nama, e-mail, NIK, nama berkas, dan nomor pada contoh memakai data netral, bukan data asli.
 - Semua konfirmasi memakai modal di dalam halaman, bukan dialog bawaan peramban.
+- Huruf memakai Inter (dimuat dari Google Fonts), sama seperti aplikasi; nomor, kode order, dan tanggal
+  juga memakai Inter, bukan huruf monospace.
