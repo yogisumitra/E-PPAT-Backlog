@@ -123,6 +123,15 @@
   .btn-ghost{background:var(--field-bg);border:1px solid var(--line);color:#000}
   .otp{width:100%;height:44px;border:1px solid var(--line);border-radius:8px;background:var(--field-bg);text-align:center;font:600 20px "IBM Plex Mono",monospace;letter-spacing:8px}
 
+  .confirm{background:#fff;border-radius:14px;overflow:hidden}
+  .confirm-head{display:flex;align-items:flex-start;gap:12px;padding:22px 24px 14px}
+  .confirm-ico{width:38px;height:38px;flex:none;border-radius:999px;background:#FEE2E2;color:#B91C1C;display:grid;place-items:center}
+  .confirm h2{margin:0;font:600 17px Inter,sans-serif;color:#0f172a}
+  .confirm p{margin:6px 0 0;font-size:13px;line-height:19px;color:var(--muted)}
+  .confirm ul{margin:10px 0 0;padding-left:18px;font-size:13px;line-height:20px;color:var(--muted)}
+  .confirm-foot{display:flex;justify-content:flex-end;gap:12px;padding:16px 24px;border-top:1px solid var(--line);background:var(--field-bg)}
+  .btn-danger{background:#B91C1C;border:0;color:#fff}
+  .btn-danger:hover{background:#991B1B}
   .otp-modal{background:var(--field-bg);border-radius:14px;padding:24px;position:relative;text-align:center}
   .otp-modal .x{position:absolute;top:18px;right:18px;border:0;background:transparent;color:var(--muted);font-size:16px;cursor:pointer}
   .otp-title{display:flex;align-items:center;justify-content:center;gap:8px;margin:0;font:600 18px Inter,sans-serif;color:#000}
@@ -130,6 +139,7 @@
   .otp-desc{margin:0 0 14px;font-size:14px;color:var(--muted)}
   .otp-foot{display:flex;justify-content:center;gap:12px;margin-top:18px}
   .modal{width:384px}
+  .modal:has(.confirm){width:460px}
   .pill.info{background:#E6EFF7;border-color:#BBD3E8;color:#2A5C86}
   .signer{border:1px solid var(--line);border-radius:10px;padding:12px;margin-top:12px;background:#fff}
   .signer .top{display:flex;align-items:center;gap:8px}
@@ -195,7 +205,7 @@
 <body>
 
 <div class="protobar">
-  <span class="protonav"><a class="home" href="index.html">☰ Daftar prototipe</a><a href="Backlog-EPPATPN-2-Object%20Jual%20Beli-Prototype.html">EPPATPN-2 · Object Jual Beli</a><a href="Backlog-EPPATPN-3-Minuta-01-Prototype.html" aria-current="page">EPPATPN-3 · Minuta — 01</a></span>
+  <span class="protonav"><a class="home" href="index.html">☰ Daftar prototipe</a><a href="Backlog-EPPATPN-2-Object%20Jual%20Beli-Prototype.html">EPPATPN-2 · Object Jual Beli</a><a href="Backlog-EPPATPN-3-Minuta-01-Prototype.html" aria-current="page">EPPATPN-3 · Minuta — 01</a><a href="Backlog-EPPATPN-17-Profil-Kantor-Prototype.html">EPPATPN-17 · Profil Kantor</a><a href="Backlog-EPPATPN-19-Pemilihan-Para-Pihak-Prototype.html">EPPATPN-19 · Pemilihan Para Pihak</a><a href="Backlog-EPPATPN-20-Registrasi-CA-Melalui-AsistenPPAT-Prototype.html">EPPATPN-20 · Registrasi CA</a><a href="Backlog-EPPATPN-21-Editor-Template-Prototype.html">EPPATPN-21 · Editor Template</a><a href="Backlog-EPPATPN-Drafting-Minuta-Prototype.html">Drafting Minuta</a><a href="Backlog-EPPATPN-25-Menu-Repository-Prototype.html">EPPATPN-25 &middot; Akta Repository</a></span>
   <span class="sep">•</span>
   <b>Prototipe UI</b><span class="sep">•</span><span>E-Akta Wizard — proses Digital Stamp, E-Signature, E-Materai</span>
   <button class="unlock" id="reset">Ulangi simulasi</button>
@@ -254,7 +264,7 @@
         <div class="tabs" role="tablist">
           <button role="tab" aria-selected="true" data-tab="l1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Minuta Pertama</button>
           <button role="tab" aria-selected="false" data-tab="l2"><svg class="lockico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Minuta Kedua</button>
-          <button role="tab" aria-selected="false" data-tab="sal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Salinan</button>
+          <button role="tab" aria-selected="false" data-tab="sal"><svg class="lockico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Salinan</button>
         </div>
         <div id="stage"></div>
       </div>
@@ -425,11 +435,11 @@ function step2Panel(S){
   const atas = semua
     ? `<div class="infobox">Semua pihak telah menandatangani. PDF telah disahkan, siap diunduh.</div>
        <button class="btn-primary" style="margin-bottom:8px">${ICON.dl} Unduh PDF Final</button>
-       <button class="btn-ghost-w">${ICON.restart} Mulai Ulang</button>`
+       <button class="btn-ghost-w" data-act="reset-ask">${ICON.restart} Mulai Ulang</button>`
     : (S.signed>0
         ? `<button class="btn-ghost-w" style="margin-bottom:8px">${ICON.dl} Unduh PDF (progres ttd)</button>
-           <button class="btn-ghost-w">${ICON.restart} Mulai Ulang</button>`
-        : `<button class="btn-ghost-w">${ICON.restart} Mulai Ulang</button>`);
+           <button class="btn-ghost-w" data-act="reset-ask">${ICON.restart} Mulai Ulang</button>`
+        : `<button class="btn-ghost-w" data-act="reset-ask">${ICON.restart} Mulai Ulang</button>`);
 
   return `${stepper()}
   <div class="work">
@@ -492,7 +502,8 @@ function step3Panel(S){
 }
 
 function salinanPanel(){
-  return `<div class="upload-row">
+  return `<div class="infobox">Minuta Pertama dan Minuta Kedua sudah selesai sampai E-Materai, sehingga unggah salinan sudah terbuka.</div>
+  <div class="upload-row">
     <div class="f"><label>Label (opsional)</label><input type="text" placeholder="mis. Salinan Penjual"></div>
     <button class="btn-upload"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Unggah Salinan (PDF)</button>
   </div>
@@ -521,15 +532,21 @@ const toastEl=document.getElementById('toast');
 function toast(m){toastEl.textContent=m;toastEl.classList.add('show');clearTimeout(toastEl._h);toastEl._h=setTimeout(()=>toastEl.classList.remove('show'),2600);}
 
 const tabL2=document.querySelector('.tabs button[data-tab="l2"]');
+const tabSal=document.querySelector('.tabs button[data-tab="sal"]');
+const IKON_KUNCI='<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>';
+const IKON_LEMBAR='<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>';
+const IKON_SALINAN='<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>';
 function l1Selesai(){ return SIM.l1.mat==='selesai'; }
+function l2Selesai(){ return SIM.l2.mat==='selesai'; }
+function kunciTab(tab, buka, ikon, pesan){
+  tab.classList.toggle('locked',!buka);
+  tab.setAttribute('aria-disabled',String(!buka));
+  tab.title = buka ? '' : pesan;
+  tab.querySelector('svg').innerHTML = buka ? ikon : IKON_KUNCI;
+}
 function syncLock(){
-  const buka=l1Selesai();
-  tabL2.classList.toggle('locked',!buka);
-  tabL2.setAttribute('aria-disabled',String(!buka));
-  tabL2.title = buka ? '' : 'Terkunci sampai Minuta Pertama selesai (E-Materai).';
-  tabL2.querySelector('svg').innerHTML = buka
-    ? '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>'
-    : '<rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>';
+  kunciTab(tabL2, l1Selesai(), IKON_LEMBAR, 'Terkunci sampai Minuta Pertama selesai (E-Materai).');
+  kunciTab(tabSal, l2Selesai(), IKON_SALINAN, 'Terkunci sampai Minuta Kedua selesai (E-Materai).');
 }
 
 function render(){
@@ -568,6 +585,30 @@ document.addEventListener('input', e=>{
   }
 });
 
+function modalReset(){
+  md.innerHTML = `<div class="confirm">
+      <div class="confirm-head">
+        <span class="confirm-ico"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span>
+        <div>
+          <h2>Mulai ulang proses ini?</h2>
+          <p>Seluruh langkah yang sudah dikerjakan akan dihapus dan proses kembali ke Step 1. Yang ikut terhapus:</p>
+          <ul>
+            <li>Stempel TERA beserta nomor referensinya</li>
+            <li>Tanda tangan elektronik semua pihak yang sudah menandatangani</li>
+            <li>E-Materai beserta nomor serinya (kuota yang sudah terpakai tidak kembali)</li>
+            <li>Posisi stempel, tanda tangan, dan meterai yang sudah ditempatkan di PDF</li>
+          </ul>
+          <p>Tindakan ini tidak dapat dibatalkan.</p>
+        </div>
+      </div>
+      <div class="confirm-foot">
+        <button class="btn btn-ghost" data-close>Batal</button>
+        <button class="btn btn-danger" data-act="reset-do">Ya, mulai ulang</button>
+      </div>
+    </div>`;
+  ov.hidden=false;
+}
+
 document.addEventListener('click', e=>{
   const S=SIM[TAB];
 
@@ -598,6 +639,15 @@ document.addEventListener('click', e=>{
     const act=a.dataset.act;
     if(act==='stamp-otp'){ S.stamp='otp'; render(); modalOTP('stamp'); return; }
     if(act==='sign-otp'){ S.otpFor=+a.dataset.i; render(); modalOTP('sign', +a.dataset.i); return; }
+    if(act==='reset-ask'){ modalReset(); return; }
+    if(act==='reset-do'){
+      ov.hidden=true;
+      SIM[TAB]=freshSim()[TAB];
+      SIM[TAB].step=1;
+      render(); syncLock();
+      toast('Proses dimulai ulang — stempel, tanda tangan, dan meterai dihapus.');
+      return;
+    }
     if(act==='gen-sn'){ S.mat='sn'; render(); return; }
     if(act==='tempel'){ S.mat='selesai'; render(); toast('E-Materai berhasil diterapkan.'); return; }
     if(act==='verify'){
@@ -620,6 +670,10 @@ document.querySelectorAll('.tabs button').forEach(b=>{
   b.addEventListener('click',()=>{
     if(b.dataset.tab==='l2' && !l1Selesai()){
       toast('Minuta Kedua terkunci — selesaikan Minuta Pertama sampai E-Materai dulu.');
+      return;
+    }
+    if(b.dataset.tab==='sal' && !l2Selesai()){
+      toast('Salinan terkunci — selesaikan Minuta Kedua sampai E-Materai dulu.');
       return;
     }
     document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));

@@ -277,6 +277,25 @@
   .ident .act{margin-top:12px}
   .ktp{border-top:1px solid var(--line);margin-top:14px;padding-top:14px}
 
+  /* ---------- pencarian user klien ---------- */
+  .cari{position:relative}
+  .cari-pop{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:6;max-height:238px;overflow:auto;
+    background:#fff;border:1px solid var(--line);border-radius:8px;box-shadow:0 10px 24px rgba(15,26,23,.14);padding:4px}
+  .cari-row{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;
+    border:0;background:transparent;border-radius:6px;padding:8px 10px;cursor:pointer}
+  .cari-row:hover{background:#F1F5F4}
+  .cari-row[aria-selected="true"]{background:#EEF3F1}
+  .cari-nm{display:block;font:600 13.5px Inter,sans-serif;color:#111827}
+  .cari-ml{display:block;font:400 12px Inter,sans-serif;color:var(--help);margin-top:2px}
+  .cari-bd{display:flex;align-items:center;gap:6px;flex:none}
+  .cari-kosong{padding:10px;font-size:12.5px;color:var(--help)}
+  .bd{display:inline-flex;font:500 11px Inter,sans-serif;border-radius:999px;padding:3px 9px;white-space:nowrap;border:1px solid}
+  .bd.ca{background:#ECFDF5;border-color:#A7F3D0;color:#047857}
+  .bd.nik{background:#FEF7E7;border-color:#F3DCA8;color:#9A6B10}
+  .ident .nama .bd{margin-left:8px;vertical-align:middle}
+  .pp-btn-line:disabled{opacity:.55;cursor:not-allowed;background:#F1F5F4}
+  .ca-nota{display:flex;align-items:flex-start;gap:6px;margin-top:8px;font-size:11.5px;line-height:16px;color:var(--green)}
+
   .pp-btn{height:36px;padding:8px 16px;border-radius:6px;font:500 14px Inter,sans-serif;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
   .pp-btn-ghost{background:var(--field-bg);border:1px solid var(--line);color:#000}
   .pp-btn-ghost:hover{background:#F1F5F4}
@@ -333,7 +352,7 @@
     <a href="Backlog-EPPATPN-2-Object%20Jual%20Beli-Prototype.html">EPPATPN-2 · Object Jual Beli</a>
     <a href="Backlog-EPPATPN-3-Minuta-01-Prototype.html">EPPATPN-3 · Minuta — 01</a>
     <a href="Backlog-EPPATPN-17-Profil-Kantor-Prototype.html">EPPATPN-17 · Profil Kantor</a>
-    <a href="Backlog-EPPATPN-19-Pemilihan-Para-Pihak-Prototype.html" aria-current="page">EPPATPN-19 · Pemilihan Para Pihak</a>
+    <a href="Backlog-EPPATPN-19-Pemilihan-Para-Pihak-Prototype.html" aria-current="page">EPPATPN-19 · Pemilihan Para Pihak</a><a href="Backlog-EPPATPN-20-Registrasi-CA-Melalui-AsistenPPAT-Prototype.html">EPPATPN-20 · Registrasi CA</a><a href="Backlog-EPPATPN-21-Editor-Template-Prototype.html">EPPATPN-21 · Editor Template</a><a href="Backlog-EPPATPN-Drafting-Minuta-Prototype.html">Drafting Minuta</a><a href="Backlog-EPPATPN-25-Menu-Repository-Prototype.html">EPPATPN-25 &middot; Akta Repository</a>
   </span>
   <span class="sep">•</span>
   <b>Prototipe UI</b><span class="sep">•</span><span>Para Pihak — Order AJB</span>
@@ -496,7 +515,14 @@ const USER_LIST = [
   {nama:'Contoh Saksi Tiga', mail:'saksi3@contoh.id', nik:'3174********0013', telp:'—', kota:'Kota Administrasi Jakarta Selatan', alamat:'Jalan Contoh', jk:'Perempuan', status:'Belum Menikah', lahir:'Jakarta', tgl:'1995-03-25', kerja:'Karyawan Swasta', rt:'003', rw:'006', kel:'Senayan', kec:'Kebayoran Baru', prov:'DKI Jakarta'},
   {nama:'Contoh Ahli Waris 1', mail:'waris1@contoh.id', nik:'3273********9001', telp:'—', kota:'Kota Bandung', alamat:'Jalan Contoh Nomor 1', jk:'Laki-laki', status:'Kawin', lahir:'Bandung', tgl:'1975-08-11', kerja:'Wiraswasta', rt:'004', rw:'007', kel:'Cihapit', kec:'Bandung Wetan', prov:'Jawa Barat'},
   {nama:'Contoh Ahli Waris 2', mail:'waris2@contoh.id', nik:'3273********9002', telp:'—', kota:'Kota Bandung', alamat:'Jalan Contoh Nomor 2', jk:'Perempuan', status:'Cerai Mati', lahir:'Bandung', tgl:'1978-11-02', kerja:'Wiraswasta', rt:'004', rw:'007', kel:'Cihapit', kec:'Bandung Wetan', prov:'Jawa Barat'}
+,
+  {nama:'Contoh Klien Baru', mail:'baru@contoh.id', nik:'', telp:'0812-0000-0044', kota:'Kota Bandung', alamat:'Jalan Contoh Nomor 44', jk:'Laki-laki', status:'Belum Menikah', lahir:'Bandung', tgl:'1996-06-30', kerja:'Wiraswasta', rt:'001', rw:'002', kel:'Cihapit', kec:'Bandung Wetan', prov:'Jawa Barat'}
 ];
+
+/* status sertifikat elektronik (CA) dan kelengkapan NIK tiap user */
+const CA_AKTIF = ['Contoh Nama Satu','Contoh Nama Dua','Contoh Penerima Kuasa'];
+const NIK_KOSONG = ['Contoh Ahli Waris 2','Contoh Klien Baru'];
+USER_LIST.forEach(u => { u.ca = CA_AKTIF.indexOf(u.nama) > -1; if(NIK_KOSONG.indexOf(u.nama) > -1) u.nik = ''; });
 
 /* sapaan diturunkan dari jenis kelamin + status perkawinan */
 function sapaan(u){
@@ -519,16 +545,21 @@ function kartuIdentitas(judul, u, key){
   const buka = !!S.ktpTerbuka[key];
   return `<div class="ident">
     <div class="cap">${judul}</div>
-    <div class="nama">${sapaan(u)} ${u.nama}</div>
+    <div class="nama">${sapaan(u)} ${u.nama}${lencanaUser(u)}</div>
     <div class="pp-kv">
-      <div><div class="k">NIK</div><div class="v">${u.nik}</div></div>
+      <div><div class="k">NIK</div><div class="v">${u.nik || '—'}</div></div>
       <div><div class="k">Telepon</div><div class="v">${u.telp}</div></div>
       <div><div class="k">Email</div><div class="v">${u.mail}</div></div>
       <div><div class="k">Kota Domisili</div><div class="v">${u.kota}</div></div>
       <div class="full"><div class="k">Alamat</div><div class="v">${u.alamat}</div></div>
     </div>
-    <div class="act"><button type="button" class="pp-btn-line" data-ktp="${key}">${buka?'Tutup Data KTP':'Ubah Data KTP'}</button></div>
-    ${buka?panelKtp(u,key):''}
+    <div class="act">
+      <button type="button" class="pp-btn-line" data-ktp="${key}" ${u.ca?'disabled':''}>${buka?'Tutup Data KTP':'Ubah Data KTP'}</button>
+      ${u.ca?`<div class="ca-nota">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" style="flex:none;margin-top:1px"><rect x="4" y="11" width="16" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+        <span>Data KTP terkunci — sertifikat elektronik (CA) user ini sudah aktif, datanya sudah dipakai pada sertifikat.</span></div>`:''}
+    </div>
+    ${(buka && !u.ca)?panelKtp(u,key):''}
   </div>`;
 }
 
@@ -567,30 +598,37 @@ function panelKtp(u, key){
   </div>`;
 }
 
-function pilihUser(id, nilai, label, bantuan){
-  const opsi = USER_LIST.map(u =>
-    `<option value="${u.nama}" ${nilai === u.nama ? 'selected' : ''}>${u.nama} — ${u.mail}</option>`).join('');
+function lencanaUser(u){
+  return (u.ca ? '<span class="bd ca">CA aktif</span>' : '')
+       + (u.nik ? '' : '<span class="bd nik">NIK kosong</span>');
+}
+
+function comboUser(target, nilai, label, bantuan){
+  const u = cariUser(nilai);
+  const baris = USER_LIST.map(x => `<button type="button" class="cari-row" role="option"
+      aria-selected="${nilai === x.nama}" data-pilih="${x.nama}" data-teks="${(x.nama + ' ' + x.mail).toLowerCase()}">
+      <span><span class="cari-nm">${x.nama}</span><span class="cari-ml">${x.mail}</span></span>
+      <span class="cari-bd">${lencanaUser(x)}</span>
+    </button>`).join('');
   return `<div class="field">
     <label>${label}<span class="req">*</span></label>
-    <select id="${id}">
-      <option value="">Cari nama / email user klien…</option>
-      ${opsi}
-    </select>
+    <div class="cari" data-target="${target}">
+      <input type="text" class="cari-inp" autocomplete="off" role="combobox" aria-expanded="false"
+        placeholder="Cari nama / email user klien…" value="${u ? u.nama + ' — ' + u.mail : ''}">
+      <div class="cari-pop" hidden>${baris}<div class="cari-kosong" hidden>Tidak ada user yang cocok.</div></div>
+    </div>
     <div class="help">${bantuan}</div>
   </div>`;
 }
 
+function pilihUser(id, nilai, label, bantuan){
+  const target = id === 'userKuasa' ? 'kuasa' : id === 'userSaksi' ? 'saksi' : 'user';
+  return comboUser(target, nilai, label, bantuan);
+}
+
 function userKlien(label){
-  const opsi = USER_LIST.map(u =>
-    `<option value="${u.nama}" ${S.user === u.nama ? 'selected' : ''}>${u.nama} — ${u.mail}</option>`).join('');
-  return `<div class="field">
-    <label>${label || 'User Klien'}<span class="req">*</span></label>
-    <select id="userKlien">
-      <option value="">Cari nama / email user klien…</option>
-      ${opsi}
-    </select>
-    <div class="help">Pihak harus terdaftar sebagai user (fungsi Klien). Data diri terisi otomatis dari profilnya.</div>
-  </div>`;
+  return comboUser('user', S.user, label || 'User Klien',
+    'Pihak harus terdaftar sebagai user (fungsi Klien). Data diri terisi otomatis dari profilnya.');
 }
 
 function blokIsiKuasa(){
@@ -626,20 +664,12 @@ function blokKuasa(labelCheck, judulPemberi){
 
 function kartuWaris(i){
   const pilih = S.waris[i];
-  const opsi = USER_LIST.map(u =>
-    `<option value="${u.nama}" ${pilih === u.nama ? 'selected' : ''}>${u.nama} — ${u.mail}</option>`).join('');
   const head = `<div class="grup" style="background:var(--field-bg)">
     <div class="grup-title">Ahli waris ${i+1}
       <button type="button" class="pp-btn-line" data-delwaris="${i}">Hapus</button>
     </div>
-    <div class="field" ${pilih ? '' : 'style="margin-bottom:0"'}>
-      <label>User Klien<span class="req">*</span></label>
-      <select data-pilihwaris="${i}">
-        <option value="">Cari nama / email user klien…</option>
-        ${opsi}
-      </select>
-      <div class="help">Ahli waris harus terdaftar sebagai user (fungsi Klien). Data diri terisi otomatis dari profilnya.</div>
-    </div>`;
+    ${comboUser('waris:' + i, pilih, 'User Klien',
+      'Ahli waris harus terdaftar sebagai user (fungsi Klien). Data diri terisi otomatis dari profilnya.')}`;
   if(!pilih) return head + '</div>';
   return head + kartuIdentitas('Identitas ahli waris (KTP)', cariUser(pilih), 'waris'+i) + '</div>';
 }
@@ -881,6 +911,52 @@ el('isi').addEventListener('click', e => {
   if(e.target.closest('#addPerubahan')){ S.perubahan++; render(); return; }
   if(e.target.closest('[data-delperubahan]')){ S.perubahan--; render(); return; }
 });
+
+/* --- pencarian user: buka, saring, pilih --- */
+function tutupSemuaPop(){
+  document.querySelectorAll('.cari-pop').forEach(p => { p.hidden = true;
+    const i = p.parentNode.querySelector('.cari-inp'); if(i) i.setAttribute('aria-expanded','false'); });
+}
+function saringPop(kotak, semua){
+  const q = semua ? '' : kotak.querySelector('.cari-inp').value.toLowerCase();
+  const pop = kotak.querySelector('.cari-pop');
+  let ada = 0;
+  pop.querySelectorAll('.cari-row').forEach(r => {
+    const cocok = !q || r.dataset.teks.indexOf(q) > -1;
+    r.hidden = !cocok; if(cocok) ada++;
+  });
+  pop.querySelector('.cari-kosong').hidden = ada > 0;
+}
+function setUser(target, nama){
+  if(target === 'user') S.user = nama;
+  else if(target === 'kuasa') S.userKuasa = nama;
+  else if(target === 'saksi') S.userSaksi = nama;
+  else if(target.indexOf('waris:') === 0) S.waris[+target.split(':')[1]] = nama;
+  render();
+}
+el('isi').addEventListener('focusin', e => {
+  const inp = e.target.closest('.cari-inp'); if(!inp) return;
+  tutupSemuaPop();
+  const kotak = inp.closest('.cari');
+  kotak.querySelector('.cari-pop').hidden = false;
+  inp.setAttribute('aria-expanded','true');
+  saringPop(kotak, true);
+  inp.select();
+});
+el('isi').addEventListener('input', e => {
+  const inp = e.target.closest('.cari-inp'); if(!inp) return;
+  const kotak = inp.closest('.cari');
+  kotak.querySelector('.cari-pop').hidden = false;
+  saringPop(kotak);
+});
+el('isi').addEventListener('click', e => {
+  const row = e.target.closest('.cari-row'); if(!row) return;
+  setUser(row.closest('.cari').dataset.target, row.dataset.pilih);
+});
+el('isi').addEventListener('keydown', e => {
+  if(e.key === 'Escape' && e.target.closest('.cari-inp')) tutupSemuaPop();
+});
+document.addEventListener('click', e => { if(!e.target.closest('.cari')) tutupSemuaPop(); });
 
 el('isi').addEventListener('change', e => {
   const t = e.target;
